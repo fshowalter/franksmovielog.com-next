@@ -15,6 +15,12 @@ export interface IHomePageItem {
   still: {};
 }
 
+function formatDate(reviewDate: Date)  {
+  const day = `0${reviewDate.getUTCDate()}`.slice(-2);
+
+  return `${day} ${reviewDate.toLocaleString('default', { month: 'short' })} ${reviewDate.getFullYear()}`
+}
+
 export async function getHomePageItems(): Promise<IHomePageItem[]> {
   const reviewedTitles = await getReviewedTitles();
 
@@ -28,7 +34,7 @@ export async function getHomePageItems(): Promise<IHomePageItem[]> {
       sequence: title.sequence,
       title: title.title,
       year: title.year,
-      date: "",
+      date: formatDate(review.date),
       slug: title.slug,
       grade: title.grade,
       principalCastNames: title.principalCastNames,

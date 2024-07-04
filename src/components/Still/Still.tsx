@@ -1,9 +1,11 @@
-import Image from "next-export-optimize-images/image";
 import { Box, BoxProps } from "@/components/Box";
+import  Image from 'next/image'
 
-interface IStillProps extends BoxProps<Image> {
+interface IStillProps extends Omit<BoxProps<typeof Image>, "alt"> {
   title: string;
   year: string | number;
+  __width: number;
+  __height: number;
 }
 
 export function Still({ title, year, ...rest }: IStillProps): JSX.Element {

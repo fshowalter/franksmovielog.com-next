@@ -2,46 +2,78 @@ import fs from "fs";
 import matter from "gray-matter";
 import { join } from "path";
 import { z } from "zod";
-import { remark } from "remark";
-import { Root, RootContent } from "mdast";
+import { Root, RootContent, Node, Parent } from "mdast";
 import rehypeRaw from "rehype-raw";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import remarkRehype from "remark-rehype";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
+import remarkGfm from 'remark-gfm'
+import { Element } from "hast";
+import {visit, SKIP, CONTINUE} from "unist-util-visit";
 
-export default async function markdownToHtml(markdown: string) {
-  const result = await remark().use(rehypeRaw).parse(markdown);
+export function removeFootnotes<T extends Node>(node: T) {
+  visit(
+    node,
+    "footnoteReference",
+    function (
+      node: Node,
+      index: number | undefined,
+      parent: Parent | undefined,
+    ) {
+      if (
+        parent &&
+        index &&
+        node.type === "footnoteReference"
+      ) {
+        parent.children.splice(index, 1);
+        return [SKIP, index];
+      }
+      return CONTINUE;
+    },
+  );
 
-  return result.toString();
+  return node;
 }
 
-function getExcerptAst(tree: Root, excerptSeparator: string) {
-  const excerptSeparatorIndex = tree.children.findIndex((node: RootContent) => {
+
+function getExcerptSeparatorIndex(tree: Root, excerptSeparator: string) {
+  return tree.children.findIndex((node: RootContent) => {
     return node.type === "html" && node.value.trim() === excerptSeparator;
   });
-
-  if (excerptSeparatorIndex !== -1) {
-    tree.children.splice(excerptSeparatorIndex);
-    return tree;
-  }
-
-  return tree;
 }
 
-function getExcerptHtml(content: string, excerptSeparator: string) {
-  const ast = unified()
+function getExcerptHtml(content: string, excerptSeparator: string, slug: string) {
+  let ast = unified()
     .use(remarkParse)
+    .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
-    .parse(content);
+    .parse(content)
 
-  const excerptAST = getExcerptAst(ast, excerptSeparator);
 
-  const excerptHast = toHast(excerptAST);
+  const excerptSeparatorIndex = getExcerptSeparatorIndex(ast, excerptSeparator);
 
-  return toHtml(excerptHast);
+  if (excerptSeparatorIndex !== -1) {
+    ast.children.splice(excerptSeparatorIndex);
+  }
+
+  ast = removeFootnotes(ast);
+
+  const excerptHast = toHast(ast);
+
+  let excerptHtml = toHtml(excerptHast);
+
+  if (excerptSeparatorIndex !== -1) {
+    excerptHtml = excerptHtml.replace(/\n+$/, "");
+    excerptHtml = excerptHtml.replace(
+      /<\/p>$/,
+      ` <a data-continue-reading href="/reviews/${slug}/">Continue reading...</a></p>`,
+    );
+  }
+
+  return excerptHtml;
 }
 
 interface Review {
@@ -76,7 +108,7 @@ export function getReviewBySlug(slug: string): Review {
     date: greyMatter.date,
     grade: greyMatter.grade,
     imdbId: greyMatter.imdb_id,
-    excerpt: getExcerptHtml(content, "<!-- end -->"),
+    excerpt: getExcerptHtml(content, "<!-- end -->", slug),
     content,
   };
 }

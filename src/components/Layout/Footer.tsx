@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "../Box";
 import { ExternalLink } from "../Link";
 import ScreenReaderOnly from "@/components/ScreenReaderOnly";
-import { Nav } from "./Nav";
+import { Nav } from "./NavList";
 
 export function Footer({ ...rest }: BoxProps) {
   return (

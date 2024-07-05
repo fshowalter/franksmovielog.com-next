@@ -1,4 +1,5 @@
 const STILL_WIDTH = "960px";
+const PROSE_CONTENT_WIDTH = "36rem";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -14,19 +15,29 @@ module.exports = {
     },
     backgroundColor: {
       default: "var(--bg-default)",
+      subtle: "var(--bg-subtle)",
+    },
+    colors: {
+      accent: "var(--fg-accent)",
+      default: "var(--fg-default)",
+      muted: "var(--fg-muted)",
     },
     extend: {
       backgroundImage: {
-        "rip-notcomingsoon": "url('/assets/ripnotcomingsoon.jpg')",
+        notcomingsoon: "url('/assets/ripnotcomingsoon.jpg')",
       },
       maxWidth: {
         canvas: `clamp(${STILL_WIDTH}, 95vw, 1472px)`,
+        prose: PROSE_CONTENT_WIDTH,
       },
       brightness: {
         dark: "0.8",
       },
       contrast: {
         dark: "1.2",
+      },
+      padding: {
+        pageMargin: "var(--page-margin-width)",
       },
     },
   },

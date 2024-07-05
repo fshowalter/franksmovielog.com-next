@@ -1,17 +1,7 @@
 /* eslint-env browser, node */
 
-import React from "react";
-import { composeClassNames } from "@/styles/composeClassNames";
-import "@/styles/global.css";
-import { Box } from "@/components/Box";
 import { Footer } from "./Footer";
-import {
-  headerLayoutStyle,
-  pageCanvasStyle,
-  skipToMainContentStyle,
-} from "./Layout.css";
 import { Mast } from "./Mast";
-import { ripNotComingSoonBackgroundImageStyle } from "./backgroundImage.css";
 
 export function Layout({
   children,
@@ -20,45 +10,27 @@ export function Layout({
 }): JSX.Element {
   return (
     <div>
-      <Box
-        as="a"
-        className={skipToMainContentStyle}
+      <a
         href="#content"
-        paddingX={24}
-        paddingY={8}
-        backgroundColor="subtle"
-        color="accent"
-        textAlign="center"
+        className="bg-subtle text-accent translate-skip-to-content absolute left-1/2 top-0.5 z-50 mx-auto px-6 py-2 text-center"
       >
         Skip to content
-      </Box>
+      </a>
       <div
         className={
-          "bg-rip-notcomingsoon dark:brightness-dark dark:contrast-dark max-w-canvas desktop:sticky desktop:top-0 desktop:z-50 mx-auto min-h-4 w-full"
+          "image-filter bg-notcomingsoon mx-auto min-h-4 w-full max-w-canvas desktop:sticky desktop:top-0 desktop:z-40"
         }
       />
 
-      <div className="bg-default max-w-canvas mx-auto flex min-h-full flex-col">
-        <Mast
-          rowGap={24}
-          paddingX="pageMargin"
-          paddingY={{ default: 24, desktop: 32 }}
-          alignItems="center"
-          boxShadow="borderBottom"
-          backgroundColor="default"
-          columnGap={24}
-          className={headerLayoutStyle}
-        />
-        <Box flexGrow={1} id="content">
+      <div className="mx-auto flex min-h-full max-w-canvas flex-col bg-default">
+        <Mast />
+        <div className="flex-grow" id="content">
           {children}
-        </Box>
+        </div>
         <Footer
-          paddingX="pageMargin"
-          paddingY={32}
-          rowGap={24}
-          alignItems="center"
-          flexDirection="column"
-          className={ripNotComingSoonBackgroundImageStyle}
+          className={
+            "px-pageMargin bg-notcomingsoon flex-col items-center gap-x-6 py-8"
+          }
         />
       </div>
     </div>

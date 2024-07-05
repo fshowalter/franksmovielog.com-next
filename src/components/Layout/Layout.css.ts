@@ -8,18 +8,7 @@ export const pageCanvasStyle = style({
   margin: "0 auto",
 });
 
-export const bandStickyStyle = style({
-  maxWidth: `clamp(${STILL_WIDTH}, 95vw, ${breakpoints.max})`,
-  margin: "0 auto",
 
-  "@media": {
-    [minMediaQuery("desktop")]: {
-      position: "sticky",
-      top: "0",
-      zIndex: 10000,
-    },
-  },
-});
 
 export const headerLayoutStyle = style({
   flexDirection: "column",

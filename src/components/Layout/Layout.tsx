@@ -6,7 +6,6 @@ import "@/styles/global.css";
 import { Box } from "@/components/Box";
 import { Footer } from "./Footer";
 import {
-  bandStickyStyle,
   headerLayoutStyle,
   pageCanvasStyle,
   skipToMainContentStyle,
@@ -35,16 +34,11 @@ export function Layout({
       </Box>
       <div
         className={
-          "bg-rip-notcomingsoon max-w-canvas desktop:sticky desktop:top-0 desktop:z-50 mx-auto min-h-4 w-full"
+          "bg-rip-notcomingsoon dark:brightness-dark dark:contrast-dark max-w-canvas desktop:sticky desktop:top-0 desktop:z-50 mx-auto min-h-4 w-full"
         }
       />
 
-      <Box
-        backgroundColor="default"
-        className={pageCanvasStyle}
-        display="flex"
-        flexDirection="column"
-      >
+      <div className="bg-default max-w-canvas mx-auto flex min-h-full flex-col">
         <Mast
           rowGap={24}
           paddingX="pageMargin"
@@ -66,7 +60,7 @@ export function Layout({
           flexDirection="column"
           className={ripNotComingSoonBackgroundImageStyle}
         />
-      </Box>
+      </div>
     </div>
   );
 }

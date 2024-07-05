@@ -1,5 +1,5 @@
 import { Box, BoxProps } from "@/components/Box";
-import  Image from 'next/image'
+import Image from "next/image";
 
 interface IStillProps extends Omit<BoxProps<typeof Image>, "alt"> {
   title: string;
@@ -9,5 +9,5 @@ interface IStillProps extends Omit<BoxProps<typeof Image>, "alt"> {
 }
 
 export function Still({ title, year, ...rest }: IStillProps): JSX.Element {
-  return <Box as={Image} {...rest} alt={`A still from ${title} (${year})`} />;
+  return <Image {...rest} alt={`A still from ${title} (${year})`} />;
 }

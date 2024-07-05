@@ -1,4 +1,4 @@
-import { getReviewedTitles } from "@/data/reviewedTitles";
+import { getReviewedTitlesData } from "@/data/reviewedTitles";
 import { getReviewBySlug } from "@/data/reviews";
 
 export interface IHomePageItem {
@@ -12,7 +12,6 @@ export interface IHomePageItem {
   principalCastNames: string[];
   directorNames: string[];
   reviewExcerpt: string;
-  still: {};
 }
 
 function formatDate(reviewDate: Date)  {
@@ -22,11 +21,11 @@ function formatDate(reviewDate: Date)  {
 }
 
 export async function getHomePageItems(): Promise<IHomePageItem[]> {
-  const reviewedTitles = await getReviewedTitles();
+  const reviewedTitlesData = await getReviewedTitlesData();
 
-  reviewedTitles.sort((a, b) => b.sequence.localeCompare(a.sequence));
+  reviewedTitlesData.sort((a, b) => b.sequence.localeCompare(a.sequence));
 
-  return reviewedTitles.slice(0, 10).map((title) => {
+  return reviewedTitlesData.slice(0, 10).map((title) => {
     const review = getReviewBySlug(title.slug);
 
     return {
@@ -40,7 +39,6 @@ export async function getHomePageItems(): Promise<IHomePageItem[]> {
       principalCastNames: title.principalCastNames,
       directorNames: title.directorNames,
       reviewExcerpt: review.excerpt,
-      still: {},
     };
   });
 }

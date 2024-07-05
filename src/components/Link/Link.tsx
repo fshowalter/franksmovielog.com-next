@@ -2,12 +2,15 @@ import NextLink, {LinkProps} from 'next/link'
 import { composeClassNames } from "../../styles/composeClassNames";
 import { Box, BoxProps } from "@/components/Box";
 
-interface ILinkProps extends BoxProps<typeof NextLink> {}
 
-export const Link = ({ className = undefined, href, ...rest }: ILinkProps) => (
-  <Box as={NextLink} href={href} className={composeClassNames(className)} {...rest} />
+interface ILinkProps extends Omit<LinkProps, "as">, Omit<BoxProps, "href"> {
+  className?: string;
+}
+
+export const Link = ({ className = undefined, ...rest }: ILinkProps) => (
+  <Box as={NextLink} className={composeClassNames(className)} {...rest} />
 );
 
-export const ExternalLink = ({ className = undefined, ...rest }: BoxProps<"a">) => (
+export const ExternalLink = ({ className = undefined, ...rest }: BoxProps) => (
   <Box as="a" className={composeClassNames(className)} {...rest} />
 );

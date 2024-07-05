@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Layout } from "@/components/Layout";
-import * as styles from "@/styles/global.css";
+
+import "./global.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",

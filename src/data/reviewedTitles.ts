@@ -72,7 +72,7 @@ const ReviewedTitleSchema = z.object({
 
 export type ReviewedTitle = z.infer<typeof ReviewedTitleSchema>;
 
-export async function getReviewedTitles(): Promise<ReviewedTitle[]> {
+export async function getReviewedTitlesData(): Promise<ReviewedTitle[]> {
   const json = await fs.readFile(
     process.cwd() + "/content/data/reviewed-titles.json",
     "utf8",

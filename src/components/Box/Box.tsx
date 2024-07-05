@@ -1,11 +1,5 @@
-// Copied from https://github.com/TheMightyPenguin/dessert-box
-// The MIT License (MIT) - Copyright (c) 2021 Victor Tortolero
-
-/* eslint-disable no-restricted-syntax */
-
-import React, { createElement, forwardRef, ElementType } from "react";
-import { sprinkles, Sprinkles } from "../../styles/sprinkles.css";
-import { custom } from "zod";
+import { ElementType, ComponentPropsWithoutRef } from "react";
+import { sprinkles, Sprinkles } from "@/styles/sprinkles.css";
 
 function composeClassNames(...classNames: (string | undefined)[]) {
   const classes = classNames
@@ -13,6 +7,13 @@ function composeClassNames(...classNames: (string | undefined)[]) {
     .map((className) => className?.toString().trim()) as string[];
   return classes.length === 0 ? undefined : classes.join(` `);
 }
+
+export type BoxProps<C extends ElementType> = Sprinkles &
+  ComponentPropsWithoutRef<C> & {
+    as?: C;
+    className?: string;
+    style?: Record<string, any>;
+  };
 
 interface IAtomsFnBase {
   (...args: any): string;
@@ -43,65 +44,26 @@ function extractAtomsFromProps<AtomsFn extends IAtomsFnBase>(
   return { hasAtomProps, atomProps, otherProps, customProps };
 }
 
-type HTMLProperties = Omit<
-  React.AllHTMLAttributes<HTMLElement>,
-  "as" | "color" | "height" | "width" | "size"
->;
-
-type OverrideTokens<T> = {
-  [K in keyof T as K extends string ? `__${K}` : number]: any;
-};
-
-interface CreateBoxParams<AtomsFn> {
-  atoms: AtomsFn;
-}
-
-function createBox<AtomsFn extends IAtomsFnBase>({
-  atoms: atomsFn,
-}: CreateBoxParams<AtomsFn>) {
-  type Tokens = Parameters<AtomsFn>[0];
-  type BoxProps = {
-    as?: React.ElementType;
-    children?: React.ReactNode;
-    className?: string;
-    style?: Record<string, any>;
-  } & Tokens &
-    OverrideTokens<Tokens> &
-    HTMLProperties;
-
-  const Box = forwardRef<HTMLElement, BoxProps>(
-    ({ as: element = "div", className, style, ...props }: BoxProps, ref) => {
-      const { atomProps, customProps, otherProps } = extractAtomsFromProps(
-        props,
-        atomsFn,
-      );
-
-      return createElement(element, {
-        ref,
-        style: { ...style },
-        ...otherProps,
-        ...customProps,
-        className: composeClassNames(className, atomsFn(atomProps)),
-      });
-    },
+export const Box = <C extends ElementType = "div">({
+  as,
+  children,
+  className,
+  style,
+  ...props
+}: BoxProps<C>) => {
+  const Component = as || "div";
+  const { atomProps, customProps, otherProps } = extractAtomsFromProps(
+    props,
+    sprinkles,
   );
 
-  Box.displayName = "DessertBox";
-
-  return Box;
-}
-
-const BaseBox = createBox({ atoms: sprinkles });
-
-export type BoxProps<C extends ElementType = "div"> = Sprinkles &
-  React.ComponentPropsWithRef<C> & {
-    as?: C;
-    innerRef?: React.Ref<HTMLElement>;
-  };
-
-export const Box = <C extends ElementType = "div">({
-  innerRef,
-  ...rest
-}: BoxProps<C>) => {
-  return <BaseBox ref={innerRef} {...rest} />;
+  return (
+    <Component
+      className={composeClassNames(className, sprinkles(atomProps))}
+      style={{ ...style, ...customProps }}
+      {...otherProps}
+    >
+      {children}
+    </Component>
+  );
 };

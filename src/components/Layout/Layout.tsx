@@ -33,13 +33,10 @@ export function Layout({
       >
         Skip to content
       </Box>
-      <Box
-        minHeight={16}
-        width="full"
-        className={composeClassNames(
-          bandStickyStyle,
-          ripNotComingSoonBackgroundImageStyle,
-        )}
+      <div
+        className={
+          "bg-rip-notcomingsoon max-w-canvas desktop:sticky desktop:top-0 desktop:z-50 mx-auto min-h-4 w-full"
+        }
       />
 
       <Box

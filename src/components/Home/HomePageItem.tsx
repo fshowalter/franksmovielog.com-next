@@ -48,8 +48,8 @@ export function HomePageItem({ item, eagerLoadImage }: IItemProps) {
             <Still
               title={item.title}
               year={item.year}
-              __width={512}
-              __height={288}
+              width={512}
+              height={288}
               style={{ height: "auto" }}
               quality={80}
               src={`/assets/stills/${item.slug}.png`}

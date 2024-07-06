@@ -1,110 +1,66 @@
 import { toSentence } from "@/utils";
-import { Box, BoxProps } from "@/components/Box";
 import { Grade } from "@/components/Grade";
-import { gridAreaComponent, gridComponent } from "@/components/Grid";
-import { Link } from "../Link";
+import Link from "next/link";
 import { RenderedMarkdown } from "@/components/RenderedMarkdown";
-import { Spacer } from "@/components/Spacer";
 import type { IHomePageItem } from "./data";
-import {
-  excerptContinueReadingLinkStyle,
-  gridAreas,
-  gridStyle,
-  stillBorderStyle,
-} from "./HomePageItem.css";
 import { Still } from "@/components/Still";
 
-const GridArea = gridAreaComponent(gridAreas);
-
-const Grid = gridComponent(gridStyle);
-
-interface IItemProps extends BoxProps {
+export function HomePageItem({
+  item,
+  eagerLoadImage,
+}: {
   item: IHomePageItem;
   eagerLoadImage: boolean;
-}
-
-export function HomePageItem({ item, eagerLoadImage }: IItemProps) {
+}) {
   return (
-    <Box as="li" display="flex" backgroundColor="zebra">
-      <Grid as="article" paddingX="pageMargin">
-        <GridArea
-          name="date"
-          fontWeight="light"
-          color="subtle"
-          fontSize="small"
-          textTransform="uppercase"
-          lineHeight={16}
-          letterSpacing={0.75}
-        >
+    <li className="even:bg-subtle flex">
+      <article className="px-pageMargin desktop:grid desktop:grid-cols-8 desktop:w-full mx-auto flex flex-col items-center py-10">
+        <div className="max:col-span-1 max:self-start desktop:text-left desktop:leading-8 desktop:pb-6 desktop:mb-0 tracking-0.75px text-subtle col-span-2 mb-6 text-center text-sm font-light uppercase leading-4">
           {item.date}
-        </GridArea>
-        <GridArea name="still" maxWidth="prose">
-          <Link
-            rel="canonical"
-            href={`/reviews/${item.slug}/`}
-            className={stillBorderStyle}
-            display="block"
-          >
-            <Still
-              title={item.title}
-              year={item.year}
-              width={512}
-              height={288}
-              style={{ height: "auto" }}
-              quality={80}
-              src={`/assets/stills/${item.slug}.png`}
-              priority={eagerLoadImage}
-              borderRadius={12}
-            />
-          </Link>
-        </GridArea>
-        <GridArea
-          name="excerpt"
-          display="flex"
-          flexDirection="column"
-          alignItems={{ default: "center", desktop: "flex-start" }}
+        </div>
+        <Link
+          rel="canonical"
+          href={`/reviews/${item.slug}/`}
+          className="desktop:justify-self-end desktop:col-end-9 desktop:col-start-4 max:row-start-1 max:mt-0 desktop:mt-10 still-border desktop:row-span-2 desktop:row-start-1 desktop:self-start block max-w-prose"
         >
-          <Box as="h2" fontWeight="bold" fontSize="large">
+          <Still
+            title={item.title}
+            year={item.year}
+            width={512}
+            height={288}
+            quality={80}
+            src={`/assets/stills/${item.slug}.png`}
+            priority={eagerLoadImage}
+            className="h-auto rounded-xl"
+          />
+        </Link>
+        <div className="max:row-start-1 max:col-start-2 desktop:items-start desktop:row-start-2 desktop:place-self-start desktop:col-span-5 desktop:pt-0 desktop:col-start-1 flex max-w-lg flex-col items-center pt-4">
+          <h2 className="text-2.5xl font-bold leading-8">
             <Link
               href={`/reviews/${item.slug}/`}
               rel="canonical"
-              color="default"
-              display="inline-block"
+              className="text-default inline-block"
             >
               {item.title}{" "}
-              <Box
-                as="span"
-                color="subtle"
-                display="inline-block"
-                fontSize="default"
-                fontWeight="light"
-                lineHeight={1}
-              >
+              <span className="text-subtle inline-block text-base font-light leading-none">
                 {item.year}
-              </Box>
+              </span>
             </Link>
-          </Box>
-          <Spacer axis="vertical" size={16} />
+          </h2>
+          <div className="h-4 min-h-4" />
           <Grade grade={item.grade} height={32} />
-          <Spacer axis="vertical" size={24} />
-          <Box
-            as="p"
-            fontSize="default"
-            fontWeight="normal"
-            color="subtle"
-            letterSpacing={0.25}
-            lineHeight="default"
-          >
+          <div className="h-6 min-h-6" />
+          <p className="text-subtle tracking-0.25px text-base font-normal leading-normal">
             Directed by {toSentence(item.directorNames)}. Starring{" "}
             {toSentence(item.principalCastNames)}.
-          </Box>
-          <Spacer axis="vertical" size={24} />
+          </p>
+          <div className="h-6 min-h-6" />
           <RenderedMarkdown
             text={item.reviewExcerpt}
-            className={excerptContinueReadingLinkStyle}
+            className="text-muted tracking-0.3px self-start text-lg leading-normal"
           />
-        </GridArea>
-      </Grid>
-    </Box>
+        </div>
+      </article>
+    </li>
   );
 }

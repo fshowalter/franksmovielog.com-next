@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { navActiveLinkStyle, orderStyle } from "./Mast.css";
-import { Nav } from "./NavList";
+import { NavListItems } from "./NavListItems";
 import { SiteSearchForm } from "./SiteSearchForm";
 
 export function Mast() {
   return (
-    <header className="border-bottom px-pageMargin flex flex-col items-center gap-6 bg-default py-6 text-center desktop:sticky desktop:top-4 desktop:z-40 desktop:flex-row desktop:flex-wrap desktop:justify-between desktop:py-8 desktop:text-left">
+    <header className="border-bottom px-pageMargin bg-default desktop:sticky desktop:top-4 desktop:z-40 desktop:flex-row desktop:flex-wrap desktop:justify-between desktop:py-8 desktop:text-left flex flex-col items-center gap-6 py-6 text-center">
       <div className="items-inherit justify-items-inherit flex flex-col">
         <h1
           className="whitespace-nowrap font-normal leading-8"
@@ -16,18 +15,19 @@ export function Mast() {
           </Link>
         </h1>
         <p
-          className={"text-muted w-full text-sm italic leading-4 desktop:pl-px"}
+          className={"text-muted desktop:pl-px w-full text-sm italic leading-4"}
         >
           My life at the movies.
         </p>
       </div>
-      <div className="w-full max-w-prose desktop:w-auto max:order-4">
+      <div className="desktop:w-auto max:order-4 w-full max-w-prose">
         <SiteSearchForm />
       </div>
-      <Nav
-        activeClassName={navActiveLinkStyle}
-        className="text-accent w-full justify-center desktop:justify-start max:w-auto"
-      />
+      <nav className="max:w-auto w-full">
+        <ul className="tablet:gap-x-6 text-accent desktop:justify-start flex flex-wrap justify-center gap-x-4 gap-y-2">
+          <NavListItems activeClassName="text-muted" />
+        </ul>
+      </nav>
     </header>
   );
 }

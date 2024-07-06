@@ -1,44 +1,35 @@
-import { Box } from "@/components/Box";
-import { Link } from "@/components/Link";
-import { PageTitle } from "@/components/PageTitle";
-import { Spacer } from "@/components/Spacer";
+import Link from "next/link";
 
 export function Header({ reviewCount }: { reviewCount: number }): JSX.Element {
   return (
     <>
-      <PageTitle textAlign="center">Reviews</PageTitle>
-      <Box as="q" display="block" textAlign="center" color="subtle">
+      <h1 className="page-title text-center">Reviews</h1>
+      <q className="text-subtle block text-center">
         We have such sights to show you.
-      </Box>
-      <Spacer axis="vertical" size={16} />
+      </q>
+      <div className="max-h-4 min-h-4" />
 
-      <Box color="subtle" textAlign="center">
-        <Spacer axis="vertical" size={16} />
+      <div className="text-subtle text-center">
+        <div className="max-h-4 min-h-4" />
         <p>
           Since 2012, I&apos;ve published{" "}
-          <Box as="span" color="emphasis">
-            {reviewCount.toLocaleString()}
-          </Box>{" "}
+          <span className="text-emphasis">{reviewCount.toLocaleString()}</span>{" "}
           reviews.
         </p>
-        <Spacer axis="vertical" size={16} />
+        <div className="max-h-4 min-h-4" />
         <p>
-          <Box as="span" fontWeight="semiBold">
-            Looking for something new?
-          </Box>
+          <span className="font-semibold">Looking for something new?</span>
           <br /> Peruse my list of{" "}
-          <Link to="/reviews/underseen/">underseen gems</Link>.
+          <Link href="/reviews/underseen/">underseen gems</Link>.
         </p>
-        <Spacer axis="vertical" size={16} />
+        <div className="max-h-4 min-h-4" />
         <p>
-          <Box as="span" fontWeight="semiBold">
-            Feeling contrarian?
-          </Box>
+          <span className="font-semibold">Feeling contrarian?</span>
           <br />
           Behold my list of{" "}
-          <Link to="/reviews/overrated/">overrated disappointments</Link>.
+          <Link href="/reviews/overrated/">overrated disappointments</Link>.
         </p>
-      </Box>
+      </div>
     </>
   );
 }

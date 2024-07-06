@@ -1,5 +1,3 @@
-"use client"
-
 import Select from "react-select";
 import {
   backgroundColors,
@@ -25,7 +23,7 @@ export function Filters({
   sortValue: string;
   distinctReviewYears: string[];
   distinctReleaseYears: string[];
-  distinctGenres:string[];
+  distinctGenres: string[];
 }) {
   return (
     <>

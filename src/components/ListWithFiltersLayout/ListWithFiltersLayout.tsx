@@ -12,45 +12,20 @@ export function ListWithFiltersLayout({
   filters: React.ReactNode;
   list: React.ReactNode;
 }): JSX.Element {
-  const listHeader = useRef<HTMLDivElement>(null);
-
   return (
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <Box
-          as="main"
-          display="flex"
-          flexDirection={{ default: "column", desktop: "row" }}
-          paddingX={{ default: 0, desktop: "pageMargin" }}
-          columnGap={96}
-          alignItems={{ default: "stretch", desktop: "flex-start" }}
-          maxWidth={{ default: 960, desktop: "unset" }}
-          width="full"
-        >
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            paddingX={{ default: "gutter", desktop: 0 }}
-            paddingTop={32}
-            flexBasis={360}
-          >
-            <Box alignItems="center" display="flex" flexDirection="column">
-              {header}
-            </Box>
-            <Spacer axis="vertical" size={32} />
-            <Filters>{filters}</Filters>
-            <Spacer axis="vertical" size={32} />
-          </Box>
-          <Box
-            innerRef={listHeader}
-            display="flex"
-            flexDirection="column"
-            flexGrow={1}
-          >
-            <Spacer axis="vertical" size={{ default: 0, desktop: 32 }} />
-            {list}
-          </Box>
-        </Box>
-      </Box>
+    <div className="flex flex-col items-center">
+      <main className="desktop:flex-row desktop:px-pageMargin desktop:items-start desktop:max-w-full flex w-full max-w-prose flex-col items-stretch gap-x-24">
+        <div className="px-gutter desktop:px-0 basis-md flex flex-col items-center pt-8">
+          <div className="flex flex-col items-center">{header}</div>
+          <div className="h-8 min-h-8" />
+          <Filters>{filters}</Filters>
+          <div className="h-8 min-h-8" />
+        </div>
+        <div className="flex grow flex-col">
+          <div className="desktop:h-8 desktop:min-h-8 h-0 min-h-0" />
+          {list}
+        </div>
+      </main>
+    </div>
   );
 }

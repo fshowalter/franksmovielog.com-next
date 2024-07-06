@@ -1,6 +1,6 @@
 /* eslint-env browser, node */
 
-import { Footer } from "./Footer";
+import { NavListItems } from "./NavListItems";
 import { Mast } from "./Mast";
 
 export function Layout({
@@ -18,20 +18,36 @@ export function Layout({
       </a>
       <div
         className={
-          "image-filter bg-notcomingsoon mx-auto min-h-4 w-full max-w-canvas desktop:sticky desktop:top-0 desktop:z-40"
+          "image-filter bg-notcomingsoon max-w-canvas desktop:sticky desktop:top-0 desktop:z-40 mx-auto min-h-4 w-full"
         }
       />
 
-      <div className="mx-auto flex min-h-full max-w-canvas flex-col bg-default">
+      <div className="max-w-canvas bg-default mx-auto flex min-h-full flex-col">
         <Mast />
-        <div className="flex-grow" id="content">
+        <div className="grow" id="content">
           {children}
         </div>
-        <Footer
+        <footer
           className={
-            "px-pageMargin bg-notcomingsoon flex-col items-center gap-x-6 py-8"
+            "px-pageMargin bg-notcomingsoon text-inverse flex flex-col items-center gap-y-6 py-8"
           }
-        />
+        >
+          <ul className="tablet:gap-x-6 text-inverse max:w-auto flex w-full flex-wrap justify-center gap-x-4 gap-y-2">
+            <NavListItems activeClassName="text-inverse" />
+          </ul>
+          <p className="text-sm font-light leading-4">
+            All stills used in accordance with the{" "}
+            <a
+              href="http://www.copyright.gov/title17/92chap1.html#107"
+              className="text-inherit"
+            >
+              Fair Use Law.
+            </a>
+          </p>
+          <a href="#top" className="sr-only">
+            To the top ↑
+          </a>
+        </footer>
       </div>
     </div>
   );

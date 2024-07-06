@@ -2,8 +2,9 @@ import { composeClassNames } from "@/styles/composeClassNames";
 import { Box, BoxProps } from "@/components/Box";
 import { renderedMarkdownStyle } from "./RenderedMarkdown.css";
 
-interface IRenderedMarkdownProps extends BoxProps {
-  text?: string | null;
+interface IRenderedMarkdownProps {
+  text: string | null;
+  className?: string;
 }
 
 export function RenderedMarkdown({

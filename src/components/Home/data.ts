@@ -1,3 +1,5 @@
+"use server";
+
 import { getReviewedTitlesData } from "@/data/reviewedTitles";
 import { getReviewBySlug } from "@/data/reviews";
 
@@ -14,10 +16,10 @@ export interface IHomePageItem {
   reviewExcerpt: string;
 }
 
-function formatDate(reviewDate: Date)  {
+function formatDate(reviewDate: Date) {
   const day = `0${reviewDate.getUTCDate()}`.slice(-2);
 
-  return `${day} ${reviewDate.toLocaleString('default', { month: 'short' })} ${reviewDate.getFullYear()}`
+  return `${day} ${reviewDate.toLocaleString("default", { month: "short" })} ${reviewDate.getFullYear()}`;
 }
 
 export async function getHomePageItems(): Promise<IHomePageItem[]> {

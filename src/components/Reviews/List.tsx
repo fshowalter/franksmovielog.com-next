@@ -6,6 +6,7 @@ import { ListItemPoster } from "../ListItemPoster";
 import { ListItemTitle } from "../ListItemTitle";
 import { GroupedList } from "../ListWithFiltersLayout";
 import { Spacer } from "../Spacer";
+import type { IReviewedTitle } from "./data";
 import { Action, ActionType } from "./Reviews.reducer";
 
 export function List({
@@ -14,7 +15,7 @@ export function List({
   visibleCount,
   dispatch,
 }: {
-  groupedItems: Map<string, Queries.ReviewsItemFragment[]>;
+  groupedItems: Map<string, IReviewedTitle[]>;
   totalCount: number;
   visibleCount: number;
   dispatch: React.Dispatch<Action>;
@@ -39,13 +40,7 @@ function ReviewListItem({
 }): JSX.Element {
   return (
     <ListItem alignItems="center">
-      <ListItemPoster
-        slug={item.slug}
-        image={item.poster}
-        title={item.title}
-        year={item.year}
-        flexShrink={0}
-      />
+      <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
       <Box
         flexGrow={1}
         width={{ tablet: "full" }}

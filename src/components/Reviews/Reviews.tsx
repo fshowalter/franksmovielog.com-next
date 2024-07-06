@@ -1,14 +1,24 @@
+"use client";
+
 import { useReducer } from "react";
 import { ListWithFiltersLayout } from "../ListWithFiltersLayout";
 import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
 import { initState, reducer } from "./Reviews.reducer";
-import { getReviewedTitles } from "./data";
+import type { IReviewedTitle } from "./data";
 
-export async function Reviews(): Promise<JSX.Element> {
-  const {reviewedTitles, genres, releaseYears, reviewYears} = await getReviewedTitles();
-
+export function Reviews({
+  reviewedTitles,
+  genres,
+  releaseYears,
+  reviewYears,
+}: {
+  reviewedTitles: IReviewedTitle[];
+  genres: string[];
+  releaseYears: string[];
+  reviewYears: string[];
+}): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {

@@ -1,8 +1,5 @@
 "use client";
 
-import { Box } from "@/components/Box";
-import { inputStyle } from "./DebouncedInput.css";
-
 export type onChangeHandler = (value: string) => void;
 
 /**
@@ -60,28 +57,18 @@ export function DebouncedInput({
   const debouncedHandleChange = underscoreDebounce(onInputChange, 150);
 
   return (
-    <Box as="label" color="subtle" display="flex" flexDirection="column">
-      <Box
-        as="span"
-        fontSize="small"
-        display="inline-block"
-        letterSpacing={0.5}
-        textAlign="left"
-        fontWeight="semiBold"
-        height={24}
-      >
+    <label className="text-subtle flex flex-col">
+      <span className="tracking-0.5px inline-block h-6 text-left text-sm font-semibold">
         {label}
-      </Box>
-      <Box
-        as="input"
-        borderRadius={4}
-        className={inputStyle}
+      </span>
+      <input
         type="text"
         placeholder={placeholder}
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           debouncedHandleChange((e.target as HTMLInputElement).value)
         }
+        className="rounded-md"
       />
-    </Box>
+    </label>
   );
 }

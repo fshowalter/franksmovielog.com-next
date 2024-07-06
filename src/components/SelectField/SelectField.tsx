@@ -1,28 +1,27 @@
 import { ChangeEvent } from "react";
-import { Box, BoxProps } from "@/components/Box";
 import { LabelText } from "@/components/LabelText";
 import { SelectInput } from "@/components/SelectInput";
-
-interface SelectFieldProps extends BoxProps {
-  label: string;
-  value?: string;
-  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  children: React.ReactNode;
-}
+import { twMerge } from "tailwind-merge";
 
 export function SelectField({
   label,
   value,
   onChange,
   children,
-  ...rest
-}: SelectFieldProps): JSX.Element {
+  className,
+}: {
+  label: string;
+  value?: string;
+  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  children: React.ReactNode;
+  className?: string;
+}): JSX.Element {
   return (
-    <Box as="label" display="flex" flexDirection="column" {...rest}>
+    <label className={twMerge("flex flex-col", className)}>
       <LabelText as="span" text={label} />
       <SelectInput value={value?.toString()} onChange={onChange}>
         {children}
       </SelectInput>
-    </Box>
+    </label>
   );
 }

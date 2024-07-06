@@ -4,12 +4,11 @@ import {
   borderColors,
   foregroundColors,
 } from "../../styles/colors.css";
-import { Box } from "../Box";
 import { DebouncedInput } from "@/components/DebouncedInput";
 import { GradeInput } from "@/components/GradeInput";
 import { LabelText } from "@/components/LabelText";
 import { SelectField } from "@/components/SelectField";
-import { YearInput } from "../YearInput";
+import { YearInput } from "@/components/YearInput";
 import { Action, ActionType, Sort } from "./Reviews.reducer";
 
 export function Filters({
@@ -57,7 +56,7 @@ export function Filters({
           })
         }
       />
-      <Box display="flex" flexDirection="column" textAlign="left">
+      <div className="flex flex-col text-left">
         <LabelText text="Genres" as="label" htmlFor="genres" />
         <Select
           inputId="genres"
@@ -86,7 +85,7 @@ export function Filters({
             return { value: genre, label: genre };
           })}
         />
-      </Box>
+      </div>
       <SelectField
         value={sortValue}
         label="Order By"

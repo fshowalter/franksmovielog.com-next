@@ -1,4 +1,3 @@
-import { Box } from "../Box";
 import Link from "next/link";
 
 export function StillListHeading({
@@ -11,14 +10,9 @@ export function StillListHeading({
   linkTarget: string;
 }) {
   return (
-    <Box
-      boxShadow={{ default: "borderBottom", tablet: "unset" }}
-      paddingY={{ default: 8, tablet: 16 }}
-      paddingX={{ default: "gutter", desktop: "pageMargin" }}
-      width="full"
-    >
+    <div className="desktop:py-4 px-gutter desktop:px-pageMargin border-bottom tablet:shadow-none w-full">
       <span className="text-muted font-semibold">{leadText} </span>
       <Link href={linkTarget}>{linkText}</Link>
-    </Box>
+    </div>
   );
 }

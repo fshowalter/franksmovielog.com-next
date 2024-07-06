@@ -1,25 +1,18 @@
-import { Box, BoxProps } from "@/components/Box";
 import { ElementType } from "react";
 
-interface ILabelTextProps extends BoxProps {
+export function LabelText({
+  text,
+  as = "span",
+}: {
   text: string;
   htmlFor?: string;
-  as: ElementType;
-}
+  as?: ElementType;
+}) {
+  const Componet = as;
 
-export function LabelText({ text, as, ...rest }: ILabelTextProps) {
   return (
-    <Box
-      as={as}
-      fontSize="small"
-      display="inline-block"
-      letterSpacing={0.5}
-      textAlign="left"
-      fontWeight="semiBold"
-      height={24}
-      {...rest}
-    >
+    <Componet className="tracking-0.5px inline-block h-6 text-left text-sm font-semibold">
       {text}
-    </Box>
+    </Componet>
   );
 }

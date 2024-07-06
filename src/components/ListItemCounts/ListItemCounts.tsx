@@ -1,7 +1,3 @@
-import { Box } from "../Box";
-
-import { countMarginStyle } from "./ListItemCounts.css";
-
 export function ListItemCounts({
   current,
   total,
@@ -10,12 +6,12 @@ export function ListItemCounts({
   total: number;
 }): JSX.Element {
   if (current === total) {
-    return <Box className={countMarginStyle}>{total}</Box>;
+    return <div className="ml-auto">{total}</div>;
   }
 
   return (
-    <Box className={countMarginStyle}>
+    <div className="ml-auto">
       {current} / {total}
-    </Box>
+    </div>
   );
 }

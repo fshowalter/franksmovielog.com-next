@@ -10,7 +10,6 @@ import remarkRehype from "remark-rehype";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
 import remarkGfm from "remark-gfm";
-import { Element } from "hast";
 import { visit, SKIP, CONTINUE } from "unist-util-visit";
 
 export function removeFootnotes<T extends Node>(node: T) {
@@ -76,7 +75,6 @@ function getExcerptHtml(
 
 interface MarkdownReview {
   slug: string;
-  title: string;
   date: Date;
   grade: string;
   imdbId: string;
@@ -85,7 +83,6 @@ interface MarkdownReview {
 }
 
 const DataSchema = z.object({
-  title: z.string(),
   date: z.date(),
   grade: z.string(),
   imdb_id: z.string(),
@@ -102,7 +99,6 @@ export function getReviewBySlug(slug: string): MarkdownReview {
 
   return {
     slug: slug,
-    title: greyMatter.title,
     date: greyMatter.date,
     grade: greyMatter.grade,
     imdbId: greyMatter.imdb_id,

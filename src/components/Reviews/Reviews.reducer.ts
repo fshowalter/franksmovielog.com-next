@@ -128,7 +128,7 @@ interface FilterReleaseYearAction {
 
 interface FilterReviewYearAction {
   type: ActionType.FILTER_REVIEW_YEAR;
-  values: [number, number];
+  values: [string, string];
 }
 
 interface SortAction {

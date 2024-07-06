@@ -6,7 +6,7 @@ export interface IReviewedTitle {
   imdbId: string;
   reviewDate: string;
   releaseSequence: string;
-  reviewYear: number;
+  reviewYear: string;
   reviewMonth: string;
   title: string;
   year: string;
@@ -50,7 +50,7 @@ export async function getReviewedTitles(): Promise<{
       title: title.title,
       year: title.year,
       reviewDate: formatDate(reviewDate),
-      reviewYear: reviewDate.getUTCFullYear(),
+      reviewYear: reviewDate.getUTCFullYear().toString(),
       reviewMonth: reviewDate.toLocaleString("default", { month: "long" }),
       sortTitle: title.sortTitle,
       slug: title.slug,

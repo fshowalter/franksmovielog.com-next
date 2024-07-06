@@ -1,21 +1,18 @@
-"use client"
+"use client";
 
 import { useState } from "react";
-import { Box, BoxProps } from "@/components/Box";
 import { LabelText } from "@/components/LabelText";
 import { SelectInput } from "@/components/SelectInput";
-
-interface IYearInputProps extends BoxProps {
-  label: string;
-  years: readonly string[];
-  onYearChange: (values: [string, string]) => void;
-}
 
 export function YearInput({
   label,
   years,
   onYearChange,
-}: IYearInputProps): JSX.Element {
+}: {
+  label: string;
+  years: readonly string[];
+  onYearChange: (values: [string, string]) => void;
+}): JSX.Element {
   const [minYear, setMinYear] = useState(years[0]);
   const [maxYear, setMaxYear] = useState(years[years.length - 1]);
 
@@ -42,25 +39,13 @@ export function YearInput({
   };
 
   return (
-    <Box as="fieldset">
+    <fieldset>
       <LabelText as="legend" text={label} />
-      <Box display="flex" alignItems="baseline">
-        <Box
-          as="label"
-          display="flex"
-          flex={1}
-          columnGap=".5ch"
-          alignItems="center"
-        >
-          <Box
-            as="span"
-            fontSize="small"
-            minWidth={40}
-            textAlign="left"
-            letterSpacing={0.5}
-          >
+      <div className="flex items-baseline">
+        <label className="flex flex-1 items-center gap-x-[.5ch]">
+          <span className="tracking-0.5px min-w-10 text-left text-sm">
             From
-          </Box>
+          </span>
           <SelectInput
             value={minYear}
             onChange={(e) => handleMinChange(e.target.value)}
@@ -73,17 +58,11 @@ export function YearInput({
               );
             })}
           </SelectInput>
-        </Box>
-        <Box as="label" display="flex" flex={1} alignItems="center">
-          <Box
-            as="span"
-            fontSize="small"
-            minWidth={40}
-            textAlign="center"
-            letterSpacing={0.5}
-          >
+        </label>
+        <label className="flex flex-1 items-center">
+          <span className="tracking-0.5px min-w-10 text-center text-sm">
             to
-          </Box>
+          </span>
           <SelectInput
             value={maxYear}
             onChange={(e) => handleMaxChange(e.target.value)}
@@ -99,8 +78,8 @@ export function YearInput({
                 );
               })}
           </SelectInput>
-        </Box>
-      </Box>
-    </Box>
+        </label>
+      </div>
+    </fieldset>
   );
 }

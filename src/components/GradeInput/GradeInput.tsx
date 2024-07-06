@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
 import { useState } from "react";
-import { Box } from "@/components/Box";
 import { SelectInput } from "@/components/SelectInput";
 
 const options = [
@@ -46,15 +45,13 @@ const options = [
   </option>,
 ];
 
-interface IGradeFilterProps {
-  label: string;
-  onGradeChange: (values: [number, number]) => void;
-}
-
 export function GradeInput({
   label,
   onGradeChange,
-}: IGradeFilterProps): JSX.Element {
+}: {
+  label: string;
+  onGradeChange: (values: [number, number]) => void;
+}): JSX.Element {
   const [minValue, setMinValue] = useState(1);
   const [maxValue, setMaxValue] = useState(13);
 
@@ -81,60 +78,34 @@ export function GradeInput({
   };
 
   return (
-    <Box as="fieldset">
-      <Box
-        as="legend"
-        fontSize="small"
-        color="subtle"
-        fontWeight="bold"
-        letterSpacing={0.5}
-        height={24}
-        textAlign="left"
-      >
+    <fieldset>
+      <legend className="text-subtle tracking-0.5px h-6 text-left text-sm font-bold">
         {label}
-      </Box>
-      <Box display="flex" alignItems="baseline" flexWrap="wrap">
-        <Box
-          as="label"
-          display="flex"
-          flex={1}
-          alignItems="center"
-          columnGap=".5ch"
-        >
-          <Box
-            as="span"
-            fontSize="small"
-            minWidth={40}
-            textAlign="left"
-            letterSpacing={0.5}
-          >
+      </legend>
+      <div className="flex flex-wrap items-baseline">
+        <label className="flex flex-1 items-center gap-x-[.5ch]">
+          <span className="tracking-0.5px min-w-10 text-left text-sm">
             From
-          </Box>
+          </span>
           <SelectInput
             value={minValue}
             onChange={(e) => handleMinChange(e.target.value)}
           >
             {options.slice().reverse()}
           </SelectInput>
-        </Box>
-        <Box as="label" display="flex" flex={1} alignItems="center">
-          <Box
-            as="span"
-            fontSize="small"
-            minWidth={40}
-            textAlign="center"
-            letterSpacing={0.5}
-          >
+        </label>
+        <label className="flex flex-1 items-center">
+          <span className="tracking-0.5px min-w-10 text-center text-sm">
             to
-          </Box>
+          </span>
           <SelectInput
             value={maxValue}
             onChange={(e) => handleMaxChange(e.target.value)}
           >
             {options.slice()}
           </SelectInput>
-        </Box>
-      </Box>
-    </Box>
+        </label>
+      </div>
+    </fieldset>
   );
 }

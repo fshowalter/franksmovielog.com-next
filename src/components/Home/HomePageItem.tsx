@@ -29,7 +29,7 @@ export function HomePageItem({
             width={512}
             height={288}
             quality={80}
-            src={`/assets/stills/${item.slug}.png`}
+            slug={item.slug}
             priority={eagerLoadImage}
             className="h-auto rounded-xl"
           />

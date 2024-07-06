@@ -1,7 +1,4 @@
-import { useRef } from "react";
-import { Box } from "@/components/Box";
-import { Spacer } from "@/components/Spacer";
-import { Filters } from "./Filters";
+import { Fieldset } from "@/components/Fieldset";
 
 export function ListWithFiltersLayout({
   header,
@@ -14,12 +11,15 @@ export function ListWithFiltersLayout({
 }): JSX.Element {
   return (
     <div className="flex flex-col items-center">
-      <main className="desktop:flex-row desktop:px-pageMargin desktop:items-start desktop:max-w-full flex w-full max-w-prose flex-col items-stretch gap-x-24">
-        <div className="px-gutter desktop:px-0 basis-md flex flex-col items-center pt-8">
+      <main className="desktop:flex-row desktop:px-pageMargin desktop:max-w-full flex w-full max-w-prose flex-col items-stretch gap-x-24">
+        <div className="px-gutter desktop:px-0 basis-md flex flex-col items-center gap-y-8 pt-8">
           <div className="flex flex-col items-center">{header}</div>
-          <div className="h-8 min-h-8" />
-          <Filters>{filters}</Filters>
-          <div className="h-8 min-h-8" />
+          <Fieldset
+            legend="Filter & Sort"
+            className="desktop:sticky desktop:top-[208px] max:top-[160px] desktop:self-start"
+          >
+            {filters}
+          </Fieldset>
         </div>
         <div className="flex grow flex-col">
           <div className="desktop:h-8 desktop:min-h-8 h-0 min-h-0" />

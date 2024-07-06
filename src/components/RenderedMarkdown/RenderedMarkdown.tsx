@@ -1,30 +1,27 @@
-import { composeClassNames } from "@/styles/composeClassNames";
-import { Box, BoxProps } from "@/components/Box";
-import { renderedMarkdownStyle } from "./RenderedMarkdown.css";
-
-interface IRenderedMarkdownProps {
-  text: string | null;
-  className?: string;
-}
+import { twMerge } from "tailwind-merge";
 
 export function RenderedMarkdown({
   className,
+  as = "div",
   text,
-  ...rest
-}: IRenderedMarkdownProps): JSX.Element | null {
+}: {
+  text: string | null;
+  className?: string;
+  as?: React.ElementType;
+}): JSX.Element | null {
   if (!text) {
     return null;
   }
 
+  const Component = as;
+
   return (
-    <Box
-      fontWeight="light"
-      className={composeClassNames(renderedMarkdownStyle, className)}
+    <Component
+      className={twMerge("rendered-markdown font-light", className)}
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: text,
       }}
-      {...rest}
     />
   );
 }

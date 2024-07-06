@@ -1,6 +1,3 @@
-import { Box } from "@/components/Box";
-import { stickyStyle } from "./ListInfo.css";
-
 export function ListInfo({
   visibleCount,
   totalCount,
@@ -17,15 +14,8 @@ export function ListInfo({
   }
 
   return (
-    <Box
-      color="subtle"
-      paddingX="gutter"
-      textAlign="center"
-      backgroundColor="default"
-      lineHeight={36}
-      className={stickyStyle}
-    >
+    <div className="text-subtle px-gutter bg-default desktop:top-[176px] max:top-[128px] sticky top-0 z-40 text-center leading-10">
       {showingText}
-    </Box>
+    </div>
   );
 }

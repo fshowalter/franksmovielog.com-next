@@ -1,10 +1,20 @@
-import { Box, BoxProps } from "@/components/Box";
-import { typographyStyle } from "./PageTitle.css";
+import { twMerge } from "tailwind-merge";
 
-export function PageTitle({ children, ...rest }: BoxProps): JSX.Element {
+export function PageTitle({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}): JSX.Element {
   return (
-    <Box as="h1" className={typographyStyle} {...rest}>
+    <h1
+      className={twMerge(
+        "desktop:text-[2.5rem] text-[2rem] font-normal leading-none",
+        className,
+      )}
+    >
       {children}
-    </Box>
+    </h1>
   );
 }

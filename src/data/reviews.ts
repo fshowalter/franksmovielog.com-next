@@ -9,9 +9,9 @@ import { unified } from "unified";
 import remarkRehype from "remark-rehype";
 import { toHast } from "mdast-util-to-hast";
 import { toHtml } from "hast-util-to-html";
-import remarkGfm from 'remark-gfm'
+import remarkGfm from "remark-gfm";
 import { Element } from "hast";
-import {visit, SKIP, CONTINUE} from "unist-util-visit";
+import { visit, SKIP, CONTINUE } from "unist-util-visit";
 
 export function removeFootnotes<T extends Node>(node: T) {
   visit(
@@ -22,11 +22,7 @@ export function removeFootnotes<T extends Node>(node: T) {
       index: number | undefined,
       parent: Parent | undefined,
     ) {
-      if (
-        parent &&
-        index &&
-        node.type === "footnoteReference"
-      ) {
+      if (parent && index && node.type === "footnoteReference") {
         parent.children.splice(index, 1);
         return [SKIP, index];
       }
@@ -37,21 +33,23 @@ export function removeFootnotes<T extends Node>(node: T) {
   return node;
 }
 
-
 function getExcerptSeparatorIndex(tree: Root, excerptSeparator: string) {
   return tree.children.findIndex((node: RootContent) => {
     return node.type === "html" && node.value.trim() === excerptSeparator;
   });
 }
 
-function getExcerptHtml(content: string, excerptSeparator: string, slug: string) {
+function getExcerptHtml(
+  content: string,
+  excerptSeparator: string,
+  slug: string,
+) {
   let ast = unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
-    .parse(content)
-
+    .parse(content);
 
   const excerptSeparatorIndex = getExcerptSeparatorIndex(ast, excerptSeparator);
 
@@ -76,7 +74,7 @@ function getExcerptHtml(content: string, excerptSeparator: string, slug: string)
   return excerptHtml;
 }
 
-interface Review {
+interface MarkdownReview {
   slug: string;
   title: string;
   date: Date;
@@ -95,7 +93,7 @@ const DataSchema = z.object({
 
 const reviewsDirectory = join(process.cwd(), "content", "reviews");
 
-export function getReviewBySlug(slug: string): Review {
+export function getReviewBySlug(slug: string): MarkdownReview {
   const fullPath = join(reviewsDirectory, `${slug}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);

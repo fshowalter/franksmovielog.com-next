@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { PageTitle } from "@/components/PageTitle";
 
 export function Header({ reviewCount }: { reviewCount: number }): JSX.Element {
   return (
     <>
-      <h1 className="page-title text-center">Reviews</h1>
+      <PageTitle className="text-center">Reviews</PageTitle>
       <q className="text-subtle block text-center">
         We have such sights to show you.
       </q>

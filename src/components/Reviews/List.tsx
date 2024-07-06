@@ -1,11 +1,9 @@
-import { Box } from "../Box";
-import { Grade } from "../Grade";
-import { ListItem } from "../ListItem";
-import { ListItemGenres } from "../ListItemGenres";
-import { ListItemPoster } from "../ListItemPoster";
-import { ListItemTitle } from "../ListItemTitle";
-import { GroupedList } from "../ListWithFiltersLayout";
-import { Spacer } from "../Spacer";
+import { Grade } from "@/components/Grade";
+import { ListItem } from "@/components/ListItem";
+import { ListItemGenres } from "@/components/ListItemGenres";
+import { ListItemPoster } from "@/components/ListItemPoster";
+import { ListItemTitle } from "@/components/ListItemTitle";
+import { GroupedList } from "@/components/ListWithFiltersLayout";
 import type { IReviewedTitle } from "./data";
 import { Action, ActionType } from "./Reviews.reducer";
 
@@ -33,30 +31,22 @@ export function List({
   );
 }
 
-function ReviewListItem({
-  item,
-}: {
-  item: Queries.ReviewsItemFragment;
-}): JSX.Element {
+function ReviewListItem({ item }: { item: IReviewedTitle }): JSX.Element {
   return (
-    <ListItem alignItems="center">
+    <ListItem className="items-center">
       <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
-      <Box
-        flexGrow={1}
-        width={{ tablet: "full" }}
-        paddingRight={{ default: "gutter", desktop: 16 }}
-      >
-        <Box>
+      <div className="tablet:w-full pr-gutter desktop:pr-4 grow">
+        <div>
           <ListItemTitle title={item.title} year={item.year} slug={item.slug} />
-          <Spacer axis="vertical" size={4} />
-          <Box __paddingBottom={1} __paddingTop={1}>
+          <div className="h-1 min-h-1" />
+          <div className="py-px">
             <Grade grade={item.grade} height={18} />
-          </Box>
-          <Spacer axis="vertical" size={8} />
+          </div>
+          <div className="h-2 min-h-2" />
           <ListItemGenres genres={item.genres} />
-          <Spacer axis="vertical" size={8} />
-        </Box>
-      </Box>
+          <div className="h-2 min-h-2" />
+        </div>
+      </div>
     </ListItem>
   );
 }

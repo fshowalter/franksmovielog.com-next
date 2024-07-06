@@ -1,17 +1,5 @@
-import { Box } from "@/components/Box";
-import { Spacer } from "@/components/Spacer";
-
-import { stickyGroupHeaderStyle } from "./GroupedList.css";
 import { ListInfo } from "./ListInfo";
 import { ShowMoreButton } from "./ShowMoreButton";
-
-interface GroupedListProps<T>  {
-  groupedItems: Map<string, Iterable<T>>;
-  visibleCount: number;
-  totalCount: number;
-  onShowMore: () => void;
-  children: (item: T) => React.ReactNode;
-}
 
 export function GroupedList<T>({
   groupedItems,
@@ -19,41 +7,39 @@ export function GroupedList<T>({
   totalCount,
   onShowMore,
   children,
-  ...rest
-}: GroupedListProps<T>): JSX.Element {
+  className,
+}: {
+  groupedItems: Map<string, Iterable<T>>;
+  visibleCount: number;
+  totalCount: number;
+  onShowMore: () => void;
+  children: (item: T) => React.ReactNode;
+  className?: string;
+}): JSX.Element {
   return (
     <>
       <ListInfo visibleCount={visibleCount} totalCount={totalCount} />
 
-      <Box as="ol" {...rest}>
+      <ol className={className}>
         {[...groupedItems].map((groupedItem, index) => {
           const [group, groupItems] = groupedItem;
 
           return (
-            <GroupingListItem
-              groupText={group}
-              key={group}
-              zIndex={index + 100}
-            >
-              <Box as="ol">{[...groupItems].map(children)}</Box>
+            <GroupingListItem groupText={group} key={group} zIndex={index}>
+              <ol>{[...groupItems].map(children)}</ol>
             </GroupingListItem>
           );
         })}
-      </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        paddingX="pageMargin"
-      >
+      </ol>
+      <div className="px-pageMargin flex flex-col items-center">
         {totalCount > visibleCount && (
           <>
-            <Spacer axis="vertical" size={32} />
+            <div className="h-8 min-h-8" />
             <ShowMoreButton onClick={onShowMore} />
-            <Spacer axis="vertical" size={32} />
+            <div className="h-8 min-h-8" />
           </>
         )}
-      </Box>
+      </div>
     </>
   );
 }
@@ -68,25 +54,16 @@ function GroupingListItem({
   zIndex: number;
 }) {
   return (
-    <Box as="li" display="block">
-      <Box
-        fontSize="medium"
+    <li className="block">
+      <div
         style={{ zIndex: zIndex }}
-        paddingTop={{ default: 0, desktop: 16 }}
-        backgroundColor="default"
-        className={stickyGroupHeaderStyle}
+        className="text-md bg-default desktop:top-[216px] max:top-[168px] sticky top-8 pt-0"
       >
-        <Box
-          backgroundColor="canvas"
-          paddingY={8}
-          paddingX={{ default: "gutter", tablet: 24 }}
-        >
-          {groupText}
-        </Box>
-      </Box>
-      <Spacer axis="vertical" size={{ default: 0, tablet: 16 }} />
+        <div className="bg-canvas px-gutter tablet:px-6 py-2">{groupText}</div>
+      </div>
+      <div className="tablet:h-4 tablet:min-h-4 h-0 min-h-0" />
       {children}
-      <Spacer axis="vertical" size={{ default: 0, tablet: 16 }} />
-    </Box>
+      <div className="tablet:h-4 tablet:min-h-4 h-0 min-h-0" />
+    </li>
   );
 }

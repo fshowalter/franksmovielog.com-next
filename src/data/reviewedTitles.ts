@@ -85,3 +85,19 @@ export async function getReviewedTitlesData(): Promise<ReviewedTitle[]> {
 
   return data;
 }
+
+export async function getReviewedTitleData(
+  slug: string,
+): Promise<ReviewedTitle> {
+  const reviewedTitlesData = await getReviewedTitlesData();
+
+  const matchingTitleData = reviewedTitlesData.find(
+    (data) => data.slug === slug,
+  );
+
+  if (!matchingTitleData) {
+    throw new Error(`Review with slug ${slug} not found.`);
+  }
+
+  return matchingTitleData;
+}

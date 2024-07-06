@@ -7,6 +7,8 @@ import {
   sortString,
 } from "../../utils";
 
+import type { IReviewedTitle } from "./data";
+
 const SHOW_COUNT_DEFAULT = 100;
 
 export type Sort =
@@ -22,10 +24,10 @@ export type Sort =
 const groupItems = buildGroupItems(groupForItem);
 const { updateFilter } = filterTools(sortItems, groupItems);
 
-function sortItems(items: Queries.ReviewsItemFragment[], sortOrder: Sort) {
+function sortItems(items: IReviewedTitle[], sortOrder: Sort) {
   const sortMap: Record<
     Sort,
-    (a: Queries.ReviewsItemFragment, b: Queries.ReviewsItemFragment) => number
+    (a: IReviewedTitle, b: IReviewedTitle) => number
   > = {
     "release-date-desc": (a, b) =>
       sortString(a.releaseSequence, b.releaseSequence) * -1,
@@ -43,10 +45,7 @@ function sortItems(items: Queries.ReviewsItemFragment[], sortOrder: Sort) {
   return items.sort(comparer);
 }
 
-function groupForItem(
-  item: Queries.ReviewsItemFragment,
-  sortValue: Sort,
-): string {
+function groupForItem(item: IReviewedTitle, sortValue: Sort): string {
   switch (sortValue) {
     case "release-date-asc":
     case "release-date-desc": {
@@ -75,16 +74,16 @@ function groupForItem(
 }
 
 export type State = FilterableState<
-  Queries.ReviewsItemFragment,
+  IReviewedTitle,
   Sort,
-  Map<string, Queries.ReviewsItemFragment[]>
+  Map<string, IReviewedTitle[]>
 >;
 
 export function initState({
   items,
   sort,
 }: {
-  items: Queries.ReviewsItemFragment[];
+  items: IReviewedTitle[];
   sort: Sort;
 }): State {
   return {
@@ -129,7 +128,7 @@ interface FilterReleaseYearAction {
 
 interface FilterReviewYearAction {
   type: ActionType.FILTER_REVIEW_YEAR;
-  values: [string, string];
+  values: [number, number];
 }
 
 interface SortAction {

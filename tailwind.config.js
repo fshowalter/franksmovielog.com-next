@@ -1,5 +1,6 @@
 const STILL_WIDTH = "960px";
 const PROSE_CONTENT_WIDTH = "36rem";
+const POSTER_WIDTH = "248px";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -16,6 +17,8 @@ module.exports = {
     backgroundColor: {
       default: "var(--bg-default)",
       subtle: "var(--bg-subtle)",
+      canvas: "var(--bg-canvas)",
+      inverse: "var(--bg-inverse)",
     },
     borderColor: {
       default: "var(--border-default)",
@@ -35,10 +38,14 @@ module.exports = {
       },
       fontSize: {
         "2.5xl": "1.625rem",
+        md: ["1.125rem", "1.5rem"],
       },
       maxWidth: {
         canvas: `clamp(${STILL_WIDTH}, 95vw, 1472px)`,
         prose: PROSE_CONTENT_WIDTH,
+        popout: `calc((var(--gutter-width) * 2) + ${PROSE_CONTENT_WIDTH})`,
+        poster: POSTER_WIDTH,
+        "1/2": "50%",
       },
       brightness: {
         dark: "0.8",
@@ -48,6 +55,10 @@ module.exports = {
       },
       padding: {
         pageMargin: "var(--page-margin-width)",
+        gutter: "var(--gutter-width)",
+        ch: "1ch",
+      },
+      margin: {
         gutter: "var(--gutter-width)",
       },
       letterSpacing: {

@@ -1,18 +1,20 @@
-import { Box, IBoxProps } from "../Box";
+import { twMerge } from "tailwind-merge";
 
-export function ListItem({ children, ...rest }: IBoxProps) {
+export function ListItem({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <Box
-      as="li"
-      flexDirection="row"
-      columnGap={{ default: 16, tablet: 24 }}
-      backgroundColor="zebra"
-      paddingX={{ default: "gutter", tablet: 24 }}
-      paddingY={16}
-      display="flex"
-      {...rest}
+    <li
+      className={twMerge(
+        "tablet:gap-x-6 even:bg-subtle px-gutter tablet:px-6 flex flex-row gap-x-4 py-4",
+        className,
+      )}
     >
       {children}
-    </Box>
+    </li>
   );
 }

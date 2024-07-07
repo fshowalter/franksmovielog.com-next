@@ -79,11 +79,9 @@ export async function getReviewedTitlesData(): Promise<ReviewedTitle[]> {
   );
   const data = JSON.parse(json) as any[];
 
-  data.forEach((item) => {
-    ReviewedTitleSchema.parse(item);
+  return data.map((item) => {
+    return ReviewedTitleSchema.parse(item);
   });
-
-  return data;
 }
 
 export async function getReviewedTitleData(

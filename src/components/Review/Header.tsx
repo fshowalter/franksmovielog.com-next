@@ -10,7 +10,7 @@ export function Header({
   className?: string;
 }) {
   return (
-    <header className={twMerge("flex flex-col gap-x-4", className)}>
+    <header className={twMerge("flex flex-col gap-y-4", className)}>
       <PageTitle>{review.title}</PageTitle>
       <OriginalTitle originalTitle={review.originalTitle} />
       <Meta review={review} />

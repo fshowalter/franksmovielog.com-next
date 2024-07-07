@@ -17,9 +17,12 @@ export interface IHomePageItem {
 }
 
 function formatDate(reviewDate: Date) {
-  const day = `0${reviewDate.getUTCDate()}`.slice(-2);
-
-  return `${day} ${reviewDate.toLocaleString("default", { month: "short" })} ${reviewDate.getFullYear()}`;
+  return reviewDate.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 export async function getHomePageItems(): Promise<IHomePageItem[]> {

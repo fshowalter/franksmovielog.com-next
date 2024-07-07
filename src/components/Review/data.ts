@@ -6,6 +6,7 @@ import {
 } from "@/data/reviewedTitles";
 import { getReviewBySlug } from "@/data/reviews";
 import type { IStillListMovie } from "@/components/StillList";
+import { getViewingsForSlug } from "@/data/viewings";
 
 export interface IMoreReviewsCastAndCrewMember {
   name: string;
@@ -64,11 +65,16 @@ export interface IReview {
   moreReviews: IStillListMovie[];
 }
 
-function formatDate(reviewDate: Date) {
-  const day = `0${reviewDate.getUTCDate()}`.slice(-2);
-  const month = `0${reviewDate.getUTCMonth()}`.slice(-2);
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+});
 
-  return `${reviewDate.getUTCFullYear()}-${month}-${day}`;
+function formatDate(reviewDate: Date) {
+  return dateFormat.format(reviewDate);
 }
 
 export async function getReviewSlugs(): Promise<string[]> {
@@ -82,6 +88,7 @@ export async function getReviewSlugs(): Promise<string[]> {
 export async function getReview(slug: string): Promise<IReview> {
   const title = await getReviewedTitleData(slug);
   const review = getReviewBySlug(slug);
+  const viewings = getViewingsForSlug(slug);
 
   return {
     imdbId: title.imdbId,
@@ -97,23 +104,25 @@ export async function getReview(slug: string): Promise<IReview> {
     linkedHtml: review.content,
     frontmatter: {
       grade: review.grade,
-      date: review.date.toString(),
+      date: formatDate(review.date),
     },
     castAndCrew: title.castAndCrew,
     collections: title.collections,
     moreCastAndCrew: title.moreCastAndCrew,
     moreReviews: title.moreReviews,
     moreCollections: title.moreCollections,
-    viewings: title.viewings.map((viewing) => {
-      return {
-        date: viewing.date,
-        venue: viewing.venue,
-        venueNotes: viewing.venueNotes,
-        medium: viewing.medium,
-        mediumNotes: viewing.mediumNotes,
-        viewingNotes: null,
-        sequence: viewing.sequence,
-      };
-    }),
+    viewings: viewings
+      .toSorted((a, b) => b.sequence - a.sequence)
+      .map((viewing) => {
+        return {
+          date: formatDate(viewing.date),
+          venue: viewing.venue,
+          venueNotes: viewing.venueNotes,
+          medium: viewing.medium,
+          mediumNotes: viewing.mediumNotes,
+          viewingNotes: viewing.viewingNotes,
+          sequence: viewing.sequence,
+        };
+      }),
   };
 }

@@ -10,7 +10,7 @@ export function PageTitle({
   return (
     <h1
       className={twMerge(
-        "desktop:text-[2.5rem] text-[2rem] font-normal leading-none",
+        "text-[2rem] font-normal leading-none desktop:text-[2.25rem]",
         className,
       )}
     >

@@ -20,7 +20,7 @@ export async function Home(): Promise<JSX.Element> {
       </ol>
       <Link
         href="/reviews/"
-        className="px-pageMargin text-accent flex justify-end py-10 text-lg"
+        className="flex justify-end px-pageMargin py-10 text-lg text-accent"
       >
         All Reviews →
       </Link>

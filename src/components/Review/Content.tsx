@@ -12,9 +12,9 @@ export function Content({
 }) {
   return (
     <div className={twMerge("flex flex-col gap-y-8", className)}>
-      <div className="flex flex-col">
+      <div className="flex flex-col items-center">
         <Grade grade={review.frontmatter.grade} height={32} />
-        <div className="text-subtle tracking-0.5px flex flex-col">
+        <div className="flex flex-col items-center tracking-0.5px text-subtle">
           <span>on</span> {review.frontmatter.date}
         </div>
       </div>

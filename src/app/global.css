@@ -155,7 +155,11 @@
     }
 
     p {
-      margin-bottom: "24px";
+      margin-bottom: 24px;
+    }
+
+    strong {
+      font-weight: bold;
     }
 
     blockquote {

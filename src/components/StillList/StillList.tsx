@@ -11,14 +11,14 @@ export function StillList({
   seeAllLinkTarget: string;
 }): JSX.Element {
   return (
-    <ul>
+    <ul className="destkop:grid-cols-[repeat(4,1fr)] desktop:max-w-unset w-full tablet:grid tablet:w-auto tablet:grid-cols-[repeat(2,minmax(100px,312px))] tablet:gap-8 tablet:px-gutter desktop:px-pageMargin desktop:pt-2">
       {movies.map((movie) => {
         return <StillListMovie key={movie.slug} movie={movie} />;
       })}
-      <li className="px-gutter block py-4 text-right">
+      <li className="block px-gutter py-4 text-right">
         <Link href={seeAllLinkTarget}>
           All{" "}
-          <span className="tablet:hidden desktop:inline inline">
+          <span className="inline tablet:hidden desktop:inline">
             {seeAllLinkText}
           </span>{" "}
           &#8594;

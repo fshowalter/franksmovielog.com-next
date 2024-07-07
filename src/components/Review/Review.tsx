@@ -14,7 +14,7 @@ export function Review({ review }: { review: IReview }): JSX.Element {
     <main id="top" className="scroll-margin-top flex flex-col items-center">
       <Header
         review={review}
-        className="px-pageMargin desktop:py-8 py-6 text-center"
+        className="px-pageMargin py-6 text-center desktop:py-8"
       />
       <Still
         slug={review.slug}
@@ -24,18 +24,18 @@ export function Review({ review }: { review: IReview }): JSX.Element {
         height={540}
         className="mb-[5.33px]"
       />
-      <div className="tablet:min-h-8 tablet:h-8 h-6 min-h-6" />
-      <Content review={review} className="px-pageMargin items-center" />
+      <div className="h-6 min-h-6 tablet:h-8 tablet:min-h-8" />
+      <Content review={review} className="items-center px-pageMargin" />
       <div className="h-20 min-h-20" />
-      <ViewingHistory review={review} className="max-w-popout w-full" />
+      <ViewingHistory review={review} className="w-full max-w-popout" />
       <div className="h-32 min-h-32" />
-      <Credits review={review} className="max-w-popout w-full" />
-      v <div className="h-32 min-h-32" />
+      <Credits review={review} className="w-full max-w-popout" />
+      <div className="h-32 min-h-32" />
       <MoreReviews
         review={review}
-        className="max-w-popout tablet:max-w-full w-full"
+        className="w-full max-w-popout tablet:max-w-full"
       />
-      v <div className="tablet:h-0 tablet:min-h-0 h-32 min-h-32" />
+      <div className="h-32 min-h-32 tablet:h-0 tablet:min-h-0" />
       <StructuredData review={review} />
     </main>
   );

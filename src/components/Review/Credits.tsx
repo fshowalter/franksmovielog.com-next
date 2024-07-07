@@ -15,25 +15,25 @@ export function Credits({
     <aside
       id="credits"
       className={twMerge(
-        "px-gutter tablet:pt-12 bg-subtle scroll-margin-top relative pb-8 pt-8",
+        "scroll-margin-top relative bg-subtle px-gutter pb-8 pt-8 tablet:pt-12",
         className,
       )}
     >
-      <header className="flex items-baseline justify-center gap-x-2 pb-6 text-center text-lg">
+      <header className="flex items-center justify-center gap-x-2 pb-6 text-center text-2.5xl">
         {review.title}{" "}
-        <span className="text-subtle text-sm font-light">({review.year})</span>
+        <span className="text-sm font-light text-subtle">({review.year})</span>
       </header>
-      <div className="tablet:float-left tablet:max-w-1/2 tablet:mr-gutter mx-auto block">
+      <div className="mx-auto block tablet:float-left tablet:mr-gutter tablet:max-w-1/2">
         <Image
           src={`/assets/posters/${review.slug}.png`}
           alt={`A poster from ${review.title} (${review.year})`}
-          className="poster-border max-w-poster tablet:mx-0 mx-auto mb-4 mt-0 rounded-lg"
+          className="poster-border mx-auto mb-4 mt-0 max-w-poster rounded-lg tablet:mx-0"
           width={248}
           height={372}
         />
       </div>
 
-      <dl className="flex flex-col gap-y-6">
+      <dl className="flex flex-col gap-y-4">
         {review.originalTitle && (
           <Credit title="Original Title" creditValue={review.originalTitle} />
         )}
@@ -64,10 +64,10 @@ export function Credits({
       <div className="h-8 min-h-8" />
       <a
         href="#top"
-        className="border-all max-w-1/2 flex cursor-pointer content-center items-center rounded-lg p-2"
+        className="shadow-all shadow-border hover:shadow-border-accent mx-auto flex max-w-1/2 cursor-pointer content-center items-center justify-center rounded-lg p-2"
       >
         Back to Top
-        <svg viewBox="0 0 24 24" className="fill-default size-6">
+        <svg viewBox="0 0 24 24" className="size-6 fill-default">
           <path d="M7.997 10l3.515-3.79a.672.672 0 0 1 .89-.076l.086.075L16 10 13 10.001V18h-2v-7.999L7.997 10z"></path>
         </svg>
       </a>
@@ -83,8 +83,8 @@ function Credit({
   creditValue: React.ReactNode;
 }) {
   return (
-    <div className="mb-4 overflow-hidden">
-      <dt className="text-subtle font-bold">{title}</dt>
+    <div className="overflow-hidden">
+      <dt className="font-bold text-subtle">{title}</dt>
       <dd className="text-subtle">{creditValue}</dd>
     </div>
   );

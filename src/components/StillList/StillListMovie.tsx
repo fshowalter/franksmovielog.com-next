@@ -4,7 +4,7 @@ import { Still } from "@/components/Still";
 
 export function StillListMovie({ movie }: { movie: IStillListMovie }) {
   return (
-    <li className="px-gutter">
+    <li className="tablet:shadow-border tablet:shadow-all flow-root w-full py-6 even:bg-subtle tablet:bg-default tablet:p-0">
       <div>
         <Link href={`/reviews/${movie.slug}/`}>
           <Still
@@ -19,10 +19,10 @@ export function StillListMovie({ movie }: { movie: IStillListMovie }) {
       <div>
         <Link
           href={`/reviews/${movie.slug}/`}
-          className="text-md text-default block"
+          className="block text-md text-default"
         >
           {movie.title}{" "}
-          <span className="text-muted text-sm font-light leading-none">
+          <span className="text-sm font-light leading-none text-muted">
             {movie.year}
           </span>
         </Link>
@@ -39,7 +39,7 @@ export function StillListMovie({ movie }: { movie: IStillListMovie }) {
 
 function Genres({ genres }: { genres: readonly string[] }): JSX.Element | null {
   return (
-    <div className="text-subtle tracking-0.5px text-sm leading-4">
+    <div className="text-sm leading-4 tracking-0.5px text-subtle">
       {genres.map((genre, index) => {
         if (index === 0) {
           return <span key={genre}>{genre}</span>;

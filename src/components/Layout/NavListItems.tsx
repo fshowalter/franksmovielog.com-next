@@ -16,12 +16,12 @@ function NavListItem({
 
   let className = "text-inherit";
 
-  if (pathname === to) {
+  if (pathname === to || `${pathname}/` === to) {
     className = activeClassName;
   }
 
   return (
-    <li className="tracking-0.5px block whitespace-nowrap">
+    <li className="block whitespace-nowrap tracking-0.5px">
       <Link className={className} href={to}>
         {children}
       </Link>

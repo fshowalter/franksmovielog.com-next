@@ -48,7 +48,7 @@ export function StatsNavigation({
   linkFunc: (year: string) => string;
 }): JSX.Element {
   return (
-    <ul className="flex flex-wrap content-center gap-4 text-md">
+    <ul className="flex flex-wrap justify-center gap-4 text-md">
       <AllTimeLink currentYear={currentYear} linkFunc={linkFunc} />
       {[...years].reverse().map((year) => {
         return (

@@ -15,6 +15,7 @@ module.exports = {
       subtle: "var(--bg-subtle)",
       canvas: "var(--bg-canvas)",
       inverse: "var(--bg-inverse)",
+      stripe: "var(--bg-stripe)",
       unset: "unset",
     },
     borderColor: {

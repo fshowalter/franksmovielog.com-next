@@ -43,7 +43,7 @@ export function YearInput({
       <LabelText as="legend" text={label} />
       <div className="flex items-baseline">
         <label className="flex flex-1 items-center gap-x-[.5ch]">
-          <span className="tracking-0.5px min-w-10 text-left text-sm">
+          <span className="min-w-10 text-left text-sm tracking-0.5px">
             From
           </span>
           <SelectInput
@@ -60,7 +60,7 @@ export function YearInput({
           </SelectInput>
         </label>
         <label className="flex flex-1 items-center">
-          <span className="tracking-0.5px min-w-10 text-center text-sm">
+          <span className="min-w-10 text-center text-sm tracking-0.5px">
             to
           </span>
           <SelectInput

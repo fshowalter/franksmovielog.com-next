@@ -39,8 +39,8 @@ module.exports = {
         notcomingsoon: "url('/assets/ripnotcomingsoon.jpg')",
       },
       boxShadow: {
-        all: "0 0 0 1px",
-        bottom: "0px 1px",
+        all: "0 0 0 1px var(--border-default)",
+        bottom: "0px 1px var(--border-default)",
       },
       brightness: {
         dark: "0.8",
@@ -57,7 +57,7 @@ module.exports = {
       },
       letterSpacing: {
         "0.25px": "0.015625rem",
-        "0.3px": "0.3px",
+        "0.3px": "0.01875rem",
         "0.5px": "0.03125rem",
         "0.75px": "0.046875rem",
       },

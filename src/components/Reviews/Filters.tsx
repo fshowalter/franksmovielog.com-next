@@ -72,6 +72,12 @@ export function Filters({
               primary25: backgroundColors.stripe,
             },
           })}
+          styles={{
+            dropdownIndicator: (baseStyles) => ({
+              ...baseStyles,
+              color: "var(--border-color-accent)",
+            }),
+          }}
           classNamePrefix="reactSelect"
           isSearchable={false}
           onChange={(e) =>

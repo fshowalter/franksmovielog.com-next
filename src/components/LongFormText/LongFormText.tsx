@@ -12,7 +12,7 @@ export function LongFormText({
     <RenderedMarkdown
       text={text}
       className={twMerge(
-        "tracking-0.3px, text-md/7 desktop:text-xl/8",
+        "text-md/7 tracking-0.3px tablet:text-xl/8",
         className,
       )}
     />

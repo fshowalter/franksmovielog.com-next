@@ -16,7 +16,10 @@ export function SelectInput({
     <select
       value={value}
       onChange={onChange}
-      className={twMerge("rounded-md", className)}
+      className={twMerge(
+        "select-background-image shadow-all w-full appearance-none rounded-sm border-none bg-subtle py-2 pl-4 pr-8 text-base leading-6 text-subtle",
+        className,
+      )}
     >
       {children}
     </select>

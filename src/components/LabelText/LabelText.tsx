@@ -11,7 +11,7 @@ export function LabelText({
   const Componet = as;
 
   return (
-    <Componet className="tracking-0.5px inline-block h-6 text-left text-sm font-semibold">
+    <Componet className="inline-block h-6 text-left text-sm font-semibold leading-none tracking-0.5px">
       {text}
     </Componet>
   );

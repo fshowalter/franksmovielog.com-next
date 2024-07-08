@@ -1,5 +1,3 @@
-"use client";
-
 export type onChangeHandler = (value: string) => void;
 
 /**
@@ -57,8 +55,8 @@ export function DebouncedInput({
   const debouncedHandleChange = underscoreDebounce(onInputChange, 150);
 
   return (
-    <label className="text-subtle flex flex-col">
-      <span className="tracking-0.5px inline-block h-6 text-left text-sm font-semibold">
+    <label className="flex flex-col text-subtle">
+      <span className="inline-block h-6 text-left text-sm font-semibold leading-none tracking-0.5px">
         {label}
       </span>
       <input
@@ -67,7 +65,7 @@ export function DebouncedInput({
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           debouncedHandleChange((e.target as HTMLInputElement).value)
         }
-        className="rounded-md"
+        className="shadow-all rounded-sm border-0 bg-subtle px-4 py-2 text-base text-default"
       />
     </label>
   );

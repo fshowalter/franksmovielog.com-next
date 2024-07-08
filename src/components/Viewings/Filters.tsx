@@ -1,14 +1,7 @@
-import Select from "react-select";
+import { MultiSelectField } from "@/components/MultiSelectField";
 import { DebouncedInput } from "@/components/DebouncedInput";
-import { LabelText } from "@/components/LabelText";
 import { SelectField, SelectOptions } from "@/components/SelectField";
 import { YearInput } from "@/components/YearInput";
-
-import {
-  backgroundColors,
-  borderColors,
-  foregroundColors,
-} from "../../styles/colors.css";
 import { Action, ActionType, Sort } from "./Viewings.reducer";
 
 export function Filters({
@@ -73,42 +66,16 @@ export function Filters({
       >
         <SelectOptions options={distinctVenues} />
       </SelectField>
-      <div className="flex flex-col text-left">
-        <LabelText text="Genres" as="label" htmlFor="genres" />
-        <Select
-          inputId="genres"
-          theme={(theme) => ({
-            ...theme,
-            borderRadius: 4,
-            colors: {
-              ...theme.colors,
-              neutral0: backgroundColors.subtle,
-              neutral20: borderColors.default,
-              neutral50: foregroundColors.subtle,
-              danger: foregroundColors.accent,
-              primary25: backgroundColors.stripe,
-            },
-          })}
-          styles={{
-            dropdownIndicator: (baseStyles) => ({
-              ...baseStyles,
-              color: "var(--border-color-accent)",
-            }),
-          }}
-          classNamePrefix="reactSelect"
-          isSearchable={false}
-          onChange={(e) =>
-            dispatch({
-              type: ActionType.FILTER_GENRES,
-              values: e.map((selection) => selection.value),
-            })
-          }
-          isMulti={true}
-          options={distinctGenres.map((genre) => {
-            return { value: genre, label: genre };
-          })}
-        />
-      </div>
+      <MultiSelectField
+        label="Genres"
+        options={distinctGenres}
+        onChange={(e) =>
+          dispatch({
+            type: ActionType.FILTER_GENRES,
+            values: e.map((selection) => selection.value),
+          })
+        }
+      />
       <SelectField
         value={sortValue}
         label="Order By"

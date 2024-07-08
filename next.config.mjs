@@ -1,8 +1,5 @@
-import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
-
-const withVanillaExtract = createVanillaExtractPlugin();
-
-export default withVanillaExtract({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // write your next.js configuration values.
   // output: "export",
 
@@ -18,4 +15,4 @@ export default withVanillaExtract({
   images: {
     formats: ["image/avif"],
   },
-});
+};

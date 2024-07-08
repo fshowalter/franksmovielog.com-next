@@ -5,7 +5,7 @@ export async function generateStaticParams() {
   const slugs = await getReviewSlugs();
 
   return slugs.map((slug) => ({
-    slug: slug,
+    slug,
   }));
 }
 

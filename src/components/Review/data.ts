@@ -6,7 +6,7 @@ import {
 } from "@/data/reviewsJson";
 import { getReviewBySlug } from "@/data/reviewsMarkdown";
 import type { IStillListMovie } from "@/components/StillList";
-import { getViewingsForSlug } from "@/data/viewingsMarkdown";
+import { getViewingsForImdbId } from "@/data/viewingsMarkdown";
 
 export interface IMoreReviewsCastAndCrewMember {
   name: string;
@@ -88,7 +88,7 @@ export async function getReviewSlugs(): Promise<string[]> {
 export async function getReview(slug: string): Promise<IReview> {
   const title = await getReviewsJsonDataForSlug(slug);
   const review = getReviewBySlug(slug);
-  const viewings = getViewingsForSlug(slug);
+  const viewings = getViewingsForImdbId(title.imdbId);
 
   return {
     imdbId: title.imdbId,

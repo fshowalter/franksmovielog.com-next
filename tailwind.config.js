@@ -1,6 +1,7 @@
 const STILL_WIDTH = "960px";
 const PROSE_CONTENT_WIDTH = "36rem";
 const POSTER_WIDTH = "248px";
+const plugin = require("tailwindcss/plugin");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -80,5 +81,19 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          "spacer-y": (value) => {
+            return {
+              height: value,
+              minHeight: value,
+            };
+          },
+        },
+        { values: theme("spacing") },
+      );
+    }),
+  ],
 };

@@ -15,9 +15,9 @@ export function Reviews({
   distinctReviewYears,
 }: {
   reviewedTitles: IReviewedTitle[];
-  distinctGenres: string[];
-  distinctReleaseYears: string[];
-  distinctReviewYears: string[];
+  distinctGenres: readonly string[];
+  distinctReleaseYears: readonly string[];
+  distinctReviewYears: readonly string[];
 }): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,

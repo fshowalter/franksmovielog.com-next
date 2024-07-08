@@ -10,13 +10,45 @@ import smartypants from "remark-smartypants";
 import rehypeStringify from "rehype-stringify";
 import { remark } from "remark";
 
-const viewingsData = JSON.parse(
-  fs.readFileSync(process.cwd() + "/content/data/viewings.json", "utf8"),
-) as { sequence: number; imdbId: string }[];
-
 const reviewedTitlesData = JSON.parse(
   fs.readFileSync(process.cwd() + "/content/data/reviewed-titles.json", "utf8"),
 ) as { imdbId: string; slug: string }[];
+
+const viewingsMarkdownDir = join(process.cwd(), "content", "viewings");
+
+const DataSchema = z.object({
+  imdbId: z.string(),
+  date: z.date(),
+  sequence: z.number(),
+  venue: z.nullable(z.string()),
+  medium: z.nullable(z.string()),
+  venueNotes: z.nullable(z.string()),
+  mediumNotes: z.nullable(z.string()),
+});
+
+const allViewingsMarkdown = fs
+  .readdirSync(viewingsMarkdownDir, { withFileTypes: true })
+  .filter((item) => !item.isDirectory() && item.name.endsWith(".md"))
+  .map((item) => {
+    const fileContents = fs.readFileSync(
+      `${viewingsMarkdownDir}/${item.name}`,
+      "utf8",
+    );
+    const { data, content } = matter(fileContents);
+
+    const greyMatter = DataSchema.parse(data);
+
+    return {
+      sequence: greyMatter.sequence,
+      date: greyMatter.date,
+      venue: greyMatter.venue,
+      imbdbId: greyMatter.imdbId,
+      medium: greyMatter.medium,
+      venueNotes: getHtmlAsSpan(greyMatter.venueNotes),
+      mediumNotes: getHtmlAsSpan(greyMatter.mediumNotes),
+      viewingNotes: getHtml(content),
+    };
+  });
 
 function linkReviewedMovies(
   text: string,
@@ -97,7 +129,6 @@ function getHtml(content: string | null) {
 interface MarkdownViewing {
   sequence: number;
   date: Date;
-  slug: string;
   venue: string | null;
   venueNotes: string | null;
   medium: string | null;
@@ -105,42 +136,8 @@ interface MarkdownViewing {
   viewingNotes: string | null;
 }
 
-const DataSchema = z.object({
-  date: z.date(),
-  sequence: z.number(),
-  slug: z.string(),
-  venue: z.nullable(z.string()),
-  medium: z.nullable(z.string()),
-  venueNotes: z.nullable(z.string()),
-  mediumNotes: z.nullable(z.string()),
-});
-
-const viewingsDirectory = join(process.cwd(), "content", "viewings");
-
 export function getViewingsForImdbId(imdbId: string): MarkdownViewing[] {
-  const viewingMeta = viewingsData.filter((data) => {
-    return data.imdbId === imdbId;
-  });
-
-  return viewingMeta.map(({ sequence, imdbId }) => {
-    const fullPath = join(
-      viewingsDirectory,
-      `${sequence.toString().padStart(4, "0")}-${slug}.md`,
-    );
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const { data, content } = matter(fileContents);
-
-    const greyMatter = DataSchema.parse(data);
-
-    return {
-      sequence: sequence,
-      date: greyMatter.date,
-      slug: slug,
-      venue: greyMatter.venue,
-      venueNotes: getHtmlAsSpan(greyMatter.venueNotes),
-      medium: greyMatter.medium,
-      mediumNotes: getHtmlAsSpan(greyMatter.mediumNotes),
-      viewingNotes: getHtml(content),
-    };
+  return allViewingsMarkdown.filter((item) => {
+    item.imbdbId === imdbId;
   });
 }

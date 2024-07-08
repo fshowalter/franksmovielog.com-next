@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { HomePageItem } from "./HomePageItem";
-import { getHomePageItems } from "./data";
+import type { IHomePageItem } from "./data";
 
-export async function Home(): Promise<JSX.Element> {
-  const items = await getHomePageItems();
-
+export function Home({ items }: { items: IHomePageItem[] }): JSX.Element {
   return (
     <main>
       <ol className="flex flex-col">

@@ -1,5 +1,8 @@
-import { Home } from "@/components";
+import { Home } from "@/components/Home";
+import { getHomePageItems } from "@/components/Home/data";
 
-export default function HomePage() {
-  return <Home />;
+export default async function HomePage() {
+  const items = await getHomePageItems();
+
+  return <Home items={items} />;
 }

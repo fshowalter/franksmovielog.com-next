@@ -6,7 +6,7 @@ export function ListItemPoster({
   title,
   year,
 }: {
-  slug: string | null;
+  slug?: string | null;
   title: string;
   year: string;
 }) {
@@ -14,7 +14,7 @@ export function ListItemPoster({
     return (
       <Link
         href={`/reviews/${slug}/`}
-        className="safari-border-radius-fix shadow-all min-w-14 max-w-14 shrink-0 overflow-hidden rounded-lg"
+        className="safari-border-radius-fix min-w-14 max-w-14 shrink-0 overflow-hidden rounded-lg shadow-all"
       >
         <Image
           src={`/assets/posters/${slug}.png`}
@@ -30,7 +30,7 @@ export function ListItemPoster({
     <Image
       src="/assets/posters/default.png"
       alt="An unreviewed title."
-      className="safari-border-radius-fix shadow-all min-w-14 max-w-14 shrink-0 overflow-hidden rounded-lg"
+      className="safari-border-radius-fix min-w-14 max-w-14 shrink-0 overflow-hidden rounded-lg shadow-all"
       width={56}
       height={84}
     />

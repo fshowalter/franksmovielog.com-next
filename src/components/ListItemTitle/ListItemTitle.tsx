@@ -7,22 +7,22 @@ export function ListItemTitle({
 }: {
   title: string;
   year: string;
-  slug: string | null | undefined;
+  slug?: string | null;
 }) {
   const yearBox = (
-    <span className="text-subtle text-xs font-light">{year}</span>
+    <span className="text-xs font-light text-subtle">{year}</span>
   );
 
   if (slug) {
     return (
-      <Link href={`/reviews/${slug}/`} className="text-md block">
+      <Link href={`/reviews/${slug}/`} className="block text-md">
         {title}&#8239;&#8239;{yearBox}
       </Link>
     );
   }
 
   return (
-    <span className="text-md block">
+    <span className="block text-md">
       {title}&#8239;&#8239;{yearBox}
     </span>
   );

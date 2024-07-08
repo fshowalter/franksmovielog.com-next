@@ -12,7 +12,7 @@ import { remark } from "remark";
 
 const viewingsData = JSON.parse(
   fs.readFileSync(process.cwd() + "/content/data/viewings.json", "utf8"),
-) as { sequence: number; slug: string }[];
+) as { sequence: number; imdbId: string }[];
 
 const reviewedTitlesData = JSON.parse(
   fs.readFileSync(process.cwd() + "/content/data/reviewed-titles.json", "utf8"),
@@ -117,12 +117,12 @@ const DataSchema = z.object({
 
 const viewingsDirectory = join(process.cwd(), "content", "viewings");
 
-export function getViewingsForSlug(slug: string): MarkdownViewing[] {
+export function getViewingsForImdbId(imdbId: string): MarkdownViewing[] {
   const viewingMeta = viewingsData.filter((data) => {
-    return data.slug === slug;
+    return data.imdbId === imdbId;
   });
 
-  return viewingMeta.map(({ sequence, slug }) => {
+  return viewingMeta.map(({ sequence, imdbId }) => {
     const fullPath = join(
       viewingsDirectory,
       `${sequence.toString().padStart(4, "0")}-${slug}.md`,

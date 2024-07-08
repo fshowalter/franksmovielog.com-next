@@ -65,7 +65,7 @@ export function DebouncedInput({
         onChange={(e: React.FormEvent<HTMLInputElement>) =>
           debouncedHandleChange((e.target as HTMLInputElement).value)
         }
-        className="shadow-all rounded-sm border-0 bg-subtle px-4 py-2 text-base text-default"
+        className="shadow-all rounded-sm border-0 bg-subtle px-4 py-2 text-base text-default placeholder:text-default placeholder:opacity-50"
       />
     </label>
   );

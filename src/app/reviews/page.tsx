@@ -1,4 +1,4 @@
-import { Reviews, getReviewedTitles } from "@/components";
+import { Reviews, getReviewedTitles } from "@/components/Reviews";
 
 export default async function ReviewsPage() {
   const { reviewedTitles, genres, releaseYears, reviewYears } =
@@ -7,9 +7,9 @@ export default async function ReviewsPage() {
   return (
     <Reviews
       reviewedTitles={reviewedTitles}
-      genres={genres}
-      releaseYears={releaseYears}
-      reviewYears={reviewYears}
+      distinctGenres={genres}
+      distinctReleaseYears={releaseYears}
+      distinctReviewYears={reviewYears}
     />
   );
 }

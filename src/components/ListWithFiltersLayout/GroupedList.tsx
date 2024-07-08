@@ -25,13 +25,13 @@ export function GroupedList<T>({
           const [group, groupItems] = groupedItem;
 
           return (
-            <GroupingListItem groupText={group} key={group} zIndex={index}>
+            <GroupingListItem groupText={group} key={group} zIndex={index + 1}>
               <ol>{[...groupItems].map(children)}</ol>
             </GroupingListItem>
           );
         })}
       </ol>
-      <div className="px-pageMargin flex flex-col items-center">
+      <div className="flex flex-col items-center px-pageMargin">
         {totalCount > visibleCount && (
           <>
             <div className="h-8 min-h-8" />
@@ -57,13 +57,13 @@ function GroupingListItem({
     <li className="block">
       <div
         style={{ zIndex: zIndex }}
-        className="text-md bg-default desktop:top-[216px] max:top-[168px] sticky top-8 pt-0"
+        className="sticky top-8 bg-default pt-0 text-md desktop:top-[216px] max:top-[168px]"
       >
-        <div className="bg-canvas px-gutter tablet:px-6 py-2">{groupText}</div>
+        <div className="bg-canvas px-gutter py-2 tablet:px-6">{groupText}</div>
       </div>
-      <div className="tablet:h-4 tablet:min-h-4 h-0 min-h-0" />
+      <div className="h-0 min-h-0 tablet:h-4 tablet:min-h-4" />
       {children}
-      <div className="tablet:h-4 tablet:min-h-4 h-0 min-h-0" />
+      <div className="h-0 min-h-0 tablet:h-4 tablet:min-h-4" />
     </li>
   );
 }

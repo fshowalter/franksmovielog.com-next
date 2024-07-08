@@ -12,7 +12,10 @@ export function ListItemPoster({
 }) {
   if (slug) {
     return (
-      <Link href={`/reviews/${slug}/`} className="list-item-poster">
+      <Link
+        href={`/reviews/${slug}/`}
+        className="safari-border-radius-fix shadow-all min-w-14 max-w-14 shrink-0 overflow-hidden rounded-lg"
+      >
         <Image
           src={`/assets/posters/${slug}.png`}
           alt={`A poster from ${title} (${year})`}
@@ -27,7 +30,9 @@ export function ListItemPoster({
     <Image
       src="/assets/posters/default.png"
       alt="An unreviewed title."
-      className="list-item-poster"
+      className="safari-border-radius-fix shadow-all min-w-14 max-w-14 shrink-0 overflow-hidden rounded-lg"
+      width={56}
+      height={84}
     />
   );
 }

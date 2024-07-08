@@ -10,14 +10,14 @@ import type { IReviewedTitle } from "./data";
 
 export function Reviews({
   reviewedTitles,
-  genres,
-  releaseYears,
-  reviewYears,
+  distinctGenres,
+  distinctReleaseYears,
+  distinctReviewYears,
 }: {
   reviewedTitles: IReviewedTitle[];
-  genres: string[];
-  releaseYears: string[];
-  reviewYears: string[];
+  distinctGenres: string[];
+  distinctReleaseYears: string[];
+  distinctReviewYears: string[];
 }): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
@@ -35,9 +35,9 @@ export function Reviews({
         <Filters
           dispatch={dispatch}
           sortValue={state.sortValue}
-          distinctGenres={genres}
-          distinctReleaseYears={releaseYears}
-          distinctReviewYears={reviewYears}
+          distinctGenres={distinctGenres}
+          distinctReleaseYears={distinctReleaseYears}
+          distinctReviewYears={distinctReviewYears}
         />
       }
       list={

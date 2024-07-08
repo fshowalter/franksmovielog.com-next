@@ -1,6 +1,4 @@
-"use server";
-
-import { getReviewedTitlesData } from "@/data/reviewedTitles";
+import { getReviewsJsonData } from "@/data/reviewsJson";
 
 export interface IReviewedTitle {
   imdbId: string;
@@ -30,15 +28,15 @@ export async function getReviewedTitles(): Promise<{
   reviewYears: string[];
   reviewedTitles: IReviewedTitle[];
 }> {
-  const reviewedTitlesData = await getReviewedTitlesData();
+  const reviewsJsonData = await getReviewsJsonData();
 
-  reviewedTitlesData.sort((a, b) => b.sortTitle.localeCompare(a.sortTitle));
+  reviewsJsonData.sort((a, b) => b.sortTitle.localeCompare(a.sortTitle));
 
   const genres = new Set<string>();
   const releaseYears = new Set<string>();
   const reviewYears = new Set<string>();
 
-  const reviewedTitles = reviewedTitlesData.map((title) => {
+  const reviewedTitles = reviewsJsonData.map((title) => {
     const reviewDate = new Date(title.reviewDate);
     title.genres.forEach((genre) => genres.add(genre));
     releaseYears.add(title.year);
@@ -51,7 +49,10 @@ export async function getReviewedTitles(): Promise<{
       year: title.year,
       reviewDate: formatDate(reviewDate),
       reviewYear: reviewDate.getUTCFullYear().toString(),
-      reviewMonth: reviewDate.toLocaleString("default", { month: "long" }),
+      reviewMonth: reviewDate.toLocaleString("default", {
+        month: "long",
+        timeZone: "UTC",
+      }),
       sortTitle: title.sortTitle,
       slug: title.slug,
       grade: title.grade,

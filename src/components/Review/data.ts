@@ -1,12 +1,12 @@
 "use server";
 
 import {
-  getReviewedTitlesData,
-  getReviewedTitleData,
-} from "@/data/reviewedTitles";
-import { getReviewBySlug } from "@/data/reviews";
+  getReviewsJsonData,
+  getReviewsJsonDataForSlug,
+} from "@/data/reviewsJson";
+import { getReviewBySlug } from "@/data/reviewsMarkdown";
 import type { IStillListMovie } from "@/components/StillList";
-import { getViewingsForSlug } from "@/data/viewings";
+import { getViewingsForSlug } from "@/data/viewingsMarkdown";
 
 export interface IMoreReviewsCastAndCrewMember {
   name: string;
@@ -78,7 +78,7 @@ function formatDate(reviewDate: Date) {
 }
 
 export async function getReviewSlugs(): Promise<string[]> {
-  const reviewedTitlesData = await getReviewedTitlesData();
+  const reviewedTitlesData = await getReviewsJsonData();
 
   return reviewedTitlesData.map((title) => {
     return title.slug;
@@ -86,7 +86,7 @@ export async function getReviewSlugs(): Promise<string[]> {
 }
 
 export async function getReview(slug: string): Promise<IReview> {
-  const title = await getReviewedTitleData(slug);
+  const title = await getReviewsJsonDataForSlug(slug);
   const review = getReviewBySlug(slug);
   const viewings = getViewingsForSlug(slug);
 

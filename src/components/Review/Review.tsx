@@ -1,5 +1,3 @@
-"use client";
-
 import { Still } from "@/components/Still";
 import { Content } from "./Content";
 import { Credits } from "./Credits";

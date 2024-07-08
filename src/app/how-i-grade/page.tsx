@@ -1,12 +1,12 @@
 import { Article } from "@/components/Article";
 import React from "react";
-import { getPageBySlug } from "@/data/pages";
-import { getReviewedTitlesData } from "@/data/reviewedTitles";
+import { getPageBySlug } from "@/data/pagesMarkdown";
+import { getReviewsJsonData } from "@/data/reviewsJson";
 
 export default async function HowoIGradePage() {
   const pageData = getPageBySlug("how-i-grade");
 
-  const reviewedTitlesData = await getReviewedTitlesData();
+  const reviewedTitlesData = await getReviewsJsonData();
 
   reviewedTitlesData.sort((a, b) => b.sequence.localeCompare(a.sequence));
 

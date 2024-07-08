@@ -129,16 +129,6 @@
     left: 24px;
   }
 
-  .list-item-poster {
-    overflow: hidden;
-    transform: "translateZ(0)";
-    box-shadow: 0 0 0 1px var(--border-default);
-    border-radius: 8px;
-    max-width: 56px;
-    min-width: 56px;
-    flex-shrink: 0;
-  }
-
   .page-title {
     font-size: 2rem;
     font-weight: normal;

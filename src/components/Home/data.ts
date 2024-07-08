@@ -1,7 +1,7 @@
 "use server";
 
-import { getReviewedTitlesData } from "@/data/reviewedTitles";
-import { getReviewBySlug } from "@/data/reviews";
+import { getReviewsJsonData } from "@/data/reviewsJson";
+import { getReviewBySlug } from "@/data/reviewsMarkdown";
 
 export interface IHomePageItem {
   imdbId: string;
@@ -26,7 +26,7 @@ function formatDate(reviewDate: Date) {
 }
 
 export async function getHomePageItems(): Promise<IHomePageItem[]> {
-  const reviewedTitlesData = await getReviewedTitlesData();
+  const reviewedTitlesData = await getReviewsJsonData();
 
   reviewedTitlesData.sort((a, b) => b.sequence.localeCompare(a.sequence));
 

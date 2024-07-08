@@ -43,7 +43,7 @@ const MoreCollectionsSchema = z.object({
   titles: z.array(MoreTitleSchema),
 });
 
-const ReviewedTitleSchema = z.object({
+const ReviewJsonSchema = z.object({
   imdbId: z.string(),
   title: z.string(),
   year: z.string(),
@@ -70,9 +70,9 @@ const ReviewedTitleSchema = z.object({
   moreReviews: z.array(MoreTitleSchema),
 });
 
-export type ReviewedTitle = z.infer<typeof ReviewedTitleSchema>;
+export type JsonReview = z.infer<typeof ReviewJsonSchema>;
 
-export async function getReviewedTitlesData(): Promise<ReviewedTitle[]> {
+export async function getReviewsJsonData(): Promise<JsonReview[]> {
   const json = await fs.readFile(
     process.cwd() + "/content/data/reviewed-titles.json",
     "utf8",
@@ -80,14 +80,14 @@ export async function getReviewedTitlesData(): Promise<ReviewedTitle[]> {
   const data = JSON.parse(json) as any[];
 
   return data.map((item) => {
-    return ReviewedTitleSchema.parse(item);
+    return ReviewJsonSchema.parse(item);
   });
 }
 
-export async function getReviewedTitleData(
+export async function getReviewsJsonDataForSlug(
   slug: string,
-): Promise<ReviewedTitle> {
-  const reviewedTitlesData = await getReviewedTitlesData();
+): Promise<JsonReview> {
+  const reviewedTitlesData = await getReviewsJsonData();
 
   const matchingTitleData = reviewedTitlesData.find(
     (data) => data.slug === slug,

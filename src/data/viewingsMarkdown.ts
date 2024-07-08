@@ -2,14 +2,11 @@ import fs from "fs";
 import matter from "gray-matter";
 import { join } from "path";
 import { z } from "zod";
-import type { Root, RootContent, Node, Parent } from "mdast";
 import type { Root as HastRoot } from "hast";
 import rehypeRaw from "rehype-raw";
-import type { Processor } from "unified";
 import remarkRehype from "remark-rehype";
 import remarkGfm from "remark-gfm";
 import smartypants from "remark-smartypants";
-import { visit, SKIP, CONTINUE } from "unist-util-visit";
 import rehypeStringify from "rehype-stringify";
 import { remark } from "remark";
 

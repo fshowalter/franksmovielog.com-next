@@ -138,6 +138,6 @@ interface MarkdownViewing {
 
 export function getViewingsForImdbId(imdbId: string): MarkdownViewing[] {
   return allViewingsMarkdown.filter((item) => {
-    item.imbdbId === imdbId;
+    return item.imbdbId === imdbId;
   });
 }

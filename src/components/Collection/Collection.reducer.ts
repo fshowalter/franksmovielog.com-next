@@ -5,7 +5,9 @@ import {
   filterTools,
   sortNumber,
   sortString,
-} from "../../utils";
+} from "@/utils";
+
+import type { CollectionTitle } from "./Collection";
 
 export type Sort =
   | "release-date-desc"
@@ -19,13 +21,10 @@ const SHOW_COUNT_DEFAULT = 100;
 const groupItems = buildGroupItems(groupForItem);
 const { updateFilter, applyFilters } = filterTools(sortItems, groupItems);
 
-function sortItems(items: Queries.CollectionTitleFragment[], sortOrder: Sort) {
+function sortItems(items: CollectionTitle[], sortOrder: Sort) {
   const sortMap: Record<
     Sort,
-    (
-      a: Queries.CollectionTitleFragment,
-      b: Queries.CollectionTitleFragment,
-    ) => number
+    (a: CollectionTitle, b: CollectionTitle) => number
   > = {
     "release-date-desc": (a, b) =>
       sortString(a.releaseSequence, b.releaseSequence) * -1,
@@ -41,10 +40,7 @@ function sortItems(items: Queries.CollectionTitleFragment[], sortOrder: Sort) {
   return items.sort(comparer);
 }
 
-function groupForItem(
-  item: Queries.CollectionTitleFragment,
-  sortValue: Sort,
-): string {
+function groupForItem(item: CollectionTitle, sortValue: Sort): string {
   switch (sortValue) {
     case "release-date-asc":
     case "release-date-desc": {
@@ -69,9 +65,9 @@ function groupForItem(
 
 export interface State
   extends FilterableState<
-    Queries.CollectionTitleFragment,
+    CollectionTitle,
     Sort,
-    Map<string, Queries.CollectionTitleFragment[]>
+    Map<string, CollectionTitle[]>
   > {
   hideReviewed: boolean;
 }
@@ -80,7 +76,7 @@ export function initState({
   items,
   sort,
 }: {
-  items: Queries.CollectionTitleFragment[];
+  items: CollectionTitle[];
   sort: Sort;
 }): State {
   return {
@@ -193,7 +189,7 @@ export function reducer(state: State, action: Action): State {
       } else {
         filters = {
           ...state.filters,
-          reviewed: (item: Queries.CollectionTitleFragment) => {
+          reviewed: (item: CollectionTitle) => {
             return item.slug === null;
           },
         };

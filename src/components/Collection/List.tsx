@@ -1,11 +1,10 @@
-import { Box } from "../Box";
-import { Grade } from "../Grade";
-import { ListItem } from "../ListItem";
-import { ListItemPoster } from "../ListItemPoster";
-import { ListItemTitle } from "../ListItemTitle";
-import { GroupedList } from "../ListWithFiltersLayout";
-import { Spacer } from "../Spacer";
+import { Grade } from "@/components/Grade";
+import { ListItem } from "@/components/ListItem";
+import { ListItemPoster } from "@/components/ListItemPoster";
+import { ListItemTitle } from "@/components/ListItemTitle";
+import { GroupedList } from "@/components/ListWithFiltersLayout";
 import { Action, ActionType } from "./Collection.reducer";
+import type { CollectionTitle } from "./Collection";
 
 export function List({
   groupedItems,
@@ -13,7 +12,7 @@ export function List({
   totalCount,
   visibleCount,
 }: {
-  groupedItems: Map<string, Queries.CollectionTitleFragment[]>;
+  groupedItems: Map<string, CollectionTitle[]>;
   dispatch: React.Dispatch<Action>;
   totalCount: number;
   visibleCount: number;
@@ -27,38 +26,28 @@ export function List({
       onShowMore={() => dispatch({ type: ActionType.SHOW_MORE })}
     >
       {(item) => {
-        return <WatchlistTitle item={item} key={item.imdbId} />;
+        return <CollectionTitleItem item={item} key={item.imdbId} />;
       }}
     </GroupedList>
   );
 }
 
-function WatchlistTitle({
-  item,
-}: {
-  item: Queries.CollectionTitleFragment;
-}): JSX.Element {
+function CollectionTitleItem({ item }: { item: CollectionTitle }): JSX.Element {
   return (
-    <ListItem alignItems="center">
-      <ListItemPoster
-        slug={item.slug}
-        image={item.poster}
-        title={item.title}
-        year={item.year}
-        flexShrink={0}
-      />
-      <Box
-        flexGrow={1}
-        width={{ tablet: "full" }}
-        paddingRight={{ default: "gutter", desktop: 16 }}
-      >
-        <Box>
+    <ListItem className="items-center">
+      <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
+      <div className="grow pr-gutter tablet:w-full desktop:pr-4">
+        <div>
           <ListItemTitle title={item.title} year={item.year} slug={item.slug} />
-          <Spacer axis="vertical" size={4} />
-          {item.grade && <Grade grade={item.grade} height={18} />}
-          <Spacer axis="vertical" size={8} />
-        </Box>
-      </Box>
+          <div className="spacer-y-2" />
+          {item.grade && (
+            <div className="py-px">
+              <Grade grade={item.grade} height={18} />
+            </div>
+          )}
+          <div className="spacer-y-2" />
+        </div>
+      </div>
     </ListItem>
   );
 }

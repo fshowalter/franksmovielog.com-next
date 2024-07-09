@@ -1,21 +1,35 @@
-import { graphql } from "gatsby";
+"use client";
+
 import { useReducer } from "react";
-import { ListWithFiltersLayout } from "../ListWithFiltersLayout";
+import { ListWithFiltersLayout } from "@/components/ListWithFiltersLayout";
 import { initState, reducer } from "./Collections.reducer";
 import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
+import type { Sort } from "./Collections.reducer";
+
+export interface Collection {
+  name: string;
+  slug: string;
+  titleCount: number;
+  reviewCount: number;
+  avatar: string | null;
+}
+
+export interface CollectionsProps {
+  collections: readonly Collection[];
+  initialSort: Sort;
+}
 
 export function Collections({
   collections,
-}: {
-  collections: readonly Queries.CollectionsItemFragment[];
-}): JSX.Element {
+  initialSort,
+}: CollectionsProps): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {
       entities: collections,
-      sort: "name-asc",
+      sort: initialSort,
     },
     initState,
   );
@@ -34,24 +48,3 @@ export function Collections({
     />
   );
 }
-
-export const query = graphql`
-  fragment CollectionsItem on CollectionsJson {
-    name
-    slug
-    titleCount
-    reviewCount
-    avatar {
-      childImageSharp {
-        gatsbyImageData(
-          layout: FIXED
-          formats: [JPG, AVIF]
-          quality: 80
-          width: 48
-          height: 48
-          placeholder: NONE
-        )
-      }
-    }
-  }
-`;

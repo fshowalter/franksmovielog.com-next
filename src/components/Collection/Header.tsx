@@ -1,12 +1,10 @@
-import { Box } from "../Box";
-import { GraphqlImage } from "../GraphqlImage";
-import { Link } from "../Link";
+import Image from "next/image";
+import Link from "next/link";
 import { PageTitle } from "../PageTitle";
 import { RenderedMarkdown } from "../RenderedMarkdown";
-import { Spacer } from "../Spacer";
-import { avatarStyle } from "./Collection.css";
+import type { Collection } from "./Collection";
 
-function tagline(collection: Queries.CollectionFragment): string {
+function tagline(collection: Collection): string {
   if (collection.titles.length === collection.reviewCount) {
     return `Collection of ${collection.reviewCount.toLocaleString()} reviewed movies.`;
   }
@@ -17,34 +15,37 @@ function tagline(collection: Queries.CollectionFragment): string {
 export function Header({
   collection,
 }: {
-  collection: Queries.CollectionFragment;
+  collection: Collection;
 }): JSX.Element {
   return (
     <>
-      <Box textAlign="center" lineHeight={36}>
-        <Link to="/collections/">Collections</Link>
-      </Box>
-      <Spacer axis="vertical" size={16} />
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <GraphqlImage
-          image={collection.avatar}
-          alt={collection.name}
-          borderRadius="half"
-          transform="safariBorderRadiusFix"
-          className={avatarStyle}
-        />
-      </Box>
-      <Spacer axis="vertical" size={16} />
-      <PageTitle textAlign="center">{collection.name}</PageTitle>
-      <Spacer axis="vertical" size={24} />
-      <Box color="subtle" textAlign="center" paddingX="gutter" maxWidth="prose">
+      <div className="text-center leading-9">
+        <Link href="/collections/">Collections</Link>
+      </div>
+      <div className="spacer-y-4" />
+      {collection.avatar && (
+        <div className="flex flex-col items-center">
+          <div className="safari-border-radius-fix w-[200px] max-w-[200px] overflow-hidden rounded-[50%] shadow-all">
+            <Image
+              src={collection.avatar}
+              alt={collection.name}
+              width={200}
+              height={200}
+            />
+          </div>
+        </div>
+      )}
+      <div className="spacer-y-4" />
+      <PageTitle className="text-center">{collection.name}</PageTitle>
+      <div className="spacer-y-6" />
+      <div className="max-w-prose px-gutter text-center text-subtle">
         <RenderedMarkdown
           // eslint-disable-next-line react/no-danger
           text={collection.description || tagline(collection)}
-          lineHeight={1}
+          className="leading-none"
           as="span"
         />
-      </Box>
+      </div>
     </>
   );
 }

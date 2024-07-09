@@ -1,11 +1,12 @@
-import { filterCollection, sortNumber, sortString } from "../../utils";
+import { filterCollection, sortNumber, sortString } from "@/utils";
+import type { Collection } from "./Collections";
 
 export enum ActionType {
   FILTER_NAME = "FILTER_NAME",
   SORT = "SORT",
 }
 
-export type SortValue =
+export type Sort =
   | "name-asc"
   | "name-desc"
   | "title-count-asc"
@@ -13,17 +14,8 @@ export type SortValue =
   | "review-count-asc"
   | "review-count-desc";
 
-function sortEntities(
-  entities: Queries.CollectionsItemFragment[],
-  sortOrder: SortValue,
-): Queries.CollectionsItemFragment[] {
-  const sortMap: Record<
-    SortValue,
-    (
-      a: Queries.CollectionsItemFragment,
-      b: Queries.CollectionsItemFragment,
-    ) => number
-  > = {
+function sortEntities(entities: Collection[], sortOrder: Sort): Collection[] {
+  const sortMap: Record<Sort, (a: Collection, b: Collection) => number> = {
     "name-asc": (a, b) => sortString(a.name, b.name),
     "name-desc": (a, b) => sortString(a.name, b.name) * -1,
     "title-count-asc": (a, b) => sortNumber(a.titleCount, b.titleCount),
@@ -39,22 +31,24 @@ function sortEntities(
 }
 
 interface State {
-  allEntities: Queries.CollectionsItemFragment[];
-  filteredEntities: Queries.CollectionsItemFragment[];
-  filters: Record<string, (entity: Queries.CollectionsItemFragment) => boolean>;
-  sortValue: SortValue;
+  allEntities: Collection[];
+  filteredEntities: Collection[];
+  filters: Record<string, (entity: Collection) => boolean>;
+  sortValue: Sort;
 }
 
 export function initState({
   entities,
+  sort,
 }: {
-  entities: readonly Queries.CollectionsItemFragment[];
+  entities: readonly Collection[];
+  sort: Sort;
 }): State {
   return {
     allEntities: [...entities],
     filteredEntities: [...entities],
     filters: {},
-    sortValue: "name-asc",
+    sortValue: sort,
   };
 }
 
@@ -65,7 +59,7 @@ interface FilterNameAction {
 
 interface SortAction {
   type: ActionType.SORT;
-  value: SortValue;
+  value: Sort;
 }
 
 export type Action = FilterNameAction | SortAction;
@@ -84,12 +78,12 @@ export function reducer(state: State, action: Action): State {
       const regex = new RegExp(action.value, "i");
       filters = {
         ...state.filters,
-        name: (person: Queries.CollectionsItemFragment) => {
+        name: (person: Collection) => {
           return regex.test(person.name);
         },
       };
       filteredEntities = sortEntities(
-        filterCollection<Queries.CollectionsItemFragment>({
+        filterCollection<Collection>({
           collection: state.allEntities,
           filters,
         }),

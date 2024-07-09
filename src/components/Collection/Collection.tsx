@@ -1,23 +1,48 @@
-import { graphql } from "gatsby";
+"use client";
+
 import { useReducer } from "react";
-import { ListWithFiltersLayout } from "../ListWithFiltersLayout";
+import { ListWithFiltersLayout } from "@/components/ListWithFiltersLayout";
 import { initState, reducer } from "./Collection.reducer";
 import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
+import type { Sort } from "./Collection.reducer";
+
+export interface CollectionTitle {
+  imdbId: string;
+  title: string;
+  year: string;
+  grade: string | null;
+  gradeValue: number | null;
+  slug: string | null;
+  sortTitle: string;
+  releaseSequence: string;
+}
+
+export interface Collection {
+  name: string;
+  reviewCount: number;
+  description: string | null;
+  avatar: string | null;
+  titles: CollectionTitle[];
+}
+
+export interface CollectionProps {
+  collection: Collection;
+  distinctReleaseYears: readonly string[];
+  initialSort: Sort;
+}
 
 export function Collection({
   collection,
   distinctReleaseYears,
-}: {
-  collection: Queries.CollectionFragment;
-  distinctReleaseYears: readonly string[];
-}): JSX.Element {
+  initialSort,
+}: CollectionProps): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {
       items: [...collection.titles],
-      sort: "release-date-asc",
+      sort: initialSort,
     },
     initState,
   );
@@ -44,40 +69,3 @@ export function Collection({
     />
   );
 }
-
-export const query = graphql`
-  fragment CollectionTitle on CollectionTitle {
-    imdbId
-    title
-    year
-    grade
-    gradeValue
-    slug
-    sortTitle
-    releaseSequence
-    poster {
-      ...ListItemPoster
-    }
-  }
-
-  fragment Collection on CollectionsJson {
-    name
-    reviewCount
-    description
-    avatar {
-      childImageSharp {
-        gatsbyImageData(
-          layout: FIXED
-          formats: [JPG, AVIF]
-          quality: 80
-          width: 200
-          height: 200
-          placeholder: BLURRED
-        )
-      }
-    }
-    titles {
-      ...CollectionTitle
-    }
-  }
-`;

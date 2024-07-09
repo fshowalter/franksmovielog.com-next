@@ -1,8 +1,7 @@
-import { Box } from "../Box";
-import { Button } from "../Button";
-import { DebouncedInput } from "../DebouncedInput";
-import { SelectField } from "../SelectField";
-import { YearInput } from "../YearInput";
+import { Button } from "@/components/Button";
+import { DebouncedInput } from "@/components/DebouncedInput";
+import { SelectField } from "@/components/SelectField";
+import { YearInput } from "@/components/YearInput";
 import { Action, ActionType, Sort } from "./Collection.reducer";
 
 export function Filters({
@@ -21,19 +20,13 @@ export function Filters({
   return (
     <>
       {showHideReviewd && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="flex-end"
-          flexBasis="full"
-          alignItems="center"
-        >
+        <div className="flex basis-full flex-col items-center justify-end">
           <Button
             onClick={() => dispatch({ type: ActionType.TOGGLE_REVIEWED })}
           >
             {hideReviewed ? "Show Reviewed" : "Hide Reviewed"}
           </Button>
-        </Box>
+        </div>
       )}
       <DebouncedInput
         label="Title"
@@ -51,7 +44,7 @@ export function Filters({
         }
       />
       <SelectField
-        flexBasis="full"
+        className="basis-full"
         value={sortValue}
         label="Order By"
         onChange={(e) =>

@@ -1,41 +1,35 @@
-import { backgroundColors } from "../../styles/colors.css";
-import { Box } from "../Box";
-import { GraphqlImage } from "../GraphqlImage";
-import { Link } from "../Link";
-import { ListItem } from "../ListItem";
-import { ListItemCounts } from "../ListItemCounts";
+import Image from "next/Image";
+import Link from "next/link";
+import { ListItem } from "@/components/ListItem";
+import { ListItemCounts } from "@/components/ListItemCounts";
 import { ListInfo } from "../ListWithFiltersLayout/ListInfo";
-import { Spacer } from "../Spacer";
+import type { Collection } from "./Collections";
 
 export function List({
   entities,
   totalCount,
   visibleCount,
 }: {
-  entities: readonly Queries.CollectionsItemFragment[];
+  entities: readonly Collection[];
   totalCount: number;
   visibleCount: number;
 }): JSX.Element {
   return (
     <>
       <ListInfo totalCount={totalCount} visibleCount={visibleCount} />
-      <Box as="ol" data-testid="entity-list">
+      <ol data-testid="list">
         {entities.map((entity) => {
           return <CollectionListItem key={entity.name} entity={entity} />;
         })}
-      </Box>
-      <Spacer axis="vertical" size={32} />
+      </ol>
+      <div className="spacer-y-8" />
     </>
   );
 }
 
-function CollectionListItem({
-  entity,
-}: {
-  entity: Queries.CollectionsItemFragment;
-}): JSX.Element {
+function CollectionListItem({ entity }: { entity: Collection }): JSX.Element {
   return (
-    <ListItem alignItems="center">
+    <ListItem className="items-center">
       <Avatar entity={entity} />
       <CollectionName entity={entity} />
       <ListItemCounts current={entity.reviewCount} total={entity.titleCount} />
@@ -43,19 +37,24 @@ function CollectionListItem({
   );
 }
 
-function Avatar({ entity }: { entity: Queries.CollectionsItemFragment }) {
+function Avatar({ entity }: { entity: Collection }) {
   let avatarImage;
 
   if (entity.avatar) {
     avatarImage = (
-      <GraphqlImage image={entity.avatar} alt={`An image of ${entity.name}`} />
+      <Image
+        src={entity.avatar}
+        alt={`An image of ${entity.name}`}
+        width={64}
+        height={64}
+      />
     );
   } else {
     avatarImage = (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 16 16"
-        fill={backgroundColors.subtle}
+        fill="var(--bg-subtle)"
         width="100%"
       >
         <path
@@ -69,27 +68,18 @@ function Avatar({ entity }: { entity: Queries.CollectionsItemFragment }) {
 
   return (
     <Link
-      to={`/collections/${entity.slug}/`}
-      transform="safariBorderRadiusFix"
-      overflow="hidden"
-      boxShadow="borderAll"
-      borderRadius="half"
-      maxWidth={48}
-      width={48}
+      href={`/collections/${entity.slug}/`}
+      className="safari-border-radius-fix w-16 max-w-16 overflow-hidden rounded-[50%] shadow-all"
     >
       {avatarImage}
     </Link>
   );
 }
 
-function CollectionName({
-  entity,
-}: {
-  entity: Queries.CollectionsItemFragment;
-}) {
+function CollectionName({ entity }: { entity: Collection }) {
   return (
-    <Link to={`/collections/${entity.slug}/`} fontSize="medium">
-      <Box lineHeight="default">{entity.name}</Box>
+    <Link href={`/collections/${entity.slug}/`} className="text-md">
+      <div className="leading-normal">{entity.name}</div>
     </Link>
   );
 }

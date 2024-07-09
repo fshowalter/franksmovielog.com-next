@@ -1,5 +1,3 @@
-import { backgroundColors, foregroundColors } from "../../styles/colors.css";
-
 interface IProgresRingProps extends React.SVGProps<SVGSVGElement> {
   total: number;
   complete: number;
@@ -23,7 +21,7 @@ export function ProgressRing({
   return (
     <svg viewBox="0 0 36 36" {...rest}>
       <path
-        stroke={backgroundColors.canvas}
+        stroke="var(--bg-canvas)"
         strokeWidth={3.8}
         fill={"none" as const}
         d="M18 2.0845
@@ -34,7 +32,7 @@ export function ProgressRing({
         d="M18 2.0845
           a 15.9155 15.9155 0 0 1 0 31.831
           a 15.9155 15.9155 0 0 1 0 -31.831"
-        stroke={backgroundColors.progress}
+        stroke="var(--bg-progress)"
         strokeLinecap="round"
         fill="none"
         strokeWidth={2.8}
@@ -43,7 +41,7 @@ export function ProgressRing({
       <text
         x="18"
         y="17"
-        fill={foregroundColors.default}
+        fill="var(--fg-default)"
         textAnchor="middle"
         fontSize=".5em"
       >
@@ -52,7 +50,7 @@ export function ProgressRing({
       <text
         x="18"
         y="23"
-        fill={foregroundColors.default}
+        fill="var(--fg-default)"
         textAnchor="middle"
         fontSize=".225em"
       >
@@ -61,7 +59,7 @@ export function ProgressRing({
       <text
         x="18"
         y="27"
-        fill={foregroundColors.subtle}
+        fill="var(--fg-subtle)"
         textAnchor="middle"
         fontSize=".225em"
       >

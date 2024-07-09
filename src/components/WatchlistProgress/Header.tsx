@@ -1,30 +1,19 @@
-import { Box } from "..//Box";
 import { PageTitle } from "..//PageTitle";
-import { Link } from "../Link";
-import { Spacer } from "../Spacer";
+import Link from "next/link";
 
 export function Header(): JSX.Element {
   return (
-    <Box
-      as="header"
-      display="flex"
-      flexDirection="column"
-      paddingX="pageMargin"
-      columnGap={32}
-      alignItems="center"
-    >
-      <PageTitle paddingTop={{ default: 24, desktop: 32 }} lineHeight={40}>
+    <header className="flex flex-col items-center gap-x-8 px-pageMargin">
+      <PageTitle className="pt-6 leading-10 desktop:pt-8">
         Watchlist Progress
       </PageTitle>
-      <Spacer axis="vertical" size={8} />
-      <Box as="q" color="subtle">
-        I find your lack of faith disturbing.
-      </Box>
-      <Spacer axis="vertical" size={32} />
-      <Box color="subtle" as="p">
+      <div className="spacer-y-2" />
+      <q className="text-subtle">I find your lack of faith disturbing.</q>
+      <div className="spacer-y-8" />
+      <p className="text-subtle">
         My progress working through{" "}
-        <Link to="/watchlist/">my movie-review bucketlist</Link>.
-      </Box>
-    </Box>
+        <Link href="/watchlist/">my movie-review bucketlist</Link>.
+      </p>
+    </header>
   );
 }

@@ -1,15 +1,13 @@
-import { graphql } from "gatsby";
-import { BarGradient } from "../BarGradient";
-import { Box } from "../Box";
-import { Link } from "../Link";
-import { StatHeading } from "../StatHeading";
+import { BarGradient } from "@/components/BarGradient";
+import Link from "next/link";
+import { StatHeading } from "@/components/StatHeading";
 import {
   Table,
   TableDataCell,
   TableHead,
   TableHeaderCell,
   TableRow,
-} from "../StatsTable";
+} from "@/components/StatsTable";
 
 type EntityType = "director" | "writer" | "performer" | "collection";
 
@@ -20,7 +18,7 @@ export function WatchlistProgressDetail({
 }: {
   label: string;
   entityType: EntityType;
-  entities: readonly Queries.WatchlistProgressDetailFragment[];
+  entities: readonly IWatchlistProgressDetail[];
 }) {
   return (
     <section>
@@ -48,10 +46,10 @@ export function WatchlistProgressDetail({
                 </TableDataCell>
                 <TableDataCell
                   align="right"
-                  color={
+                  className={
                     entity.reviewCount === entity.titleCount
-                      ? "progress"
-                      : "subtle"
+                      ? "text-progress"
+                      : "text-subtle"
                   }
                 >
                   {entity.reviewCount}/{entity.titleCount}
@@ -70,7 +68,7 @@ function EntityName({
   entityType,
 }: {
   entityType: EntityType;
-  entity: Queries.WatchlistProgressDetailFragment;
+  entity: IWatchlistProgressDetail;
 }) {
   let linkTarget;
 
@@ -80,20 +78,14 @@ function EntityName({
     linkTarget = `/cast-and-crew/${entity.slug}`;
   }
 
-  if (entity.slug) return <Link to={linkTarget}>{entity.name}</Link>;
+  if (entity.slug) return <Link href={linkTarget}>{entity.name}</Link>;
 
-  return (
-    <Box as="span" color="subtle">
-      {entity.name}
-    </Box>
-  );
+  return <span className="text-subtle">{entity.name}</span>;
 }
 
-export const query = graphql`
-  fragment WatchlistProgressDetail on WatchlistProgressDetail {
-    name
-    reviewCount
-    titleCount
-    slug
-  }
-`;
+export interface IWatchlistProgressDetail {
+  name: string;
+  reviewCount: number;
+  titleCount: number;
+  slug: string | null;
+}

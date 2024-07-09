@@ -1,5 +1,3 @@
-import { Box } from "../Box";
-import { Spacer } from "../Spacer";
 import { ProgressRing } from "./ProgressRing";
 
 function Callout({
@@ -23,15 +21,13 @@ function Callout({
         label={label}
         subLabel={subLabel}
       />
-      <Spacer axis="vertical" size={8} />
-      <Box color="subtle" textAlign="center">
-        <Box>
+      <div className="spacer-y-2" />
+      <div className="text-center text-subtle">
+        <div>
           {reviewed?.toLocaleString()}/{total?.toLocaleString()}
-        </Box>
-        <Box fontSize="small" lineHeight={16}>
-          Reviewed
-        </Box>
-      </Box>
+        </div>
+        <div className="text-sm leading-4">Reviewed</div>
+      </div>
     </>
   );
 }
@@ -60,62 +56,51 @@ export function Callouts({
   collectionReviewedMovieCount: number | null;
 }): JSX.Element {
   return (
-    <Box
-      as="section"
-      display="flex"
-      flexWrap="wrap"
-      columnGap={32}
-      justifyContent="center"
-    >
-      <Box
-        minWidth={{ default: "full", tablet: 0 }}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
-        <Spacer axis="vertical" size={32} />
+    <section className="flex flex-wrap justify-center gap-x-8">
+      <div className="flex min-w-full flex-col items-center tablet:min-w-0">
+        <div className="spacer-y-8" />
         <Callout
           total={movieCount}
           reviewed={reviewedMovieCount}
           label="Total Progress"
         />
-      </Box>
-      <Box>
-        <Spacer axis="vertical" size={32} />
+      </div>
+      <div>
+        <div className="spacer-y-8" />
         <Callout
           total={directorMovieCount}
           reviewed={directorReviewedMovieCount}
           label="Director"
           subLabel="Titles"
         />
-      </Box>
-      <Box>
-        <Spacer axis="vertical" size={32} />
+      </div>
+      <div>
+        <div className="spacer-y-8" />
         <Callout
           total={performerMovieCount}
           reviewed={performerReviewedMovieCount}
           label="Performer"
           subLabel="Titles"
         />
-      </Box>
-      <Box>
-        <Spacer axis="vertical" size={32} />
+      </div>
+      <div>
+        <div className="spacer-y-8" />
         <Callout
           total={writerMovieCount}
           reviewed={writerReviewedMovieCount}
           label="Writer"
           subLabel="Titles"
         />
-      </Box>
-      <Box>
-        <Spacer axis="vertical" size={32} />
+      </div>
+      <div>
+        <div className="spacer-y-8" />
         <Callout
           total={collectionMovieCount}
           reviewed={collectionReviewedMovieCount}
           label="Collection"
           subLabel="Titles"
         />
-      </Box>
-    </Box>
+      </div>
+    </section>
   );
 }

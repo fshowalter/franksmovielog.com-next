@@ -1,96 +1,76 @@
-import { graphql } from "gatsby";
-import { Box } from "../Box";
-import { Layout } from "../Layout";
-import { Spacer } from "../Spacer";
 import { Callouts } from "./Callouts";
 import { Header } from "./Header";
 import { WatchlistProgressDetail } from "./WatchlistProgressDetail";
+import type { IWatchlistProgressDetail } from "./WatchlistProgressDetail";
+
+export interface WatchlistProgress {
+  reviewed: number;
+  total: number;
+  directorTotal: number;
+  directorReviewed: number;
+  directorDetails: IWatchlistProgressDetail[];
+  performerTotal: number;
+  performerReviewed: number;
+  performerDetails: IWatchlistProgressDetail[];
+  writerTotal: number;
+  writerReviewed: number;
+  writerDetails: IWatchlistProgressDetail[];
+  collectionTotal: number;
+  collectionReviewed: number;
+  collectionDetails: IWatchlistProgressDetail[];
+}
+
+export interface WatchlistProgressProps {
+  progress: WatchlistProgress;
+}
 
 export function WatchlistProgress({
   progress,
-}: {
-  progress: Queries.WatchlistProgressFragment;
-}): JSX.Element {
+}: WatchlistProgressProps): JSX.Element {
   return (
-    <Layout>
-      <Box as="main" display="flex" flexDirection="column" alignItems="center">
-        <Header />
-        <Spacer axis="vertical" size={32} />
-        <Callouts
-          movieCount={progress.total}
-          reviewedMovieCount={progress.reviewed}
-          directorMovieCount={progress.directorTotal}
-          directorReviewedMovieCount={progress.directorReviewed}
-          performerMovieCount={progress.performerTotal}
-          performerReviewedMovieCount={progress.performerReviewed}
-          writerMovieCount={progress.writerTotal}
-          writerReviewedMovieCount={progress.writerReviewed}
-          collectionMovieCount={progress.collectionTotal}
-          collectionReviewedMovieCount={progress.collectionReviewed}
+    <main className="flex flex-col items-center">
+      <Header />
+      <div className="spacer-y-8" />
+      <Callouts
+        movieCount={progress.total}
+        reviewedMovieCount={progress.reviewed}
+        directorMovieCount={progress.directorTotal}
+        directorReviewedMovieCount={progress.directorReviewed}
+        performerMovieCount={progress.performerTotal}
+        performerReviewedMovieCount={progress.performerReviewed}
+        writerMovieCount={progress.writerTotal}
+        writerReviewedMovieCount={progress.writerReviewed}
+        collectionMovieCount={progress.collectionTotal}
+        collectionReviewedMovieCount={progress.collectionReviewed}
+      />
+      <div className="spacer-y-8" />
+      <div className="flex w-full max-w-[960px] flex-col items-stretch tablet:px-gutter desktop:px-pageMargin">
+        <div className="spacer-y-8" />
+        <WatchlistProgressDetail
+          label="Director Progress"
+          entityType="director"
+          entities={progress.directorDetails}
         />
-        <Spacer axis="vertical" size={32} />
-        <Box
-          paddingX={{ default: 0, tablet: "gutter", desktop: "pageMargin" }}
-          width="full"
-          display="flex"
-          flexDirection="column"
-          alignItems="stretch"
-          maxWidth={960}
-        >
-          <Spacer axis="vertical" size={32} />
-          <WatchlistProgressDetail
-            label="Director Progress"
-            entityType="director"
-            entities={progress.directorDetails}
-          />
-          <Spacer axis="vertical" size={64} />
-          <WatchlistProgressDetail
-            label="Performer Progress"
-            entityType="performer"
-            entities={progress.performerDetails}
-          />
-          <Spacer axis="vertical" size={64} />
-          <WatchlistProgressDetail
-            label="Writer Progress"
-            entityType="writer"
-            entities={progress.writerDetails}
-          />
-          <Spacer axis="vertical" size={64} />
-          <WatchlistProgressDetail
-            label="Collection Progress"
-            entityType="collection"
-            entities={progress.collectionDetails}
-          />
-          <Spacer axis="vertical" size={64} />
-        </Box>
-      </Box>
-    </Layout>
+        <div className="spacer-y-16" />
+        <WatchlistProgressDetail
+          label="Performer Progress"
+          entityType="performer"
+          entities={progress.performerDetails}
+        />
+        <div className="spacer-y-16" />
+        <WatchlistProgressDetail
+          label="Writer Progress"
+          entityType="writer"
+          entities={progress.writerDetails}
+        />
+        <div className="spacer-y-16" />
+        <WatchlistProgressDetail
+          label="Collection Progress"
+          entityType="collection"
+          entities={progress.collectionDetails}
+        />
+        <div className="spacer-y-16" />
+      </div>
+    </main>
   );
 }
-
-export const query = graphql`
-  fragment WatchlistProgress on WatchlistProgressJson {
-    reviewed
-    total
-    directorTotal
-    directorReviewed
-    directorDetails {
-      ...WatchlistProgressDetail
-    }
-    performerTotal
-    performerReviewed
-    performerDetails {
-      ...WatchlistProgressDetail
-    }
-    writerTotal
-    writerReviewed
-    writerDetails {
-      ...WatchlistProgressDetail
-    }
-    collectionTotal
-    collectionReviewed
-    collectionDetails {
-      ...WatchlistProgressDetail
-    }
-  }
-`;

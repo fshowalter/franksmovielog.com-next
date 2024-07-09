@@ -31,6 +31,7 @@ module.exports = {
       subtle: "var(--fg-subtle)",
       inherit: "inherit",
       emphasis: "var(--fg-emphasis)",
+      progress: "var(--fg-progress)",
     },
     screens: {
       tablet: "510px",

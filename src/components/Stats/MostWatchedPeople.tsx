@@ -72,7 +72,7 @@ function Name({ person }: { person: IMostWatchedPerson }): JSX.Element {
   return <>{person.name}</>;
 }
 
-export function MostWatchedPersonViewingListItem({
+function MostWatchedPersonViewingListItem({
   viewing,
 }: {
   viewing: IMostWatchedPersonViewing;

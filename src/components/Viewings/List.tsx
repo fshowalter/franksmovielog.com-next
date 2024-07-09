@@ -51,7 +51,7 @@ function DateListItem({
   return (
     <ListItem className="items-center pb-0">
       <div>
-        <div className="shadow-all rounded-md">
+        <div className="rounded-md shadow-all">
           <div className="w-12 bg-canvas py-2 text-center text-sm/none uppercase">
             {day}
           </div>
@@ -68,9 +68,9 @@ function DateListItem({
   );
 }
 
-export function SubListItem({ item }: { item: IViewing }): JSX.Element {
+function SubListItem({ item }: { item: IViewing }): JSX.Element {
   return (
-    <ListItem className="shadow-bottom even:bg-unset items-center pt-0 last-of-type:shadow-none">
+    <ListItem className="items-center pt-0 shadow-bottom even:bg-unset last-of-type:shadow-none">
       <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
       <div className="grow">
         <div>

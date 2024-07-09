@@ -35,16 +35,16 @@ function ReviewListItem({ item }: { item: IReviewedTitle }): JSX.Element {
   return (
     <ListItem className="items-center">
       <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
-      <div className="tablet:w-full pr-gutter desktop:pr-4 grow">
+      <div className="grow pr-gutter tablet:w-full desktop:pr-4">
         <div>
           <ListItemTitle title={item.title} year={item.year} slug={item.slug} />
-          <div className="h-1 min-h-1" />
+          <div className="spacer-y-1" />
           <div className="py-px">
             <Grade grade={item.grade} height={18} />
           </div>
-          <div className="h-2 min-h-2" />
+          <div className="spacer-y-2" />
           <ListItemGenres genres={item.genres} />
-          <div className="h-2 min-h-2" />
+          <div className="spacer-y-2" />
         </div>
       </div>
     </ListItem>

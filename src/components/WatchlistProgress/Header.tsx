@@ -4,7 +4,7 @@ import Link from "next/link";
 export function Header(): JSX.Element {
   return (
     <header className="flex flex-col items-center gap-x-8 px-pageMargin">
-      <PageTitle className="pt-6 leading-10 desktop:pt-8">
+      <PageTitle className="pt-6 leading-none desktop:pt-8">
         Watchlist Progress
       </PageTitle>
       <div className="spacer-y-2" />

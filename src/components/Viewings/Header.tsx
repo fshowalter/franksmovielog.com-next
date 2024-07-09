@@ -9,11 +9,11 @@ export function Header({
   return (
     <>
       <PageTitle className="text-center">Viewing Log</PageTitle>
-      <div className="h-2 min-h-2" />
+      <div className="spacer-y-2" />
       <q className="block text-center text-subtle">
         We have such sights to show you.
       </q>
-      <div className="h-8 min-h-8" />
+      <div className="spacer-y-8" />
       <div className="text-center text-subtle">
         <p>
           Since 2012, I&apos;ve watched{" "}

@@ -1,5 +1,13 @@
 import { promises as fs } from "node:fs";
 import { z } from "zod";
+import { join } from "path";
+
+const reviewedTitlesJsonFile = join(
+  process.cwd(),
+  "content",
+  "data",
+  "reviewed-titles.json",
+);
 
 const ViewingSchema = z.object({
   sequence: z.number(),
@@ -43,7 +51,7 @@ const MoreCollectionsSchema = z.object({
   titles: z.array(MoreTitleSchema),
 });
 
-const ReviewJsonSchema = z.object({
+const ReviewedTitlesJsonSchema = z.object({
   imdbId: z.string(),
   title: z.string(),
   year: z.string(),
@@ -70,32 +78,25 @@ const ReviewJsonSchema = z.object({
   moreReviews: z.array(MoreTitleSchema),
 });
 
-export type JsonReview = z.infer<typeof ReviewJsonSchema>;
+export type ReviewedTitlesJson = z.infer<typeof ReviewedTitlesJsonSchema>;
 
-export async function getReviewsJsonData(): Promise<JsonReview[]> {
-  const json = await fs.readFile(
-    process.cwd() + "/content/data/reviewed-titles.json",
-    "utf8",
-  );
-  const data = JSON.parse(json) as any[];
+let allReviewedTitlesJson: ReviewedTitlesJson[];
+
+async function parseAllReviewedTitlesJson() {
+  const json = await fs.readFile(reviewedTitlesJsonFile, "utf8");
+  const data = JSON.parse(json) as unknown[];
 
   return data.map((item) => {
-    return ReviewJsonSchema.parse(item);
+    return ReviewedTitlesJsonSchema.parse(item);
   });
 }
 
-export async function getReviewsJsonDataForSlug(
-  slug: string,
-): Promise<JsonReview> {
-  const reviewedTitlesData = await getReviewsJsonData();
-
-  const matchingTitleData = reviewedTitlesData.find(
-    (data) => data.slug === slug,
-  );
-
-  if (!matchingTitleData) {
-    throw new Error(`Review with slug ${slug} not found.`);
+export default async function reviewedTitlesJson(): Promise<
+  ReviewedTitlesJson[]
+> {
+  if (!allReviewedTitlesJson) {
+    allReviewedTitlesJson = await parseAllReviewedTitlesJson();
   }
 
-  return matchingTitleData;
+  return allReviewedTitlesJson;
 }

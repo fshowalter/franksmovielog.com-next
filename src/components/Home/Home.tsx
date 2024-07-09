@@ -1,16 +1,20 @@
 import Link from "next/link";
-import { HomePageItem } from "./HomePageItem";
-import type { IHomePageItem } from "./data";
+import { HomeListItem } from "./HomeListItem";
+import type { HomeListItemData } from "./HomeListItem";
 
-export function Home({ items }: { items: IHomePageItem[] }): JSX.Element {
+export interface HomeProps {
+  data: HomeListItemData[];
+}
+
+export function Home({ data }: HomeProps): JSX.Element {
   return (
     <main>
       <ol className="flex flex-col">
-        {items.map((item, index) => {
+        {data.map((item, index) => {
           return (
-            <HomePageItem
+            <HomeListItem
               key={item.sequence}
-              item={item}
+              data={item}
               eagerLoadImage={index === 0}
             />
           );

@@ -1,69 +1,7 @@
-"use server";
-
-import {
-  getReviewsJsonData,
-  getReviewsJsonDataForSlug,
-} from "@/data/reviewsJson";
-import { getReviewBySlug } from "@/data/reviewsMarkdown";
-import type { IStillListMovie } from "@/components/StillList";
-import { getViewingsForImdbId } from "@/data/viewingsMarkdown";
-
-export interface IMoreReviewsCastAndCrewMember {
-  name: string;
-  slug: string;
-  creditKind: string;
-  titles: IStillListMovie[];
-}
-
-export interface IMoreReviewsCollection {
-  name: string;
-  slug: string;
-  titles: IStillListMovie[];
-}
-
-export interface IReviewCastAndCrewMember {
-  name: string;
-  slug: string;
-}
-
-export interface IReviewCollection {
-  name: string;
-  slug: string;
-}
-
-export interface IReviewViewing {
-  date: string;
-  venue: string | null;
-  venueNotes: string | null;
-  medium: string | null;
-  mediumNotes: string | null;
-  viewingNotes: string | null;
-  sequence: number;
-}
-
-export interface IReview {
-  imdbId: string;
-  title: string;
-  originalTitle: string | null;
-  year: string;
-  countries: string[];
-  runtimeMinutes: number;
-  slug: string;
-  frontmatter: {
-    grade: string;
-    date: string;
-  };
-  linkedHtml: string;
-  viewings: IReviewViewing[];
-  directorNames: string[];
-  principalCastNames: string[];
-  writerNames: string[];
-  castAndCrew: IReviewCastAndCrewMember[];
-  collections: IReviewCollection[];
-  moreCastAndCrew: IMoreReviewsCastAndCrewMember[];
-  moreCollections: IMoreReviewsCollection[];
-  moreReviews: IStillListMovie[];
-}
+import reviewedTitlesJson from "@/data/reviewedTitlesJson";
+import reviewsMarkdown from "@/data/reviewsMarkdown";
+import viewingsMarkdown from "@/data/viewingsMarkdown";
+import type { ReviewProps } from "./Review";
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
@@ -77,41 +15,61 @@ function formatDate(reviewDate: Date) {
   return dateFormat.format(reviewDate);
 }
 
-export async function getReviewSlugs(): Promise<string[]> {
-  const reviewedTitlesData = await getReviewsJsonData();
+export default async function getComponentData(
+  slug: string,
+): Promise<ReviewProps> {
+  const json = await reviewedTitlesJson();
 
-  return reviewedTitlesData.map((title) => {
-    return title.slug;
+  const jsonTitle = json.find((title) => {
+    return title.slug === slug;
   });
-}
 
-export async function getReview(slug: string): Promise<IReview> {
-  const title = await getReviewsJsonDataForSlug(slug);
-  const review = getReviewBySlug(slug);
-  const viewings = getViewingsForImdbId(title.imdbId);
+  if (!jsonTitle) {
+    throw new Error(`No reviewed title with slug: ${slug}`);
+  }
 
-  return {
-    imdbId: title.imdbId,
-    title: title.title,
-    year: title.year,
-    slug: title.slug,
-    originalTitle: title.originalTitle,
-    countries: title.countries,
-    runtimeMinutes: title.runtimeMinutes,
-    directorNames: title.directorNames,
-    writerNames: title.writerNames,
-    principalCastNames: title.principalCastNames,
-    linkedHtml: review.content,
+  const markdown = await reviewsMarkdown();
+
+  const markdownReview = markdown.find((review) => {
+    return review.slug === slug;
+  });
+
+  if (!markdownReview) {
+    throw new Error(`No markdown review with slug: ${slug}`);
+  }
+
+  const viewings = await viewingsMarkdown();
+
+  const markdownViewings = viewings.filter((viewing) => {
+    return viewing.imdbId === jsonTitle.imdbId;
+  });
+
+  if (markdownViewings.length === 0) {
+    throw new Error(`No markdown viewings with imdbId: ${jsonTitle.imdbId}`);
+  }
+
+  const data: ReviewProps["data"] = {
+    imdbId: jsonTitle.imdbId,
+    title: jsonTitle.title,
+    year: jsonTitle.year,
+    slug: jsonTitle.slug,
+    originalTitle: jsonTitle.originalTitle,
+    countries: jsonTitle.countries,
+    runtimeMinutes: jsonTitle.runtimeMinutes,
+    directorNames: jsonTitle.directorNames,
+    writerNames: jsonTitle.writerNames,
+    principalCastNames: jsonTitle.principalCastNames,
+    linkedHtml: markdownReview.content,
     frontmatter: {
-      grade: review.grade,
-      date: formatDate(review.date),
+      grade: markdownReview.grade,
+      date: formatDate(markdownReview.date),
     },
-    castAndCrew: title.castAndCrew,
-    collections: title.collections,
-    moreCastAndCrew: title.moreCastAndCrew,
-    moreReviews: title.moreReviews,
-    moreCollections: title.moreCollections,
-    viewings: viewings
+    castAndCrew: jsonTitle.castAndCrew,
+    collections: jsonTitle.collections,
+    moreCastAndCrew: jsonTitle.moreCastAndCrew,
+    moreReviews: jsonTitle.moreReviews,
+    moreCollections: jsonTitle.moreCollections,
+    viewings: markdownViewings
       .toSorted((a, b) => b.sequence - a.sequence)
       .map((viewing) => {
         return {
@@ -125,4 +83,6 @@ export async function getReview(slug: string): Promise<IReview> {
         };
       }),
   };
+
+  return { data };
 }

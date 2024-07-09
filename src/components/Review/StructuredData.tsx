@@ -1,4 +1,14 @@
-import type { IReview } from "./data";
+interface Frontmatter {
+  grade: string;
+}
+
+export interface StructuredDataData {
+  title: string;
+  imdbId: string;
+  directorNames: string[];
+  year: string;
+  frontmatter: Frontmatter;
+}
 
 const gradeMap: Record<string, number> = {
   A: 5,
@@ -8,23 +18,23 @@ const gradeMap: Record<string, number> = {
   F: 1,
 };
 
-export function StructuredData({ review }: { review: IReview }) {
+export function StructuredData({ data }: { data: StructuredDataData }) {
   const structuredData = {
     "@context": "http://schema.org",
     "@type": "Review",
     itemReviewed: {
       "@type": "Movie",
-      name: review.title,
-      sameAs: `http://www.imdb.com/title/${review.imdbId}/`,
-      dateCreated: review.year,
+      name: data.title,
+      sameAs: `http://www.imdb.com/title/${data.imdbId}/`,
+      dateCreated: data.year,
       director: {
         "@type": "Person",
-        name: review.directorNames[0],
+        name: data.directorNames[0],
       },
     },
     reviewRating: {
       "@type": "Rating",
-      ratingValue: gradeMap[review.frontmatter.grade[0]],
+      ratingValue: gradeMap[data.frontmatter.grade[0]],
     },
     author: {
       "@type": "Person",

@@ -1,4 +1,4 @@
-import fs from "fs";
+import { promises as fs } from "node:fs";
 import matter from "gray-matter";
 import { join } from "path";
 import { z } from "zod";
@@ -11,10 +11,10 @@ import smartypants from "remark-smartypants";
 import { visit, SKIP, CONTINUE } from "unist-util-visit";
 import rehypeStringify from "rehype-stringify";
 import { remark } from "remark";
+import reviewedTitlesJson from "./reviewedTitlesJson";
+import { linkReviewedTitles } from "./utils/linkReviewedTitles";
 
-const reviewedTitlesData = JSON.parse(
-  fs.readFileSync(process.cwd() + "/content/data/reviewed-titles.json", "utf8"),
-) as { imdbId: string; slug: string }[];
+const reviewsMarkdownDirectory = join(process.cwd(), "content", "reviews");
 
 function removeFootnotes() {
   return (tree: Node) => {
@@ -66,41 +66,11 @@ function processorToHtml(
     .toString();
 }
 
-function linkReviewedMovies(
-  text: string,
-  reviewedTitles: { imdbId: string; slug: string }[],
-) {
-  let result = text;
-
-  const re = RegExp(/(<span data-imdb-id="(tt\d+)">)(.*?)(<\/span>)/, "g");
-
-  const matches = [...text.matchAll(re)];
-
-  for (const match of matches) {
-    const reviewedMovie = reviewedTitles.find(
-      (title) => title.imdbId === match[2],
-    );
-
-    if (!reviewedMovie) {
-      result = result.replace(
-        `<span data-imdb-id="${match[2]}">${match[3]}</span>`,
-        match[3],
-      );
-    } else {
-      result = result.replace(
-        `<span data-imdb-id="${match[2]}">${match[3]}</span>`,
-        `<a href="/reviews/${reviewedMovie.slug}/">${match[3]}</a>`,
-      );
-    }
-  }
-
-  return result;
-}
-
 function getExcerptHtml(
   content: string,
   excerptSeparator: string,
   slug: string,
+  reviewedTitles: { imdbId: string; slug: string }[],
 ) {
   let excerptHtml = processorToHtml(
     getMastProcessor().use(trimToExcerpt, { separator: excerptSeparator }),
@@ -117,10 +87,13 @@ function getExcerptHtml(
     );
   }
 
-  return linkReviewedMovies(excerptHtml, reviewedTitlesData);
+  return linkReviewedTitles(excerptHtml, reviewedTitles);
 }
 
-function getHtml(content: string) {
+function getHtml(
+  content: string,
+  reviewedTitles: { imdbId: string; slug: string }[],
+) {
   const html = remark()
     .use(remarkGfm)
     .use(removeFootnotes)
@@ -131,7 +104,7 @@ function getHtml(content: string) {
     .processSync(content)
     .toString();
 
-  return linkReviewedMovies(html, reviewedTitlesData);
+  return linkReviewedTitles(html, reviewedTitles);
 }
 
 interface MarkdownReview {
@@ -149,21 +122,47 @@ const DataSchema = z.object({
   imdb_id: z.string(),
 });
 
-const reviewsDirectory = join(process.cwd(), "content", "reviews");
+let allReviewsMarkdown: MarkdownReview[];
 
-export function getReviewBySlug(slug: string): MarkdownReview {
-  const fullPath = join(reviewsDirectory, `${slug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(fileContents);
+async function parseAllReviewsMarkdown() {
+  const dirents = await fs.readdir(reviewsMarkdownDirectory, {
+    withFileTypes: true,
+  });
 
-  const greyMatter = DataSchema.parse(data);
+  return Promise.all(
+    dirents
+      .filter((item) => !item.isDirectory() && item.name.endsWith(".md"))
+      .map(async (item) => {
+        const fileContents = await fs.readFile(
+          `${reviewsMarkdownDirectory}/${item.name}`,
+          "utf8",
+        );
 
-  return {
-    slug: slug,
-    date: greyMatter.date,
-    grade: greyMatter.grade,
-    imdbId: greyMatter.imdb_id,
-    excerpt: getExcerptHtml(content, "<!-- end -->", slug),
-    content: getHtml(content),
-  };
+        const { data, content } = matter(fileContents);
+        const greyMatter = DataSchema.parse(data);
+        const reviewedTitles = await reviewedTitlesJson();
+
+        return {
+          slug: data.slug,
+          date: greyMatter.date,
+          grade: greyMatter.grade,
+          imdbId: greyMatter.imdb_id,
+          excerpt: getExcerptHtml(
+            content,
+            "<!-- end -->",
+            data.slug,
+            reviewedTitles,
+          ),
+          content: getHtml(content, reviewedTitles),
+        };
+      }),
+  );
+}
+
+export default async function reviewsMarkdown(): Promise<MarkdownReview[]> {
+  if (!allReviewsMarkdown) {
+    allReviewsMarkdown = await parseAllReviewsMarkdown();
+  }
+
+  return allReviewsMarkdown;
 }

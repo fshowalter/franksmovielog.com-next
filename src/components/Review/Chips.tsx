@@ -1,11 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { IReview } from "./data";
 
-export function Chips({ review }: { review: IReview }): JSX.Element {
+interface CastAndCrewMember {
+  name: string;
+  slug: string;
+}
+
+interface Collection {
+  name: string;
+  slug: string;
+}
+
+export interface ChipsData {
+  castAndCrew: CastAndCrewMember[];
+  collections: Collection[];
+}
+
+export function Chips({ data }: { data: ChipsData }): JSX.Element {
   return (
     <ul className="flex flex-wrap gap-2">
-      {review.castAndCrew.map((member) => {
+      {data.castAndCrew.map((member) => {
         return (
           <Chip
             linkTarget={`/cast-and-crew/${member.slug}`}
@@ -15,7 +29,7 @@ export function Chips({ review }: { review: IReview }): JSX.Element {
           />
         );
       })}
-      {review.collections.map((collection) => {
+      {data.collections.map((collection) => {
         return (
           <Chip
             linkTarget={`/collections/${collection.slug}`}
@@ -42,7 +56,7 @@ function Chip({
     <li className="block">
       <Link
         href={linkTarget}
-        className="bg-inverse border-all hover:border-all-accent flex items-center whitespace-nowrap rounded-lg px-4 py-2"
+        className="border-all hover:border-all-accent flex items-center whitespace-nowrap rounded-lg bg-inverse px-4 py-2"
       >
         <Image
           src={`/assets/avatars/${slug}.png`}

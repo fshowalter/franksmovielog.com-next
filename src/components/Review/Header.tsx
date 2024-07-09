@@ -1,19 +1,26 @@
 import { PageTitle } from "@/components/PageTitle";
-import { IReview } from "./data";
 import { twMerge } from "tailwind-merge";
 
+export interface HeaderData {
+  title: string;
+  originalTitle: string | null;
+  year: string;
+  countries: string[];
+  runtimeMinutes: number;
+}
+
 export function Header({
-  review,
+  data,
   className,
 }: {
-  review: IReview;
+  data: HeaderData;
   className?: string;
 }) {
   return (
     <header className={twMerge("flex flex-col gap-y-4", className)}>
-      <PageTitle>{review.title}</PageTitle>
-      <OriginalTitle originalTitle={review.originalTitle} />
-      <Meta review={review} />
+      <PageTitle>{data.title}</PageTitle>
+      <OriginalTitle originalTitle={data.originalTitle} />
+      <Meta data={data} />
     </header>
   );
 }
@@ -26,11 +33,11 @@ function OriginalTitle({ originalTitle }: { originalTitle: string | null }) {
   return <div className="text-muted">({originalTitle})</div>;
 }
 
-function Meta({ review }: { review: IReview }) {
+function Meta({ data }: { data: HeaderData }) {
   return (
     <div className="text-muted">
-      {review.year} <span>|</span>{" "}
-      {review.countries.reduce<JSX.Element | null>((acc, country) => {
+      {data.year} <span>|</span>{" "}
+      {data.countries.reduce<JSX.Element | null>((acc, country) => {
         if (acc === null) {
           return <>{country}</>;
         }
@@ -43,7 +50,7 @@ function Meta({ review }: { review: IReview }) {
           </>
         );
       }, null)}{" "}
-      <span>|</span> {review.runtimeMinutes}
+      <span>|</span> {data.runtimeMinutes}
       &#x02009;min{" "}
       <span>
         <span>|</span> <a href="#credits">More...</a>

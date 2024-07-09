@@ -1,43 +1,61 @@
 import {
-  IStillListMovie,
   StillList,
   StillListHeading,
   StillListNav,
 } from "@/components/StillList";
-import type { IReview } from "./data";
 import { twMerge } from "tailwind-merge";
+import type { StillListItemData } from "@/components/StillList/StillListItem";
+
+interface MoreReviewsCastAndCrewMember {
+  name: string;
+  slug: string;
+  creditKind: string;
+  titles: StillListItemData[];
+}
+
+interface MoreReviewsCollection {
+  name: string;
+  slug: string;
+  titles: StillListItemData[];
+}
+
+export interface MoreReviewsData {
+  moreCastAndCrew: MoreReviewsCastAndCrewMember[];
+  moreCollections: MoreReviewsCollection[];
+  moreReviews: StillListItemData[];
+}
 
 export function MoreReviews({
-  review,
+  data,
   className,
 }: {
-  review: IReview;
+  data: MoreReviewsData;
   className?: string;
 }) {
   return (
     <div
       className={twMerge(
-        "tablet:pt-8 tablet:pb-32 desktop:gap-y-24 bg-default tablet:bg-subtle flex flex-col items-center gap-y-12",
+        "flex flex-col items-center gap-y-12 bg-default tablet:bg-subtle tablet:pb-32 tablet:pt-8 desktop:gap-y-24",
         className,
       )}
     >
-      {review.moreCastAndCrew.map((castAndCrewMember) => (
+      {data.moreCastAndCrew.map((castAndCrewMember) => (
         <MoreReviewsList
           key={castAndCrewMember.slug}
           leadText={leadTextForCreditKind(castAndCrewMember.creditKind)}
           linkText={castAndCrewMember.name}
           linkTarget={`/cast-and-crew/${castAndCrewMember.slug}`}
-          reviews={castAndCrewMember.titles}
+          data={castAndCrewMember.titles}
         />
       ))}
 
-      {review.moreCollections.map((collection) => (
+      {data.moreCollections.map((collection) => (
         <MoreReviewsList
           key={collection.slug}
           leadText="More"
           linkText={collection.name}
           linkTarget={`/collections/${collection.slug}`}
-          reviews={collection.titles}
+          data={collection.titles}
         />
       ))}
 
@@ -45,7 +63,7 @@ export function MoreReviews({
         leadText="More"
         linkText="Reviews"
         linkTarget="/reviews/"
-        reviews={review.moreReviews}
+        data={data.moreReviews}
       />
     </div>
   );
@@ -69,7 +87,7 @@ function leadTextForCreditKind(creditKind: string): string {
 }
 
 function MoreReviewsList({
-  reviews,
+  data,
   leadText,
   linkText,
   linkTarget,
@@ -77,7 +95,7 @@ function MoreReviewsList({
   leadText: string;
   linkText: string;
   linkTarget: string;
-  reviews: IStillListMovie[];
+  data: StillListItemData[];
 }) {
   return (
     <StillListNav>
@@ -87,7 +105,7 @@ function MoreReviewsList({
         linkTarget={linkTarget}
       />
       <StillList
-        movies={reviews}
+        data={data}
         seeAllLinkTarget={linkTarget}
         seeAllLinkText={linkText}
       />

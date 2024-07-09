@@ -1,24 +1,33 @@
 import { Grade } from "@/components/Grade";
 import { LongFormText } from "@/components/LongFormText";
-import type { IReview } from "./data";
 import { twMerge } from "tailwind-merge";
 
+interface Frontmatter {
+  grade: string;
+  date: string;
+}
+
+export interface ContentData {
+  frontmatter: Frontmatter;
+  linkedHtml: string;
+}
+
 export function Content({
-  review,
+  data,
   className,
 }: {
-  review: IReview;
+  data: ContentData;
   className?: string;
 }) {
   return (
     <div className={twMerge("flex flex-col gap-y-8", className)}>
       <div className="flex flex-col items-center">
-        <Grade grade={review.frontmatter.grade} height={32} />
+        <Grade grade={data.frontmatter.grade} height={32} />
         <div className="flex flex-col items-center tracking-0.5px text-subtle">
-          <span>on</span> {review.frontmatter.date}
+          <span>on</span> {data.frontmatter.date}
         </div>
       </div>
-      <LongFormText text={review.linkedHtml} className="max-w-prose" />
+      <LongFormText text={data.linkedHtml} className="max-w-prose" />
     </div>
   );
 }

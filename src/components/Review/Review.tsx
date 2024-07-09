@@ -5,36 +5,58 @@ import { Header } from "./Header";
 import { MoreReviews } from "./MoreReviews";
 import { StructuredData } from "./StructuredData";
 import { ViewingHistory } from "./ViewingHistory";
-import type { IReview } from "./data";
+import type { ViewingHistoryData } from "./ViewingHistory";
+import type { HeaderData } from "./Header";
+import type { ContentData } from "./Content";
+import type { CreditsData } from "./Credits";
+import type { MoreReviewsData } from "./MoreReviews";
+import type { StructuredDataData } from "./StructuredData";
 
-export function Review({ review }: { review: IReview }): JSX.Element {
+export interface ReviewData
+  extends HeaderData,
+    ContentData,
+    ViewingHistoryData,
+    MoreReviewsData,
+    CreditsData,
+    StructuredDataData {
+  title: string;
+  year: string;
+  slug: string;
+  frontmatter: ContentData["frontmatter"] & StructuredDataData["frontmatter"];
+}
+
+export interface ReviewProps {
+  data: ReviewData;
+}
+
+export function Review({ data }: ReviewProps): JSX.Element {
   return (
     <main id="top" className="scroll-margin-top flex flex-col items-center">
       <Header
-        review={review}
+        data={data}
         className="px-pageMargin py-6 text-center desktop:py-8"
       />
       <Still
-        slug={review.slug}
-        title={review.title}
-        year={review.year}
+        slug={data.slug}
+        title={data.title}
+        year={data.year}
         width={960}
         height={540}
         className="mb-[5.33px]"
       />
       <div className="h-6 min-h-6 tablet:h-8 tablet:min-h-8" />
-      <Content review={review} className="items-center px-pageMargin" />
-      <div className="h-20 min-h-20" />
-      <ViewingHistory review={review} className="w-full max-w-popout" />
-      <div className="h-32 min-h-32" />
-      <Credits review={review} className="w-full max-w-popout" />
-      <div className="h-32 min-h-32" />
+      <Content data={data} className="items-center px-pageMargin" />
+      <div className="spacer-y-20" />
+      <ViewingHistory data={data} className="w-full max-w-popout" />
+      <div className="spacer-y-32" />
+      <Credits data={data} className="w-full max-w-popout" />
+      <div className="spacer-y-32" />
       <MoreReviews
-        review={review}
+        data={data}
         className="w-full max-w-popout tablet:max-w-full"
       />
-      <div className="h-32 min-h-32 tablet:h-0 tablet:min-h-0" />
-      <StructuredData review={review} />
+      <div className="spacer-y-32 tablet:spacer-y-0" />
+      <StructuredData data={data} />
     </main>
   );
 }

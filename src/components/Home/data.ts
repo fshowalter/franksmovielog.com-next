@@ -1,20 +1,6 @@
-"use server";
-
-import { getReviewsJsonData } from "@/data/reviewsJson";
-import { getReviewBySlug } from "@/data/reviewsMarkdown";
-
-export interface IHomePageItem {
-  imdbId: string;
-  sequence: string;
-  title: string;
-  year: string;
-  date: string;
-  slug: string;
-  grade: string;
-  principalCastNames: string[];
-  directorNames: string[];
-  reviewExcerpt: string;
-}
+import reviewedTitlesJson from "@/data/reviewedTitlesJson";
+import reviewsMarkdown from "@/data/reviewsMarkdown";
+import { HomeProps } from "./Home";
 
 function formatDate(reviewDate: Date) {
   return reviewDate.toLocaleString("en-GB", {
@@ -25,25 +11,39 @@ function formatDate(reviewDate: Date) {
   });
 }
 
-export async function getHomePageItems(): Promise<IHomePageItem[]> {
-  const reviewedTitlesData = await getReviewsJsonData();
+export default async function getComponentData(): Promise<HomeProps> {
+  const json = await reviewedTitlesJson();
+  const markdown = await reviewsMarkdown();
+  json.sort((a, b) => b.sequence.localeCompare(a.sequence));
 
-  reviewedTitlesData.sort((a, b) => b.sequence.localeCompare(a.sequence));
+  const data = json.slice(0, 10).map((title) => {
+    const markdownReview = markdown.find(
+      (review) => review.imdbId === title.imdbId,
+    );
 
-  return reviewedTitlesData.slice(0, 10).map((title) => {
-    const review = getReviewBySlug(title.slug);
+    if (!markdownReview) {
+      throw new Error(
+        `No markdown review found with imdbId"${title.imdbId} for title "${title.title}"`,
+      );
+    }
 
-    return {
+    const homePageItemData: HomeProps["data"][0] = {
       imdbId: title.imdbId,
       sequence: title.sequence,
       title: title.title,
       year: title.year,
-      date: formatDate(review.date),
+      date: formatDate(markdownReview.date),
       slug: title.slug,
       grade: title.grade,
       principalCastNames: title.principalCastNames,
       directorNames: title.directorNames,
-      reviewExcerpt: review.excerpt,
+      reviewExcerpt: markdownReview.excerpt,
     };
+
+    return homePageItemData;
   });
+
+  return {
+    data,
+  };
 }

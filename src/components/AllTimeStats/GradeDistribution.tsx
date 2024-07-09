@@ -8,12 +8,17 @@ import {
   TableRow,
 } from "@/components/StatsTable";
 
+export interface GradeDistributionData {
+  name: string;
+  count: number;
+}
+
 export function GradeDistribution({
-  distributions,
+  data,
 }: {
-  distributions: readonly IAllTimeStatsGradeDistribution[];
+  data: readonly GradeDistributionData[];
 }): JSX.Element | null {
-  const maxBar = distributions.reduce((acc, distribution) => {
+  const maxBar = data.reduce((acc, distribution) => {
     const value = distribution.count;
     return acc > value ? acc : value;
   }, 0);
@@ -30,7 +35,7 @@ export function GradeDistribution({
           </tr>
         </TableHead>
         <tbody>
-          {distributions.map((distribution) => {
+          {data.map((distribution) => {
             return (
               <TableRow key={distribution.name}>
                 <TableDataCell align="left">{distribution.name}</TableDataCell>
@@ -47,9 +52,4 @@ export function GradeDistribution({
       </Table>
     </section>
   );
-}
-
-export interface IAllTimeStatsGradeDistribution {
-  name: string;
-  count: number;
 }

@@ -1,6 +1,6 @@
-import { getAllTimeStatsJsonData } from "@/data/allTimeStatsJson";
-import type { IAllTimeStats } from "./AllTimeStats";
-import { getJsonStatYears } from "@/data/yearStatsJson";
+import allTimeStatsJson from "@/data/allTimeStatsJson";
+import type { AllTimeStatsProps } from "./AllTimeStats";
+import yearStatsJson from "@/data/yearStatsJson";
 import type { IMostWatchedPerson } from "../Stats/MostWatchedPeople";
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
@@ -28,26 +28,29 @@ function formatViewingDatesForMostWatchedPeople(
   });
 }
 
-export async function getAllTimeStats(): Promise<{
-  allTimeStats: IAllTimeStats;
-  statYears: string[];
-}> {
-  const allTimeStatsJsonData = await getAllTimeStatsJsonData();
-  const statYears = getJsonStatYears();
+export default async function getComponentData(): Promise<AllTimeStatsProps> {
+  const json = await allTimeStatsJson();
+  const yearsJson = await yearStatsJson();
 
-  return {
-    allTimeStats: {
-      ...allTimeStatsJsonData,
-      mostWatchedDirectors: formatViewingDatesForMostWatchedPeople(
-        allTimeStatsJsonData.mostWatchedDirectors,
-      ),
-      mostWatchedPerformers: formatViewingDatesForMostWatchedPeople(
-        allTimeStatsJsonData.mostWatchedPerformers,
-      ),
-      mostWatchedWriters: formatViewingDatesForMostWatchedPeople(
-        allTimeStatsJsonData.mostWatchedWriters,
-      ),
-    },
-    statYears,
+  const statYears = new Set<string>();
+
+  yearsJson.forEach((statYear) => {
+    statYears.add(statYear.year);
+  });
+
+  const data: AllTimeStatsProps["data"] = {
+    ...json,
+    mostWatchedDirectors: formatViewingDatesForMostWatchedPeople(
+      json.mostWatchedDirectors,
+    ),
+    mostWatchedPerformers: formatViewingDatesForMostWatchedPeople(
+      json.mostWatchedPerformers,
+    ),
+    mostWatchedWriters: formatViewingDatesForMostWatchedPeople(
+      json.mostWatchedWriters,
+    ),
+    distinctStatYears: Array.from(statYears).toSorted(),
   };
+
+  return { data };
 }

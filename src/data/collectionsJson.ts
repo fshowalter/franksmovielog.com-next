@@ -2,7 +2,7 @@ import { promises as fs, existsSync } from "node:fs";
 import { z } from "zod";
 import { join } from "path";
 
-const collectionJsonDirectory = join(
+const collectionsJsonDirectory = join(
   process.cwd(),
   "content",
   "data",
@@ -32,7 +32,7 @@ const CollectionJsonSchema = z.object({
 let allCollectionsJson: CollectionJson[];
 
 async function parseAllCollectionsJson() {
-  const dirents = await fs.readdir(collectionJsonDirectory, {
+  const dirents = await fs.readdir(collectionsJsonDirectory, {
     withFileTypes: true,
   });
 
@@ -41,11 +41,11 @@ async function parseAllCollectionsJson() {
       .filter((item) => !item.isDirectory() && item.name.endsWith(".json"))
       .map(async (item) => {
         const fileContents = await fs.readFile(
-          `${collectionJsonDirectory}/${item.name}`,
+          `${collectionsJsonDirectory}/${item.name}`,
           "utf8",
         );
 
-        const json = JSON.parse(fileContents) as any;
+        const json = JSON.parse(fileContents) as unknown;
         const collection = CollectionJsonSchema.parse(json);
 
         const avatar = existsSync(

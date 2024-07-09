@@ -43,7 +43,7 @@ const MostWatchedPerson = z.object({
   viewings: z.array(MostWatchedPersonViewing),
 });
 
-const JsonAllTimeStatsSchema = z.object({
+const AllTimeStatsJsonSchema = z.object({
   viewingCount: z.number(),
   titleCount: z.number(),
   reviewCount: z.number(),
@@ -57,11 +57,11 @@ const JsonAllTimeStatsSchema = z.object({
   mostWatchedWriters: z.array(MostWatchedPerson),
 });
 
-export type JsonAllTimeStats = z.infer<typeof JsonAllTimeStatsSchema>;
+type AllTimeStatsJson = z.infer<typeof AllTimeStatsJsonSchema>;
 
-export async function getAllTimeStatsJsonData(): Promise<JsonAllTimeStats> {
+export default async function allTimeStatsJson(): Promise<AllTimeStatsJson> {
   const json = await fs.readFile(allTimeStatsFile, "utf8");
-  const data = JSON.parse(json) as any[];
+  const data = JSON.parse(json) as unknown[];
 
-  return JsonAllTimeStatsSchema.parse(data);
+  return AllTimeStatsJsonSchema.parse(data);
 }

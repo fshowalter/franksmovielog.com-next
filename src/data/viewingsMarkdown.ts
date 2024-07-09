@@ -1,4 +1,4 @@
-import fs from "fs";
+import { promises as fs } from "node:fs";
 import matter from "gray-matter";
 import { join } from "path";
 import { z } from "zod";
@@ -9,12 +9,10 @@ import remarkGfm from "remark-gfm";
 import smartypants from "remark-smartypants";
 import rehypeStringify from "rehype-stringify";
 import { remark } from "remark";
+import { linkReviewedTitles } from "./utils/linkReviewedTitles";
+import reviewedTitlesJson from "./reviewedTitlesJson";
 
-const reviewedTitlesData = JSON.parse(
-  fs.readFileSync(process.cwd() + "/content/data/reviewed-titles.json", "utf8"),
-) as { imdbId: string; slug: string }[];
-
-const viewingsMarkdownDir = join(process.cwd(), "content", "viewings");
+const viewingsMarkdownDirectory = join(process.cwd(), "content", "viewings");
 
 const DataSchema = z.object({
   imdbId: z.string(),
@@ -26,61 +24,6 @@ const DataSchema = z.object({
   mediumNotes: z.nullable(z.string()),
 });
 
-const allViewingsMarkdown = fs
-  .readdirSync(viewingsMarkdownDir, { withFileTypes: true })
-  .filter((item) => !item.isDirectory() && item.name.endsWith(".md"))
-  .map((item) => {
-    const fileContents = fs.readFileSync(
-      `${viewingsMarkdownDir}/${item.name}`,
-      "utf8",
-    );
-    const { data, content } = matter(fileContents);
-
-    const greyMatter = DataSchema.parse(data);
-
-    return {
-      sequence: greyMatter.sequence,
-      date: greyMatter.date,
-      venue: greyMatter.venue,
-      imbdbId: greyMatter.imdbId,
-      medium: greyMatter.medium,
-      venueNotes: getHtmlAsSpan(greyMatter.venueNotes),
-      mediumNotes: getHtmlAsSpan(greyMatter.mediumNotes),
-      viewingNotes: getHtml(content),
-    };
-  });
-
-function linkReviewedMovies(
-  text: string,
-  reviewedTitles: { imdbId: string; slug: string }[],
-) {
-  let result = text;
-
-  const re = RegExp(/(<span data-imdb-id="(tt\d+)">)(.*?)(<\/span>)/, "g");
-
-  const matches = [...text.matchAll(re)];
-
-  for (const match of matches) {
-    const reviewedMovie = reviewedTitles.find(
-      (title) => title.imdbId === match[2],
-    );
-
-    if (!reviewedMovie) {
-      result = result.replace(
-        `<span data-imdb-id="${match[2]}">${match[3]}</span>`,
-        match[3],
-      );
-    } else {
-      result = result.replace(
-        `<span data-imdb-id="${match[2]}">${match[3]}</span>`,
-        `<a href="/reviews/${reviewedMovie.slug}/">${match[3]}</a>`,
-      );
-    }
-  }
-
-  return result;
-}
-
 function rootAsSpan() {
   return (tree: HastRoot) => {
     const firstChild = tree.children[0];
@@ -91,7 +34,10 @@ function rootAsSpan() {
   };
 }
 
-function getHtmlAsSpan(content: string | null) {
+function getHtmlAsSpan(
+  content: string | null,
+  reviewedTitles: { imdbId: string; slug: string }[],
+) {
   if (!content) {
     return null;
   }
@@ -106,10 +52,13 @@ function getHtmlAsSpan(content: string | null) {
     .processSync(content)
     .toString();
 
-  return linkReviewedMovies(html, reviewedTitlesData);
+  return linkReviewedTitles(html, reviewedTitles);
 }
 
-function getHtml(content: string | null) {
+function getHtml(
+  content: string | null,
+  reviewedTitles: { imdbId: string; slug: string }[],
+) {
   if (!content) {
     return null;
   }
@@ -123,11 +72,12 @@ function getHtml(content: string | null) {
     .processSync(content)
     .toString();
 
-  return linkReviewedMovies(html, reviewedTitlesData);
+  return linkReviewedTitles(html, reviewedTitles);
 }
 
 interface MarkdownViewing {
   sequence: number;
+  imdbId: string;
   date: Date;
   venue: string | null;
   venueNotes: string | null;
@@ -136,8 +86,46 @@ interface MarkdownViewing {
   viewingNotes: string | null;
 }
 
-export function getViewingsForImdbId(imdbId: string): MarkdownViewing[] {
-  return allViewingsMarkdown.filter((item) => {
-    return item.imbdbId === imdbId;
+let allViewingsMarkdown: MarkdownViewing[];
+
+async function parseAllViewingsMarkdown() {
+  const dirents = await fs.readdir(viewingsMarkdownDirectory, {
+    withFileTypes: true,
   });
+
+  return Promise.all(
+    dirents
+      .filter((item) => !item.isDirectory() && item.name.endsWith(".md"))
+      .map(async (item) => {
+        const fileContents = await fs.readFile(
+          `${viewingsMarkdownDirectory}/${item.name}`,
+          "utf8",
+        );
+
+        const { data, content } = matter(fileContents);
+        const greyMatter = DataSchema.parse(data);
+        const reviewedTitles = await reviewedTitlesJson();
+
+        const markdownViewing: MarkdownViewing = {
+          sequence: greyMatter.sequence,
+          date: greyMatter.date,
+          venue: greyMatter.venue,
+          imdbId: greyMatter.imdbId,
+          medium: greyMatter.medium,
+          venueNotes: getHtmlAsSpan(greyMatter.venueNotes, reviewedTitles),
+          mediumNotes: getHtmlAsSpan(greyMatter.mediumNotes, reviewedTitles),
+          viewingNotes: getHtml(content, reviewedTitles),
+        };
+
+        return markdownViewing;
+      }),
+  );
+}
+
+export default async function viewingsMarkdown(): Promise<MarkdownViewing[]> {
+  if (!allViewingsMarkdown) {
+    allViewingsMarkdown = await parseAllViewingsMarkdown();
+  }
+
+  return allViewingsMarkdown;
 }

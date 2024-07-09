@@ -1,11 +1,13 @@
-import { Review, getReviewSlugs, getReview } from "@/components/Review";
+import { Review } from "@/components/Review";
+import getComponentData from "@/components/Review/data";
+import reviewedTitlesJson from "@/data/reviewedTitlesJson";
 import React from "react";
 
 export async function generateStaticParams() {
-  const slugs = await getReviewSlugs();
+  const json = await reviewedTitlesJson();
 
-  return slugs.map((slug) => ({
-    slug,
+  return json.map((review) => ({
+    slug: review.slug,
   }));
 }
 
@@ -14,7 +16,7 @@ export default async function ReviewPage({
 }: {
   params: { slug: string };
 }) {
-  const review = await getReview(params.slug);
+  const data = await getComponentData(params.slug);
 
-  return <Review review={review} />;
+  return <Review {...data} />;
 }

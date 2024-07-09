@@ -1,26 +1,22 @@
 import { StatsCallout } from "@/components/Stats";
 
-export function Callouts({
-  callouts,
-}: {
-  callouts: IAllTimeStatsCallouts;
-}): JSX.Element {
-  return (
-    <div className="flex flex-wrap justify-center gap-6 desktop:flex-nowrap">
-      <StatsCallout label="Viewings" stat={callouts.viewingCount} />
-      <StatsCallout label="Movies" stat={callouts.titleCount} />
-      <StatsCallout label="Reviews" stat={callouts.reviewCount} />
-      <StatsCallout
-        label="From Watchlist"
-        stat={callouts.watchlistTitlesReviewedCount}
-      />
-    </div>
-  );
-}
-
-export interface IAllTimeStatsCallouts {
+export interface CalloutsData {
   titleCount: number;
   viewingCount: number;
   reviewCount: number;
   watchlistTitlesReviewedCount: number;
+}
+
+export function Callouts({ data }: { data: CalloutsData }): JSX.Element {
+  return (
+    <div className="flex flex-wrap justify-center gap-6 desktop:flex-nowrap">
+      <StatsCallout label="Viewings" stat={data.viewingCount} />
+      <StatsCallout label="Movies" stat={data.titleCount} />
+      <StatsCallout label="Reviews" stat={data.reviewCount} />
+      <StatsCallout
+        label="From Watchlist"
+        stat={data.watchlistTitlesReviewedCount}
+      />
+    </div>
+  );
 }

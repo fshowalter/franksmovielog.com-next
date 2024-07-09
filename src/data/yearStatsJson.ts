@@ -1,16 +1,17 @@
-import fs from "fs";
+import { promises as fs } from "node:fs";
 import { z } from "zod";
 import { join } from "path";
 
-const yearStatsDir = join(process.cwd(), "content", "data", "year-stats");
+const yearStatsJsonDirDirectory = join(
+  process.cwd(),
+  "content",
+  "data",
+  "year-stats",
+);
 
 const Distribution = z.object({
   name: z.string(),
   count: z.number(),
-});
-
-const GradeDistribution = Distribution.extend({
-  sortValue: z.number(),
 });
 
 const MostWatchedTitle = z.object({
@@ -38,7 +39,7 @@ const MostWatchedPerson = z.object({
   viewings: z.array(MostWatchedPersonViewing),
 });
 
-const JsonYearStatsSchema = z.object({
+const YearStatsJsonSchema = z.object({
   year: z.string(),
   newTitleCount: z.number(),
   viewingCount: z.number(),
@@ -51,28 +52,34 @@ const JsonYearStatsSchema = z.object({
   mostWatchedWriters: z.array(MostWatchedPerson),
 });
 
-export type JsonYearStats = z.infer<typeof JsonYearStatsSchema>;
+export type YearStatsJson = z.infer<typeof YearStatsJsonSchema>;
 
-const jsonYearStats = fs
-  .readdirSync(yearStatsDir, { withFileTypes: true })
-  .filter((item) => !item.isDirectory() && item.name.endsWith(".json"))
-  .map((item) => {
-    const json = fs.readFileSync(`${yearStatsDir}/${item.name}`, "utf8");
-    const data = JSON.parse(json) as any[];
+let allYearStatsJson: YearStatsJson[];
 
-    return JsonYearStatsSchema.parse(data);
+async function parseAllYearStatsJson() {
+  const dirents = await fs.readdir(yearStatsJsonDirDirectory, {
+    withFileTypes: true,
   });
 
-export function getJsonStatYears(): string[] {
-  return jsonYearStats.map((stats) => stats.year);
+  return Promise.all(
+    dirents
+      .filter((item) => !item.isDirectory() && item.name.endsWith(".json"))
+      .map(async (item) => {
+        const fileContents = await fs.readFile(
+          `${yearStatsJsonDirDirectory}/${item.name}`,
+          "utf8",
+        );
+
+        const json = JSON.parse(fileContents) as unknown;
+        return YearStatsJsonSchema.parse(json);
+      }),
+  );
 }
 
-export function getJsonYearStats(year: string): JsonYearStats {
-  const stats = jsonYearStats.find((stats) => stats.year === year);
-
-  if (!stats) {
-    throw new Error(`Stats not found for year: ${year}`);
+export default async function yearStatsJson(): Promise<YearStatsJson[]> {
+  if (!allYearStatsJson) {
+    allYearStatsJson = await parseAllYearStatsJson();
   }
 
-  return stats;
+  return allYearStatsJson;
 }

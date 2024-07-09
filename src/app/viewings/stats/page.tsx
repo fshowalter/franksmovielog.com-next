@@ -1,8 +1,8 @@
 import { AllTimeStats } from "@/components/AllTimeStats";
-import { getAllTimeStats } from "@/components/AllTimeStats/data";
+import getComponentData from "@/components/AllTimeStats/data";
 
 export default async function ReviewsPage() {
-  const { allTimeStats, statYears } = await getAllTimeStats();
+  const data = await getComponentData();
 
-  return <AllTimeStats stats={allTimeStats} statYears={statYears} />;
+  return <AllTimeStats {...data} />;
 }

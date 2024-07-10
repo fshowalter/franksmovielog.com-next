@@ -1,15 +1,8 @@
-import { Reviews, getReviewedTitles } from "@/components/Reviews";
+import { Reviews } from "@/components/Reviews";
+import getComponentData from "@/components/Reviews/data";
 
 export default async function ReviewsPage() {
-  const { reviewedTitles, genres, releaseYears, reviewYears } =
-    await getReviewedTitles();
+  const data = await getComponentData();
 
-  return (
-    <Reviews
-      reviewedTitles={reviewedTitles}
-      distinctGenres={genres}
-      distinctReleaseYears={releaseYears}
-      distinctReviewYears={reviewYears}
-    />
-  );
+  return <Reviews {...data} />;
 }

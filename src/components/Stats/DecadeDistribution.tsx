@@ -8,12 +8,17 @@ import {
   TableRow,
 } from "@/components/StatsTable";
 
+export interface DecadeDistributionData {
+  name: string;
+  count: number;
+}
+
 export function DecadeDistribution({
-  distributions,
+  data,
 }: {
-  distributions: readonly IDecadeDistribution[];
+  data: readonly DecadeDistributionData[];
 }): JSX.Element {
-  const maxBar = distributions.reduce((acc, distribution) => {
+  const maxBar = data.reduce((acc, distribution) => {
     const value = distribution.count;
     return acc > value ? acc : value;
   }, 0);
@@ -30,7 +35,7 @@ export function DecadeDistribution({
           </tr>
         </TableHead>
         <tbody>
-          {distributions.map((distribution) => {
+          {data.map((distribution) => {
             return (
               <TableRow key={distribution.name}>
                 <TableDataCell align="left">{distribution.name}</TableDataCell>
@@ -47,9 +52,4 @@ export function DecadeDistribution({
       </Table>
     </section>
   );
-}
-
-export interface IDecadeDistribution {
-  name: string;
-  count: number;
 }

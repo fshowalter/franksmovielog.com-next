@@ -1,7 +1,15 @@
 import { promises as fs } from "node:fs";
 import { z } from "zod";
+import { join } from "path";
 
-const JsonViewingSchema = z.object({
+const viewingsJsonFile = join(
+  process.cwd(),
+  "content",
+  "data",
+  "viewings.json",
+);
+
+const ViewingJsonSchema = z.object({
   sequence: z.number(),
   title: z.string(),
   viewingYear: z.string(),
@@ -15,16 +23,13 @@ const JsonViewingSchema = z.object({
   releaseSequence: z.string(),
 });
 
-export type JsonViewing = z.infer<typeof JsonViewingSchema>;
+export type ViewingJson = z.infer<typeof ViewingJsonSchema>;
 
-export async function getViewingsJsonData(): Promise<JsonViewing[]> {
-  const json = await fs.readFile(
-    process.cwd() + "/content/data/viewings.json",
-    "utf8",
-  );
-  const data = JSON.parse(json) as any[];
+export default async function viewingsJson(): Promise<ViewingJson[]> {
+  const json = await fs.readFile(viewingsJsonFile, "utf8");
+  const data = JSON.parse(json) as unknown[];
 
   return data.map((item) => {
-    return JsonViewingSchema.parse(item);
+    return ViewingJsonSchema.parse(item);
   });
 }

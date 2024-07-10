@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import { z } from "zod";
 import { join } from "path";
 
-const yearStatsJsonDirDirectory = join(
+const yearStatsJsonDirectory = join(
   process.cwd(),
   "content",
   "data",
@@ -32,12 +32,14 @@ const MostWatchedPersonViewing = z.object({
   year: z.string(),
 });
 
-const MostWatchedPerson = z.object({
+const MostWatchedPersonSchema = z.object({
   name: z.string(),
   count: z.number(),
   slug: z.nullable(z.string()),
   viewings: z.array(MostWatchedPersonViewing),
 });
+
+export type MostWatchedPerson = z.infer<typeof MostWatchedPersonSchema>;
 
 const YearStatsJsonSchema = z.object({
   year: z.string(),
@@ -47,9 +49,9 @@ const YearStatsJsonSchema = z.object({
   mediaDistribution: z.array(Distribution),
   decadeDistribution: z.array(Distribution),
   mostWatchedTitles: z.array(MostWatchedTitle),
-  mostWatchedDirectors: z.array(MostWatchedPerson),
-  mostWatchedPerformers: z.array(MostWatchedPerson),
-  mostWatchedWriters: z.array(MostWatchedPerson),
+  mostWatchedDirectors: z.array(MostWatchedPersonSchema),
+  mostWatchedPerformers: z.array(MostWatchedPersonSchema),
+  mostWatchedWriters: z.array(MostWatchedPersonSchema),
 });
 
 export type YearStatsJson = z.infer<typeof YearStatsJsonSchema>;
@@ -57,7 +59,7 @@ export type YearStatsJson = z.infer<typeof YearStatsJsonSchema>;
 let allYearStatsJson: YearStatsJson[];
 
 async function parseAllYearStatsJson() {
-  const dirents = await fs.readdir(yearStatsJsonDirDirectory, {
+  const dirents = await fs.readdir(yearStatsJsonDirectory, {
     withFileTypes: true,
   });
 
@@ -66,7 +68,7 @@ async function parseAllYearStatsJson() {
       .filter((item) => !item.isDirectory() && item.name.endsWith(".json"))
       .map(async (item) => {
         const fileContents = await fs.readFile(
-          `${yearStatsJsonDirDirectory}/${item.name}`,
+          `${yearStatsJsonDirectory}/${item.name}`,
           "utf8",
         );
 

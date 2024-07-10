@@ -1,10 +1,10 @@
 import { MostWatchedPeople } from "./MostWatchedPeople";
-import type { IMostWatchedPerson } from "./MostWatchedPeople";
+import type { MostWatchedPersonListItemData } from "./MostWatchedPeople";
 
 export function MostWatchedWriters({
-  writers,
+  data,
 }: {
-  writers: readonly IMostWatchedPerson[];
+  data: readonly MostWatchedPersonListItemData[];
 }): JSX.Element | null {
-  return <MostWatchedPeople people={writers} header="Most Watched Writers" />;
+  return <MostWatchedPeople data={data} header="Most Watched Writers" />;
 }

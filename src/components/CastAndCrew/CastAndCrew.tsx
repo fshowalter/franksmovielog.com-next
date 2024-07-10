@@ -6,26 +6,23 @@ import { initState, reducer } from "./CastAndCrew.reducer";
 import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
-
-export interface CastAndCrewMember {
-  name: string;
-  slug: string | null;
-  totalCount: number;
-  reviewCount: number;
-  creditedAs: string[];
-  avatar: string | null;
-}
+import type { CastAndCrewListItemData } from "./List";
+import type { Sort } from "./CastAndCrew.reducer";
 
 export interface CastAndCrewProps {
-  members: CastAndCrewMember[];
+  data: CastAndCrewListItemData[];
+  initialSort: Sort;
 }
 
-export function CastAndCrew({ members }: CastAndCrewProps): JSX.Element {
+export function CastAndCrew({
+  data,
+  initialSort,
+}: CastAndCrewProps): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {
-      entities: members,
-      sort: "name-asc",
+      entities: data,
+      sort: initialSort,
     },
     initState,
   );
@@ -36,7 +33,7 @@ export function CastAndCrew({ members }: CastAndCrewProps): JSX.Element {
       filters={<Filters dispatch={dispatch} sortValue={state.sortValue} />}
       list={
         <List
-          members={state.filteredEntities}
+          data={state.filteredEntities}
           totalCount={state.filteredEntities.length}
           visibleCount={state.filteredEntities.length}
         />

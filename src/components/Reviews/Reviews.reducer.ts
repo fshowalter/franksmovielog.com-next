@@ -5,9 +5,9 @@ import {
   filterTools,
   sortNumber,
   sortString,
-} from "../../utils";
+} from "@/utils";
 
-import type { IReviewedTitle } from "./data";
+import type { ListItemData } from "./List";
 
 const SHOW_COUNT_DEFAULT = 100;
 
@@ -24,11 +24,8 @@ export type Sort =
 const groupItems = buildGroupItems(groupForItem);
 const { updateFilter } = filterTools(sortItems, groupItems);
 
-function sortItems(items: IReviewedTitle[], sortOrder: Sort) {
-  const sortMap: Record<
-    Sort,
-    (a: IReviewedTitle, b: IReviewedTitle) => number
-  > = {
+function sortItems(items: ListItemData[], sortOrder: Sort) {
+  const sortMap: Record<Sort, (a: ListItemData, b: ListItemData) => number> = {
     "release-date-desc": (a, b) =>
       sortString(a.releaseSequence, b.releaseSequence) * -1,
     "release-date-asc": (a, b) =>
@@ -45,7 +42,7 @@ function sortItems(items: IReviewedTitle[], sortOrder: Sort) {
   return items.sort(comparer);
 }
 
-function groupForItem(item: IReviewedTitle, sortValue: Sort): string {
+function groupForItem(item: ListItemData, sortValue: Sort): string {
   switch (sortValue) {
     case "release-date-asc":
     case "release-date-desc": {
@@ -74,16 +71,16 @@ function groupForItem(item: IReviewedTitle, sortValue: Sort): string {
 }
 
 export type State = FilterableState<
-  IReviewedTitle,
+  ListItemData,
   Sort,
-  Map<string, IReviewedTitle[]>
+  Map<string, ListItemData[]>
 >;
 
 export function initState({
   items,
   sort,
 }: {
-  items: IReviewedTitle[];
+  items: ListItemData[];
   sort: Sort;
 }): State {
   return {

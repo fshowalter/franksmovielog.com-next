@@ -1,5 +1,5 @@
 import { FilterableState, filterTools, sortNumber } from "@/utils";
-import type { IViewing } from "./data";
+import type { ListItemData } from "./List";
 
 const SHOW_COUNT_DEFAULT = 100;
 
@@ -7,8 +7,8 @@ export type Sort = "viewing-date-desc" | "viewing-date-asc";
 
 const { updateFilter, clearFilter } = filterTools(sortItems, groupItems);
 
-function sortItems(items: IViewing[], sortOrder: Sort) {
-  const sortMap: Record<Sort, (a: IViewing, b: IViewing) => number> = {
+function sortItems(items: ListItemData[], sortOrder: Sort) {
+  const sortMap: Record<Sort, (a: ListItemData, b: ListItemData) => number> = {
     "viewing-date-desc": (a, b) => sortNumber(a.sequence, b.sequence) * -1,
     "viewing-date-asc": (a, b) => sortNumber(a.sequence, b.sequence),
   };
@@ -17,8 +17,10 @@ function sortItems(items: IViewing[], sortOrder: Sort) {
   return items.sort(comparer);
 }
 
-function groupItems(items: IViewing[]): Map<string, Map<string, IViewing[]>> {
-  const groupedItems = new Map<string, Map<string, IViewing[]>>();
+function groupItems(
+  items: ListItemData[],
+): Map<string, Map<string, ListItemData[]>> {
+  const groupedItems = new Map<string, Map<string, ListItemData[]>>();
 
   items.map((item) => {
     const monthYearGroup = `${item.viewingMonth} ${item.viewingYear}`;
@@ -26,7 +28,7 @@ function groupItems(items: IViewing[]): Map<string, Map<string, IViewing[]>> {
     let groupValue = groupedItems.get(monthYearGroup);
 
     if (!groupValue) {
-      groupValue = new Map<string, IViewing[]>();
+      groupValue = new Map<string, ListItemData[]>();
       groupedItems.set(monthYearGroup, groupValue);
     }
 
@@ -46,16 +48,16 @@ function groupItems(items: IViewing[]): Map<string, Map<string, IViewing[]>> {
 }
 
 export type State = FilterableState<
-  IViewing,
+  ListItemData,
   Sort,
-  Map<string, Map<string, IViewing[]>>
+  Map<string, Map<string, ListItemData[]>>
 >;
 
 export function initState({
   items,
   sort,
 }: {
-  items: IViewing[];
+  items: ListItemData[];
   sort: Sort;
 }): State {
   return {

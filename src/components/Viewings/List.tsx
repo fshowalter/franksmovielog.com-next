@@ -4,7 +4,22 @@ import { ListItemPoster } from "@/components/ListItemPoster";
 import { ListItemTitle } from "@/components/ListItemTitle";
 import { GroupedList } from "@/components/ListWithFiltersLayout";
 import { Action, ActionType } from "./Viewings.reducer";
-import type { IViewing } from "./data";
+
+export interface ListItemData {
+  sequence: number;
+  viewingYear: string;
+  viewingMonth: string;
+  viewingDay: string;
+  viewingDate: string;
+  releaseSequence: string;
+  title: string;
+  medium: string | null;
+  venue: string | null;
+  year: string;
+  sortTitle: string;
+  slug: string | null;
+  genres: string[];
+}
 
 export function List({
   groupedItems,
@@ -12,7 +27,7 @@ export function List({
   totalCount,
   dispatch,
 }: {
-  groupedItems: Map<string, Map<string, IViewing[]>>;
+  groupedItems: Map<string, Map<string, ListItemData[]>>;
   visibleCount: number;
   totalCount: number;
   dispatch: React.Dispatch<Action>;
@@ -28,11 +43,7 @@ export function List({
       {(dateGroup) => {
         const [dayAndDate, items] = dateGroup;
         return (
-          <DateListItem
-            items={items}
-            key={dayAndDate}
-            dayAndDate={dayAndDate}
-          />
+          <DateListItem data={items} key={dayAndDate} dayAndDate={dayAndDate} />
         );
       }}
     </GroupedList>
@@ -41,10 +52,10 @@ export function List({
 
 function DateListItem({
   dayAndDate,
-  items,
+  data,
 }: {
   dayAndDate: string;
-  items: IViewing[];
+  data: ListItemData[];
 }): JSX.Element {
   const [day, date] = dayAndDate.split("-");
 
@@ -60,30 +71,30 @@ function DateListItem({
         <div className="h-4 min-h-4" />
       </div>
       <ul className="flex grow flex-col gap-y-4">
-        {items.map((item) => {
-          return <SubListItem item={item} key={item.sequence} />;
+        {data.map((item) => {
+          return <SubListItem data={item} key={item.sequence} />;
         })}
       </ul>
     </ListItem>
   );
 }
 
-function SubListItem({ item }: { item: IViewing }): JSX.Element {
+function SubListItem({ data }: { data: ListItemData }): JSX.Element {
   return (
     <ListItem className="items-center pt-0 shadow-bottom even:bg-unset last-of-type:shadow-none">
-      <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
+      <ListItemPoster slug={data.slug} title={data.title} year={data.year} />
       <div className="grow">
         <div>
-          <ListItemTitle title={item.title} year={item.year} slug={item.slug} />
-          <div className="h-1 min-h-1 tablet:h-2 tablet:min-h-2" />
+          <ListItemTitle title={data.title} year={data.year} slug={data.slug} />
+          <div className="spacer-y-1 tablet:spacer-y-2" />
         </div>
         <div className="flex flex-col text-sm/none font-light tracking-0.5px text-subtle">
-          <div className="h-1 min-h-1 tablet:h-0 tablet:min-h-0" />
+          <div className="spacer-y-1 tablet:spacer-y-0" />
           <div>
-            <ListItemMediumAndVenue medium={item.medium} venue={item.venue} />
+            <ListItemMediumAndVenue medium={data.medium} venue={data.venue} />
           </div>
         </div>
-        <div className="h-2 min-h-2" />
+        <div className="spacer-y-2" />
       </div>
     </ListItem>
   );

@@ -12,34 +12,37 @@ import { Callouts } from "./Callouts";
 import { GradeDistribution } from "./GradeDistribution";
 import type { CalloutsData } from "./Callouts";
 import type { GradeDistributionData } from "./GradeDistribution";
-import type { IMostWatchedTitle } from "@/components/Stats/MostWatchedMovies";
-import type { IDecadeDistribution } from "@/components/Stats/DecadeDistribution";
-import type { IMediaDistribution } from "@/components/Stats/MediaDistribution";
-import type { IMostWatchedPerson } from "@/components/Stats/MostWatchedPeople";
+import type { MostWatchedMovieListItemData } from "@/components/Stats/MostWatchedMovies";
+import type { DecadeDistributionData } from "@/components/Stats/DecadeDistribution";
+import type { MediaDistributionData } from "@/components/Stats/MediaDistribution";
+import type { MostWatchedPersonListItemData } from "@/components/Stats/MostWatchedPeople";
 
 export interface AllTimeStatsData extends CalloutsData {
   gradeDistribution: readonly GradeDistributionData[];
-  mostWatchedTitles: readonly IMostWatchedTitle[];
-  decadeDistribution: readonly IDecadeDistribution[];
-  mediaDistribution: readonly IMediaDistribution[];
-  mostWatchedDirectors: readonly IMostWatchedPerson[];
-  mostWatchedPerformers: readonly IMostWatchedPerson[];
-  mostWatchedWriters: readonly IMostWatchedPerson[];
-  distinctStatYears: readonly string[];
+  mostWatchedTitles: readonly MostWatchedMovieListItemData[];
+  decadeDistribution: readonly DecadeDistributionData[];
+  mediaDistribution: readonly MediaDistributionData[];
+  mostWatchedDirectors: readonly MostWatchedPersonListItemData[];
+  mostWatchedPerformers: readonly MostWatchedPersonListItemData[];
+  mostWatchedWriters: readonly MostWatchedPersonListItemData[];
 }
 
 export interface AllTimeStatsProps {
   data: AllTimeStatsData;
+  distinctStatYears: readonly string[];
 }
 
-export function AllTimeStats({ data }: AllTimeStatsProps): JSX.Element {
+export function AllTimeStats({
+  data,
+  distinctStatYears,
+}: AllTimeStatsProps): JSX.Element {
   return (
     <main className="flex flex-col items-center">
       <header className="flex flex-col flex-wrap justify-between px-pageMargin">
         <div className="flex flex-col items-center">
           <PageTitle className="pt-6 desktop:pt-8">All-Time Stats</PageTitle>
           <p className="text-subtle">
-            {`${(data.distinctStatYears.length - 1).toString()} Years in Review`}
+            {`${(distinctStatYears.length - 1).toString()} Years in Review`}
           </p>
           <div className="spacer-y-6" />
           <StatsNavigation
@@ -47,7 +50,7 @@ export function AllTimeStats({ data }: AllTimeStatsProps): JSX.Element {
             linkFunc={(year: string) => {
               return `/viewings/stats/${year}/`;
             }}
-            years={data.distinctStatYears}
+            years={distinctStatYears}
           />
         </div>
         <div>
@@ -56,13 +59,13 @@ export function AllTimeStats({ data }: AllTimeStatsProps): JSX.Element {
         </div>
       </header>
       <div className="flex w-full max-w-[960px] flex-col items-stretch gap-y-8 py-8 tablet:px-gutter desktop:px-pageMargin">
-        <MostWatchedMovies titles={data.mostWatchedTitles} />
-        <DecadeDistribution distributions={data.decadeDistribution} />
-        <MediaDistribution distributions={data.mediaDistribution} />
+        <MostWatchedMovies data={data.mostWatchedTitles} />
+        <DecadeDistribution data={data.decadeDistribution} />
+        <MediaDistribution data={data.mediaDistribution} />
         <GradeDistribution data={data.gradeDistribution} />
-        <MostWatchedDirectors directors={data.mostWatchedDirectors} />
-        <MostWatchedPerformers performers={data.mostWatchedPerformers} />
-        <MostWatchedWriters writers={data.mostWatchedWriters} />
+        <MostWatchedDirectors data={data.mostWatchedDirectors} />
+        <MostWatchedPerformers data={data.mostWatchedPerformers} />
+        <MostWatchedWriters data={data.mostWatchedWriters} />
       </div>
     </main>
   );

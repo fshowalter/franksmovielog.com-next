@@ -11,14 +11,21 @@ import {
 
 type EntityType = "director" | "writer" | "performer" | "collection";
 
-export function WatchlistProgressDetail({
+export interface DetailData {
+  name: string;
+  reviewCount: number;
+  titleCount: number;
+  slug: string | null;
+}
+
+export function Details({
   label,
   entityType,
-  entities,
+  data,
 }: {
   label: string;
   entityType: EntityType;
-  entities: readonly IWatchlistProgressDetail[];
+  data: readonly DetailData[];
 }) {
   return (
     <section>
@@ -32,7 +39,7 @@ export function WatchlistProgressDetail({
           </tr>
         </TableHead>
         <tbody>
-          {entities.map((entity) => {
+          {data.map((entity) => {
             return (
               <TableRow key={entity.name}>
                 <TableDataCell align="left">
@@ -68,7 +75,7 @@ function EntityName({
   entityType,
 }: {
   entityType: EntityType;
-  entity: IWatchlistProgressDetail;
+  entity: DetailData;
 }) {
   let linkTarget;
 
@@ -81,11 +88,4 @@ function EntityName({
   if (entity.slug) return <Link href={linkTarget}>{entity.name}</Link>;
 
   return <span className="text-subtle">{entity.name}</span>;
-}
-
-export interface IWatchlistProgressDetail {
-  name: string;
-  reviewCount: number;
-  titleCount: number;
-  slug: string | null;
 }

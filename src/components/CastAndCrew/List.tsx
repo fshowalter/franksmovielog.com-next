@@ -4,14 +4,22 @@ import Link from "next/link";
 import { ListItem } from "@/components/ListItem";
 import { ListItemCounts } from "@/components/ListItemCounts";
 import { ListInfo } from "@/components/ListWithFiltersLayout/ListInfo";
-import type { CastAndCrewMember } from "./CastAndCrew";
+
+export interface CastAndCrewListItemData {
+  name: string;
+  slug: string | null;
+  totalCount: number;
+  reviewCount: number;
+  creditedAs: string[];
+  avatar: string | null;
+}
 
 export function List({
-  members,
+  data,
   totalCount,
   visibleCount,
 }: {
-  members: readonly CastAndCrewMember[];
+  data: readonly CastAndCrewListItemData[];
   totalCount: number;
   visibleCount: number;
 }): JSX.Element {
@@ -19,8 +27,8 @@ export function List({
     <>
       <ListInfo totalCount={totalCount} visibleCount={visibleCount} />
       <ol data-testid="list">
-        {members.map((member) => {
-          return <MemberListItem key={member.name} member={member} />;
+        {data.map((member) => {
+          return <MemberListItem key={member.name} data={member} />;
         })}
       </ol>
       <div className="spacer-y-8" />
@@ -29,29 +37,29 @@ export function List({
 }
 
 function MemberListItem({
-  member,
+  data,
 }: {
-  member: CastAndCrewMember;
+  data: CastAndCrewListItemData;
 }): JSX.Element {
   return (
     <ListItem className="items-center">
-      <Avatar member={member} />
-      <Name member={member} />
-      <ListItemCounts current={member.reviewCount} total={member.totalCount} />
+      <Avatar data={data} />
+      <Name data={data} />
+      <ListItemCounts current={data.reviewCount} total={data.totalCount} />
     </ListItem>
   );
 }
 
-function Avatar({ member }: { member: CastAndCrewMember }) {
-  if (member.avatar) {
+function Avatar({ data }: { data: CastAndCrewListItemData }) {
+  if (data.avatar) {
     return (
       <Link
-        href={`/cast-and-crew/${member.slug}/`}
+        href={`/cast-and-crew/${data.slug}/`}
         className="safari-border-radius-fix w-16 max-w-16 overflow-hidden rounded-[50%] shadow-all"
       >
         <Image
-          src={member.avatar}
-          alt={`An image of ${member.name}`}
+          src={data.avatar}
+          alt={`An image of ${data.name}`}
           width={64}
           height={64}
         />
@@ -77,14 +85,14 @@ function Avatar({ member }: { member: CastAndCrewMember }) {
   );
 }
 
-function Name({ member }: { member: CastAndCrewMember }) {
+function Name({ data }: { data: CastAndCrewListItemData }) {
   return (
     <div>
-      <Link href={`/cast-and-crew/${member.slug}/`} className="text-md">
-        <div className="leading-normal">{member.name}</div>
+      <Link href={`/cast-and-crew/${data.slug}/`} className="text-md">
+        <div className="leading-normal">{data.name}</div>
       </Link>
       <div className="spacer-y-1" />
-      <CreditedAs creditedAs={member.creditedAs} />
+      <CreditedAs creditedAs={data.creditedAs} />
     </div>
   );
 }

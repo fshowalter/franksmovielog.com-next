@@ -1,17 +1,21 @@
 import { YearStats } from "@/components/YearStats";
-import { getStatsForYear, getStatYears } from "@/components/YearStats/data";
-import React from "react";
+import getComponentData from "@/components/YearStats/data";
+import yearStatsJson from "@/data/yearStatsJson";
 
 export async function generateStaticParams() {
-  const years = getStatYears();
+  const json = await yearStatsJson();
 
-  return years.map((year) => ({
-    year,
+  return json.map((stats) => ({
+    year: stats.year,
   }));
 }
 
-export default function ReviewPage({ params }: { params: { year: string } }) {
-  const { stats, statYears } = getStatsForYear(params.year);
+export default async function YearStatsPage({
+  params,
+}: {
+  params: { year: string };
+}) {
+  const data = await getComponentData(params.year);
 
-  return <YearStats statYears={statYears} stats={stats} year={params.year} />;
+  return <YearStats {...data} />;
 }

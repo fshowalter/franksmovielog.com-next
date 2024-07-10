@@ -29,7 +29,7 @@ export async function overratedDisappointmentsJson(): Promise<
   OverratedDisappointmentsJson[]
 > {
   const json = await fs.readFile(overratedDisappointmentsJsonFile, "utf8");
-  const data = JSON.parse(json) as any[];
+  const data = JSON.parse(json) as unknown[];
 
   return data.map((item) => {
     return OverratedDisappointmentsJsonSchema.parse(item);

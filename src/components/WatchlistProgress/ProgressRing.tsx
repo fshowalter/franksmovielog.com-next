@@ -1,4 +1,4 @@
-interface IProgresRingProps extends React.SVGProps<SVGSVGElement> {
+interface ProgresRingProps extends React.SVGProps<SVGSVGElement> {
   total: number;
   complete: number;
   label: string;
@@ -11,7 +11,7 @@ export function ProgressRing({
   label,
   subLabel,
   ...rest
-}: IProgresRingProps): JSX.Element | null {
+}: ProgresRingProps): JSX.Element | null {
   if (total === 0) {
     return null;
   }

@@ -7,28 +7,17 @@ import { Header } from "./Header";
 import { List } from "./List";
 import { initState, reducer } from "./Underseen.reducer";
 import type { Sort } from "./Underseen.reducer";
-
-export interface UnderseenTitle {
-  releaseSequence: string;
-  title: string;
-  year: string;
-  sortTitle: string;
-  slug: string;
-  grade: string;
-  gradeValue: number;
-  imdbId: string;
-  genres: string[];
-}
+import type { ListItemData } from "./List";
 
 export interface UnderseenProps {
-  titles: readonly UnderseenTitle[];
+  items: readonly ListItemData[];
   distinctGenres: readonly string[];
   distinctReleaseYears: readonly string[];
   initialSort: Sort;
 }
 
 export function Underseen({
-  titles,
+  items,
   distinctGenres,
   distinctReleaseYears,
   initialSort,
@@ -36,7 +25,7 @@ export function Underseen({
   const [state, dispatch] = useReducer(
     reducer,
     {
-      items: [...titles],
+      items: [...items],
       sort: initialSort,
     },
     initState,

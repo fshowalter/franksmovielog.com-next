@@ -2,14 +2,14 @@ import { promises as fs } from "node:fs";
 import { z } from "zod";
 import { join } from "path";
 
-const watchlistTitlesFile = join(
+const watchlistTitlesJsonFile = join(
   process.cwd(),
   "content",
   "data",
   "watchlist-titles.json",
 );
 
-const JsonWatchlistTitlesSchema = z.object({
+const WatchlistTitlesJsonSchema = z.object({
   imdbId: z.string(),
   title: z.string(),
   year: z.string(),
@@ -22,15 +22,15 @@ const JsonWatchlistTitlesSchema = z.object({
   collectionNames: z.array(z.string()),
 });
 
-export type JsonWatchlistTitles = z.infer<typeof JsonWatchlistTitlesSchema>;
+export type WatchlistTitlesJson = z.infer<typeof WatchlistTitlesJsonSchema>;
 
-export async function getWatchlistTitlesJsonData(): Promise<
-  JsonWatchlistTitles[]
+export default async function getWatchlistTitlesJsonData(): Promise<
+  WatchlistTitlesJson[]
 > {
-  const json = await fs.readFile(watchlistTitlesFile, "utf8");
-  const data = JSON.parse(json) as any[];
+  const json = await fs.readFile(watchlistTitlesJsonFile, "utf8");
+  const data = JSON.parse(json) as unknown[];
 
   return data.map((title) => {
-    return JsonWatchlistTitlesSchema.parse(title);
+    return WatchlistTitlesJsonSchema.parse(title);
   });
 }

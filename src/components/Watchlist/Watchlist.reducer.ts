@@ -5,7 +5,7 @@ import {
   filterTools,
   sortString,
 } from "@/utils";
-import type { IWatchlistTitle } from "./Watchlist";
+import type { ListItemData } from "./List";
 
 export type Sort = "release-date-desc" | "release-date-asc" | "title";
 
@@ -14,11 +14,8 @@ const SHOW_COUNT_DEFAULT = 100;
 const groupItems = buildGroupItems(groupForItem);
 const { updateFilter, applyFilters } = filterTools(sortItems, groupItems);
 
-function sortItems(items: IWatchlistTitle[], sortOrder: Sort) {
-  const sortMap: Record<
-    Sort,
-    (a: IWatchlistTitle, b: IWatchlistTitle) => number
-  > = {
+function sortItems(items: ListItemData[], sortOrder: Sort) {
+  const sortMap: Record<Sort, (a: ListItemData, b: ListItemData) => number> = {
     "release-date-desc": (a, b) =>
       sortString(a.releaseSequence, b.releaseSequence) * -1,
     "release-date-asc": (a, b) =>
@@ -30,7 +27,7 @@ function sortItems(items: IWatchlistTitle[], sortOrder: Sort) {
   return items.sort(comparer);
 }
 
-function groupForItem(item: IWatchlistTitle, sortValue: Sort): string {
+function groupForItem(item: ListItemData, sortValue: Sort): string {
   switch (sortValue) {
     case "release-date-asc":
     case "release-date-desc": {
@@ -50,11 +47,7 @@ function groupForItem(item: IWatchlistTitle, sortValue: Sort): string {
 }
 
 export interface State
-  extends FilterableState<
-    IWatchlistTitle,
-    Sort,
-    Map<string, IWatchlistTitle[]>
-  > {
+  extends FilterableState<ListItemData, Sort, Map<string, ListItemData[]>> {
   hideReviewed: boolean;
 }
 
@@ -62,7 +55,7 @@ export function initState({
   items,
   sort,
 }: {
-  items: IWatchlistTitle[];
+  items: ListItemData[];
   sort: Sort;
 }): State {
   return {

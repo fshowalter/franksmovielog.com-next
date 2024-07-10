@@ -1,13 +1,14 @@
 import { DebouncedInput } from "../DebouncedInput";
 import { SelectField } from "../SelectField";
-import { Action, ActionType, SortValue } from "./CastAndCrew.reducer";
+import { ActionType } from "./CastAndCrew.reducer";
+import type { Action, Sort } from "./CastAndCrew.reducer";
 
 export function Filters({
   dispatch,
   sortValue,
 }: {
   dispatch: React.Dispatch<Action>;
-  sortValue: SortValue;
+  sortValue: Sort;
 }): JSX.Element {
   return (
     <>
@@ -39,7 +40,7 @@ export function Filters({
         onChange={(e) =>
           dispatch({
             type: ActionType.SORT,
-            value: e.target.value as SortValue,
+            value: e.target.value as Sort,
           })
         }
       >

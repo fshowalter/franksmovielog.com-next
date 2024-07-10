@@ -1,19 +1,5 @@
-import { getReviewsJsonData } from "@/data/reviewsJson";
-
-export interface IReviewedTitle {
-  imdbId: string;
-  reviewDate: string;
-  releaseSequence: string;
-  reviewYear: string;
-  reviewMonth: string;
-  title: string;
-  year: string;
-  sortTitle: string;
-  slug: string;
-  grade: string;
-  gradeValue: number;
-  genres: string[];
-}
+import reviewedTitlesJson from "@/data/reviewedTitlesJson";
+import type { ReviewsProps } from "./Reviews";
 
 function formatDate(reviewDate: Date) {
   const day = `0${reviewDate.getUTCDate()}`.slice(-2);
@@ -22,27 +8,24 @@ function formatDate(reviewDate: Date) {
   return `${reviewDate.getUTCFullYear()}-${month}-${day}`;
 }
 
-export async function getReviewedTitles(): Promise<{
-  genres: string[];
-  releaseYears: string[];
-  reviewYears: string[];
-  reviewedTitles: IReviewedTitle[];
-}> {
-  const reviewsJsonData = await getReviewsJsonData();
+export default async function getReviewedTitles(): Promise<ReviewsProps> {
+  const json = await reviewedTitlesJson();
 
-  reviewsJsonData.sort((a, b) => b.sortTitle.localeCompare(a.sortTitle));
+  json.sort((a, b) => b.sortTitle.localeCompare(a.sortTitle));
 
   const genres = new Set<string>();
   const releaseYears = new Set<string>();
   const reviewYears = new Set<string>();
 
-  const reviewedTitles = reviewsJsonData.map((title) => {
+  json.sort((a, b) => a.sortTitle.localeCompare(b.sortTitle));
+
+  const data = json.map((title) => {
     const reviewDate = new Date(title.reviewDate);
     title.genres.forEach((genre) => genres.add(genre));
     releaseYears.add(title.year);
     reviewYears.add(title.reviewYear);
 
-    return {
+    const itemData: ReviewsProps["data"][0] = {
       imdbId: title.imdbId,
       releaseSequence: title.sequence,
       title: title.title,
@@ -59,14 +42,15 @@ export async function getReviewedTitles(): Promise<{
       gradeValue: title.gradeValue,
       genres: title.genres,
     };
+
+    return itemData;
   });
 
-  reviewedTitles.sort((a, b) => a.sortTitle.localeCompare(b.sortTitle));
-
   return {
-    genres: Array.from(genres).toSorted(),
-    releaseYears: Array.from(releaseYears).toSorted(),
-    reviewYears: Array.from(reviewYears).toSorted(),
-    reviewedTitles,
+    distinctGenres: Array.from(genres).toSorted(),
+    distinctReleaseYears: Array.from(releaseYears).toSorted(),
+    distinctReviewYears: Array.from(reviewYears).toSorted(),
+    data,
+    initialSort: "title-asc",
   };
 }

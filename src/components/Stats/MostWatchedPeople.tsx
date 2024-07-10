@@ -5,14 +5,31 @@ import { ListItemPoster } from "@/components/ListItemPoster";
 import { ListItemTitle } from "@/components/ListItemTitle";
 import { StatHeading } from "@/components/StatHeading";
 
+interface ViewingListItemData {
+  sequence: number;
+  date: string;
+  venue: string | null;
+  medium: string | null;
+  title: string;
+  year: string;
+  slug: string | null;
+}
+
+export interface MostWatchedPersonListItemData {
+  name: string;
+  slug: string | null;
+  count: number;
+  viewingsData: ViewingListItemData[];
+}
+
 export function MostWatchedPeople({
-  people,
+  data,
   header,
 }: {
   header: string;
-  people: readonly IMostWatchedPerson[];
+  data: readonly MostWatchedPersonListItemData[];
 }): JSX.Element | null {
-  if (people.length == 0) {
+  if (data.length == 0) {
     return null;
   }
 
@@ -24,15 +41,15 @@ export function MostWatchedPeople({
         <span className="text-right leading-10">Viewings</span>
       </header>
       <ol>
-        {people.map((person, index) => {
+        {data.map((person, index) => {
           return (
             <li key={person.name} className="block">
               <div
                 style={{ zIndex: 1 + index }}
-                className="bg-stripe sticky top-20 grid w-full grid-cols-[auto_1fr_calc(6ch_+_var(--gutter-width))] px-gutter leading-10 desktop:top-[calc(160px_+_5rem)] max:top-[calc(128px_+_5rem)]"
+                className="sticky top-20 grid w-full grid-cols-[auto_1fr_calc(6ch_+_var(--gutter-width))] bg-stripe px-gutter leading-10 desktop:top-[calc(160px_+_5rem)] max:top-[calc(128px_+_5rem)]"
               >
                 <span className="leading-10">
-                  <Name person={person} />
+                  <Name data={person} />
                 </span>
                 <span className="leading-10">&nbsp;</span>
                 <span className="bg-stripe text-right leading-10">
@@ -45,11 +62,11 @@ export function MostWatchedPeople({
                     Details
                   </summary>
                   <ol className="tablet:px-gutter">
-                    {person.viewings.map((viewing) => {
+                    {person.viewingsData.map((viewing) => {
                       return (
                         <MostWatchedPersonViewingListItem
                           key={viewing.sequence}
-                          viewing={viewing}
+                          data={viewing}
                         />
                       );
                     })}
@@ -64,65 +81,37 @@ export function MostWatchedPeople({
   );
 }
 
-function Name({ person }: { person: IMostWatchedPerson }): JSX.Element {
-  if (person.slug) {
-    return <Link href={`/cast-and-crew/${person.slug}/`}>{person.name}</Link>;
+function Name({ data }: { data: MostWatchedPersonListItemData }): JSX.Element {
+  if (data.slug) {
+    return <Link href={`/cast-and-crew/${data.slug}/`}>{data.name}</Link>;
   }
 
-  return <>{person.name}</>;
+  return <>{data.name}</>;
 }
 
 function MostWatchedPersonViewingListItem({
-  viewing,
+  data,
 }: {
-  viewing: IMostWatchedPersonViewing;
+  data: ViewingListItemData;
 }) {
   return (
     <ListItem className="items-center">
-      <ListItemPoster
-        slug={viewing.slug}
-        title={viewing.title}
-        year={viewing.year}
-      />
+      <ListItemPoster slug={data.slug} title={data.title} year={data.year} />
       <div className="grow">
         <div>
-          <ListItemTitle
-            title={viewing.title}
-            year={viewing.year}
-            slug={viewing.slug}
-          />
+          <ListItemTitle title={data.title} year={data.year} slug={data.slug} />
           <div className="spacer-y-1 tablet:spacer-y-2" />
         </div>
         <div className="flex flex-col text-sm font-light tracking-0.5px text-subtle">
           <div className="spacer-y-1 tablet:spacer-y-0" />
           <div>
-            {viewing.date}
+            {data.date}
             <div className="spacer-y-2" />
-            <ListItemMediumAndVenue
-              medium={viewing.medium}
-              venue={viewing.venue}
-            />
+            <ListItemMediumAndVenue medium={data.medium} venue={data.venue} />
           </div>
         </div>
         <div className="spacer-y-2" />
       </div>
     </ListItem>
   );
-}
-
-export interface IMostWatchedPersonViewing {
-  sequence: number;
-  date: string;
-  venue: string | null;
-  medium: string | null;
-  title: string;
-  year: string;
-  slug: string | null;
-}
-
-export interface IMostWatchedPerson {
-  name: string;
-  slug: string | null;
-  count: number;
-  viewings: IMostWatchedPersonViewing[];
 }

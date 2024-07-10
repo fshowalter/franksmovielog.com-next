@@ -1,10 +1,6 @@
-import type { IYearStats } from "./YearStats";
-import { getJsonStatYears, getJsonYearStats } from "@/data/yearStatsJson";
-import type { IMostWatchedPerson } from "../Stats/MostWatchedPeople";
-
-export function getStatYears() {
-  return getJsonStatYears();
-}
+import yearStatsJson from "@/data/yearStatsJson";
+import type { MostWatchedPerson } from "@/data/yearStatsJson";
+import type { YearStatsProps } from "./YearStats";
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
@@ -15,12 +11,12 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 
 function formatViewingDatesForMostWatchedPeople(
-  mostWatchedPeople: IMostWatchedPerson[],
+  mostWatchedPeople: MostWatchedPerson[],
 ) {
   return mostWatchedPeople.map((person) => {
     return {
       ...person,
-      viewings: person.viewings.map((viewing) => {
+      viewingsData: person.viewings.map((viewing) => {
         const viewingDate = new Date(viewing.date);
         return {
           ...viewing,
@@ -31,26 +27,41 @@ function formatViewingDatesForMostWatchedPeople(
   });
 }
 
-export function getStatsForYear(year: string): {
-  stats: IYearStats;
-  statYears: string[];
-} {
-  const jsonYearStats = getJsonYearStats(year);
-  const statYears = getJsonStatYears();
+export default async function getComponentData(
+  year: string,
+): Promise<YearStatsProps> {
+  const json = await yearStatsJson();
 
-  return {
-    stats: {
-      ...jsonYearStats,
+  const statYears = new Set<string>();
+
+  json.forEach((stats) => {
+    statYears.add(stats.year);
+  });
+
+  const statYear = json.find((stats) => {
+    return stats.year === year;
+  });
+
+  if (!statYear) {
+    throw new Error(`No stat year found for ${year}`);
+  }
+
+  const props: YearStatsProps = {
+    year: year,
+    data: {
+      ...statYear,
       mostWatchedDirectors: formatViewingDatesForMostWatchedPeople(
-        jsonYearStats.mostWatchedDirectors,
+        statYear.mostWatchedDirectors,
       ),
       mostWatchedPerformers: formatViewingDatesForMostWatchedPeople(
-        jsonYearStats.mostWatchedPerformers,
+        statYear.mostWatchedPerformers,
       ),
       mostWatchedWriters: formatViewingDatesForMostWatchedPeople(
-        jsonYearStats.mostWatchedWriters,
+        statYear.mostWatchedWriters,
       ),
     },
-    statYears,
+    statYears: Array.from(statYears).toSorted(),
   };
+
+  return props;
 }

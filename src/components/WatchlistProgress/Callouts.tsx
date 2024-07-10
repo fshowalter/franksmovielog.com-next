@@ -1,5 +1,18 @@
 import { ProgressRing } from "./ProgressRing";
 
+export interface CalloutsData {
+  reviewed: number;
+  total: number;
+  directorTotal: number;
+  directorReviewed: number;
+  performerTotal: number;
+  performerReviewed: number;
+  writerTotal: number;
+  writerReviewed: number;
+  collectionTotal: number;
+  collectionReviewed: number;
+}
+
 function Callout({
   total,
   reviewed,
@@ -32,44 +45,22 @@ function Callout({
   );
 }
 
-export function Callouts({
-  movieCount,
-  reviewedMovieCount,
-  directorMovieCount,
-  directorReviewedMovieCount,
-  performerMovieCount,
-  performerReviewedMovieCount,
-  writerMovieCount,
-  writerReviewedMovieCount,
-  collectionMovieCount,
-  collectionReviewedMovieCount,
-}: {
-  movieCount: number;
-  reviewedMovieCount: number;
-  directorMovieCount: number | null;
-  directorReviewedMovieCount: number | null;
-  performerMovieCount: number | null;
-  performerReviewedMovieCount: number | null;
-  writerMovieCount: number | null;
-  writerReviewedMovieCount: number | null;
-  collectionMovieCount: number | null;
-  collectionReviewedMovieCount: number | null;
-}): JSX.Element {
+export function Callouts({ data }: { data: CalloutsData }): JSX.Element {
   return (
     <section className="flex flex-wrap justify-center gap-x-8">
       <div className="flex min-w-full flex-col items-center tablet:min-w-0">
         <div className="spacer-y-8" />
         <Callout
-          total={movieCount}
-          reviewed={reviewedMovieCount}
+          total={data.total}
+          reviewed={data.reviewed}
           label="Total Progress"
         />
       </div>
       <div>
         <div className="spacer-y-8" />
         <Callout
-          total={directorMovieCount}
-          reviewed={directorReviewedMovieCount}
+          total={data.directorTotal}
+          reviewed={data.directorReviewed}
           label="Director"
           subLabel="Titles"
         />
@@ -77,8 +68,8 @@ export function Callouts({
       <div>
         <div className="spacer-y-8" />
         <Callout
-          total={performerMovieCount}
-          reviewed={performerReviewedMovieCount}
+          total={data.performerTotal}
+          reviewed={data.performerReviewed}
           label="Performer"
           subLabel="Titles"
         />
@@ -86,8 +77,8 @@ export function Callouts({
       <div>
         <div className="spacer-y-8" />
         <Callout
-          total={writerMovieCount}
-          reviewed={writerReviewedMovieCount}
+          total={data.writerTotal}
+          reviewed={data.writerReviewed}
           label="Writer"
           subLabel="Titles"
         />
@@ -95,8 +86,8 @@ export function Callouts({
       <div>
         <div className="spacer-y-8" />
         <Callout
-          total={collectionMovieCount}
-          reviewed={collectionReviewedMovieCount}
+          total={data.collectionTotal}
+          reviewed={data.collectionReviewed}
           label="Collection"
           subLabel="Titles"
         />

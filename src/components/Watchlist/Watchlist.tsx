@@ -6,34 +6,40 @@ import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
 import { initState, reducer } from "./Watchlist.reducer";
+import type { ListItemData } from "./List";
+import type { Sort } from "./Watchlist.reducer";
 
-export function Watchlist({
-  titles,
-  distinctDirectors,
-  distinctPerformers,
-  distinctWriters,
-  distinctCollections,
-  distinctReleaseYears,
-}: {
-  titles: readonly IWatchlistTitle[];
+export interface WatchlistProps {
+  data: readonly ListItemData[];
+  initialSort: Sort;
   distinctDirectors: readonly string[];
   distinctPerformers: readonly string[];
   distinctWriters: readonly string[];
   distinctCollections: readonly string[];
   distinctReleaseYears: readonly string[];
-}): JSX.Element {
+}
+
+export function Watchlist({
+  data,
+  initialSort,
+  distinctDirectors,
+  distinctPerformers,
+  distinctWriters,
+  distinctCollections,
+  distinctReleaseYears,
+}: WatchlistProps): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {
-      items: [...titles],
-      sort: "release-date-asc",
+      items: [...data],
+      sort: initialSort,
     },
     initState,
   );
 
   return (
     <ListWithFiltersLayout
-      header={<Header titleCount={titles.length} />}
+      header={<Header titleCount={data.length} />}
       filters={
         <Filters
           sortValue={state.sortValue}
@@ -55,17 +61,4 @@ export function Watchlist({
       }
     />
   );
-}
-
-export interface IWatchlistTitle {
-  imdbId: string;
-  title: string;
-  year: string;
-  releaseSequence: string;
-  sortTitle: string;
-  directorNames: string[];
-  performerNames: string[];
-  writerNames: string[];
-  collectionNames: string[];
-  viewed: boolean;
 }

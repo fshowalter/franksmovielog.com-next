@@ -1,17 +1,8 @@
-import { Viewings, getViewings } from "@/components/Viewings";
+import { Viewings } from "@/components/Viewings";
+import getComponentData from "@/components/Viewings/data";
 
 export default async function ViewingsPage() {
-  const { viewings, genres, releaseYears, viewingYears, media, venues } =
-    await getViewings();
+  const data = await getComponentData();
 
-  return (
-    <Viewings
-      distinctViewingYears={viewingYears}
-      distinctGenres={genres}
-      distinctMedia={media}
-      distinctReleaseYears={releaseYears}
-      distinctVenues={venues}
-      viewings={viewings}
-    />
-  );
+  return <Viewings {...data} />;
 }

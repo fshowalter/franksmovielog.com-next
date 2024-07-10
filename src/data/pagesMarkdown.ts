@@ -1,4 +1,4 @@
-import fs from "fs";
+import { promises as fs } from "node:fs";
 import matter from "gray-matter";
 import { join } from "path";
 import { z } from "zod";
@@ -8,6 +8,8 @@ import remarkGfm from "remark-gfm";
 import smartypants from "remark-smartypants";
 import rehypeStringify from "rehype-stringify";
 import { remark } from "remark";
+
+const pagesMarkdownDirectory = join(process.cwd(), "content", "pages");
 
 function getHtml(content: string) {
   return remark()
@@ -28,20 +30,43 @@ interface MarkdownPage {
 
 const DataSchema = z.object({
   title: z.string(),
+  slug: z.string(),
 });
 
-const pagesDirectory = join(process.cwd(), "content", "pages");
+let allPagesMarkdown: MarkdownPage[];
 
-export function getPageBySlug(slug: string): MarkdownPage {
-  const fullPath = join(pagesDirectory, `${slug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(fileContents);
+async function parseAllPagesMarkdown() {
+  const dirents = await fs.readdir(pagesMarkdownDirectory, {
+    withFileTypes: true,
+  });
 
-  const greyMatter = DataSchema.parse(data);
+  return Promise.all(
+    dirents
+      .filter((item) => !item.isDirectory() && item.name.endsWith(".md"))
+      .map(async (item) => {
+        const fileContents = await fs.readFile(
+          `${pagesMarkdownDirectory}/${item.name}`,
+          "utf8",
+        );
 
-  return {
-    slug: slug,
-    title: greyMatter.title,
-    content: getHtml(content),
-  };
+        const { data, content } = matter(fileContents);
+        const greyMatter = DataSchema.parse(data);
+
+        const markdownPage: MarkdownPage = {
+          slug: greyMatter.slug,
+          title: greyMatter.title,
+          content: getHtml(content),
+        };
+
+        return markdownPage;
+      }),
+  );
+}
+
+export default async function pagesMarkdown(): Promise<MarkdownPage[]> {
+  if (!allPagesMarkdown) {
+    allPagesMarkdown = await parseAllPagesMarkdown();
+  }
+
+  return allPagesMarkdown;
 }

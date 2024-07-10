@@ -6,31 +6,36 @@ import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
 import { initState, reducer } from "./Reviews.reducer";
-import type { IReviewedTitle } from "./data";
+import type { ListItemData } from "./List";
+import type { Sort } from "./Reviews.reducer";
 
-export function Reviews({
-  reviewedTitles,
-  distinctGenres,
-  distinctReleaseYears,
-  distinctReviewYears,
-}: {
-  reviewedTitles: IReviewedTitle[];
+export interface ReviewsProps {
+  data: ListItemData[];
+  initialSort: Sort;
   distinctGenres: readonly string[];
   distinctReleaseYears: readonly string[];
   distinctReviewYears: readonly string[];
-}): JSX.Element {
+}
+
+export function Reviews({
+  data,
+  initialSort,
+  distinctGenres,
+  distinctReleaseYears,
+  distinctReviewYears,
+}: ReviewsProps): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {
-      items: [...reviewedTitles],
-      sort: "title-asc",
+      items: [...data],
+      sort: initialSort,
     },
     initState,
   );
 
   return (
     <ListWithFiltersLayout
-      header={<Header reviewCount={reviewedTitles.length} />}
+      header={<Header reviewCount={data.length} />}
       filters={
         <Filters
           dispatch={dispatch}

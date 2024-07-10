@@ -5,7 +5,19 @@ import { GroupedList } from "@/components/ListWithFiltersLayout";
 import SvgIcon from "@/components/SvgIcon";
 import { WatchlistTitleSlug } from "@/components/WatchlistTitleSlug";
 import { Action, ActionType } from "./Watchlist.reducer";
-import type { IWatchlistTitle } from "./Watchlist";
+
+export interface ListItemData {
+  imdbId: string;
+  title: string;
+  year: string;
+  releaseSequence: string;
+  sortTitle: string;
+  directorNames: string[];
+  performerNames: string[];
+  writerNames: string[];
+  collectionNames: string[];
+  viewed: boolean;
+}
 
 export function List({
   groupedItems,
@@ -13,7 +25,7 @@ export function List({
   totalCount,
   visibleCount,
 }: {
-  groupedItems: Map<string, IWatchlistTitle[]>;
+  groupedItems: Map<string, ListItemData[]>;
   dispatch: React.Dispatch<Action>;
   totalCount: number;
   visibleCount: number;
@@ -27,31 +39,31 @@ export function List({
       onShowMore={() => dispatch({ type: ActionType.SHOW_MORE })}
     >
       {(item) => {
-        return <WatchlistTitle item={item} key={item.imdbId} />;
+        return <WatchlistTitle data={item} key={item.imdbId} />;
       }}
     </GroupedList>
   );
 }
 
-function WatchlistTitle({ item }: { item: IWatchlistTitle }): JSX.Element {
+function WatchlistTitle({ data }: { data: ListItemData }): JSX.Element {
   return (
     <ListItem className="items-center">
-      <ListItemPoster title={item.title} year={item.year} />
+      <ListItemPoster title={data.title} year={data.year} />
       <div className="flex-1 pr-gutter tablet:w-full desktop:pr-4">
         <div>
-          <ListItemTitle title={item.title} year={item.year} />
+          <ListItemTitle title={data.title} year={data.year} />
           <div className="spacer-y-3" />
           <WatchlistTitleSlug
-            directorNames={item.directorNames}
-            performerNames={item.performerNames}
-            writerNames={item.writerNames}
-            collectionNames={item.collectionNames}
+            directorNames={data.directorNames}
+            performerNames={data.performerNames}
+            writerNames={data.writerNames}
+            collectionNames={data.collectionNames}
           />
           <div className="spacer-y-2" />
         </div>
       </div>
       <div className="pr-gutter desktop:pr-4">
-        {item.viewed && (
+        {data.viewed && (
           <SvgIcon className="block h-6 min-w-6 text-subtle">
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -52,7 +52,7 @@ async function parseAllCastAndCrewJson() {
           "utf8",
         );
 
-        const json = JSON.parse(fileContents) as any;
+        const json = JSON.parse(fileContents) as unknown;
         const member = CastAndCrewJsonSchema.parse(json);
 
         const avatar = existsSync(

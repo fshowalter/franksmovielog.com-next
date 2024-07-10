@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import { z } from "zod";
 import { join } from "path";
 
-const underseenGemsFile = join(
+const underseenGemsJsonFile = join(
   process.cwd(),
   "content",
   "data",
@@ -23,9 +23,11 @@ const UnderseenGemsJsonSchema = z.object({
 
 export type UnderseenGemsJson = z.infer<typeof UnderseenGemsJsonSchema>;
 
-export async function getUnderseenGemsJson(): Promise<UnderseenGemsJson[]> {
-  const json = await fs.readFile(underseenGemsFile, "utf8");
-  const data = JSON.parse(json) as any[];
+export default async function underseenGemsJson(): Promise<
+  UnderseenGemsJson[]
+> {
+  const json = await fs.readFile(underseenGemsJsonFile, "utf8");
+  const data = JSON.parse(json) as unknown[];
 
   return data.map((item) => {
     return UnderseenGemsJsonSchema.parse(item);

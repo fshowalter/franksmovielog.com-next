@@ -36,12 +36,14 @@ const MostWatchedPersonViewing = z.object({
   year: z.string(),
 });
 
-const MostWatchedPerson = z.object({
+const MostWatchedPersonSchema = z.object({
   name: z.string(),
   count: z.number(),
   slug: z.nullable(z.string()),
   viewings: z.array(MostWatchedPersonViewing),
 });
+
+export type MostWatchedPerson = z.infer<typeof MostWatchedPersonSchema>;
 
 const AllTimeStatsJsonSchema = z.object({
   viewingCount: z.number(),
@@ -52,9 +54,9 @@ const AllTimeStatsJsonSchema = z.object({
   mediaDistribution: z.array(Distribution),
   decadeDistribution: z.array(Distribution),
   mostWatchedTitles: z.array(MostWatchedTitle),
-  mostWatchedDirectors: z.array(MostWatchedPerson),
-  mostWatchedPerformers: z.array(MostWatchedPerson),
-  mostWatchedWriters: z.array(MostWatchedPerson),
+  mostWatchedDirectors: z.array(MostWatchedPersonSchema),
+  mostWatchedPerformers: z.array(MostWatchedPersonSchema),
+  mostWatchedWriters: z.array(MostWatchedPersonSchema),
 });
 
 type AllTimeStatsJson = z.infer<typeof AllTimeStatsJsonSchema>;

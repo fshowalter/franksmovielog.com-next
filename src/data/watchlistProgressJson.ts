@@ -2,7 +2,7 @@ import { promises as fs } from "node:fs";
 import { z } from "zod";
 import { join } from "path";
 
-const watchlistProgressFile = join(
+const watchlistProgressJsonFile = join(
   process.cwd(),
   "content",
   "data",
@@ -16,7 +16,7 @@ const Detail = z.object({
   reviewCount: z.number(),
 });
 
-const JsonWatchlistProgressSchema = z.object({
+const WatchlistProgressJsonSchema = z.object({
   total: z.number(),
   reviewed: z.number(),
   directorTotal: z.number(),
@@ -33,11 +33,11 @@ const JsonWatchlistProgressSchema = z.object({
   collectionDetails: z.array(Detail),
 });
 
-export type JsonWatchlistProgress = z.infer<typeof JsonWatchlistProgressSchema>;
+export type WatchlistProgressJson = z.infer<typeof WatchlistProgressJsonSchema>;
 
-export async function getWatchlistProgressJsonData(): Promise<JsonWatchlistProgress> {
-  const json = await fs.readFile(watchlistProgressFile, "utf8");
-  const data = JSON.parse(json) as any;
+export default async function getWatchlistProgressJsonData(): Promise<WatchlistProgressJson> {
+  const json = await fs.readFile(watchlistProgressJsonFile, "utf8");
+  const data = JSON.parse(json) as unknown;
 
-  return JsonWatchlistProgressSchema.parse(data);
+  return WatchlistProgressJsonSchema.parse(data);
 }

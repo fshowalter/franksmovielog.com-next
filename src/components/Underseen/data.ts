@@ -1,25 +1,27 @@
-import { getUnderseenGemsJson } from "@/data/underseenGemsJson";
+import underseenGemsJson from "@/data/underseenGemsJson";
 import type { UnderseenProps } from "./Underseen";
 
 export default async function getComponentData(): Promise<UnderseenProps> {
-  const underseenGemsJson = await getUnderseenGemsJson();
+  const json = await underseenGemsJson();
 
-  underseenGemsJson.sort((a, b) =>
-    b.releaseSequence.localeCompare(a.releaseSequence),
-  );
+  json.sort((a, b) => b.releaseSequence.localeCompare(a.releaseSequence));
 
   const genres = new Set<string>();
   const releaseYears = new Set<string>();
 
-  const titles = underseenGemsJson.map((title) => {
+  const items = json.map((title) => {
     title.genres.forEach((genre) => genres.add(genre));
     releaseYears.add(title.year);
 
-    return title;
+    const itemData: UnderseenProps["items"][0] = {
+      ...title,
+    };
+
+    return itemData;
   });
 
   return {
-    titles,
+    items,
     distinctGenres: Array.from(genres).toSorted(),
     distinctReleaseYears: Array.from(releaseYears).toSorted(),
     initialSort: "release-date-desc",

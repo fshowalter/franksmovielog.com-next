@@ -8,12 +8,17 @@ import {
   TableRow,
 } from "@/components/StatsTable";
 
+export interface MediaDistributionData {
+  name: string;
+  count: number;
+}
+
 export function MediaDistribution({
-  distributions,
+  data,
 }: {
-  distributions: readonly IMediaDistribution[];
+  data: readonly MediaDistributionData[];
 }): JSX.Element | null {
-  const maxBar = distributions.reduce((acc, distribution) => {
+  const maxBar = data.reduce((acc, distribution) => {
     const value = distribution.count;
     return acc > value ? acc : value;
   }, 0);
@@ -30,7 +35,7 @@ export function MediaDistribution({
           </tr>
         </TableHead>
         <tbody>
-          {distributions.map((distribution) => {
+          {data.map((distribution) => {
             return (
               <TableRow key={distribution.name}>
                 <TableDataCell align="left">{distribution.name}</TableDataCell>
@@ -47,9 +52,4 @@ export function MediaDistribution({
       </Table>
     </section>
   );
-}
-
-export interface IMediaDistribution {
-  name: string;
-  count: number;
 }

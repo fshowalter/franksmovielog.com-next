@@ -6,8 +6,8 @@ export default async function getComponentData(): Promise<CastAndCrewProps> {
 
   json.sort((a, b) => a.name.localeCompare(b.name));
 
-  const members = json.map((member) => {
-    return {
+  const data = json.map((member) => {
+    const castAndCrewMember: CastAndCrewProps["data"][0] = {
       name: member.name,
       slug: member.slug,
       totalCount: member.totalCount,
@@ -15,9 +15,12 @@ export default async function getComponentData(): Promise<CastAndCrewProps> {
       creditedAs: member.creditedAs,
       avatar: member.avatar,
     };
+
+    return castAndCrewMember;
   });
 
   return {
-    members,
+    data,
+    initialSort: "name-asc",
   };
 }

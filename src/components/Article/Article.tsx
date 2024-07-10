@@ -2,25 +2,27 @@ import { LongFormText } from "@/components/LongFormText";
 import { PageTitle } from "@/components/PageTitle";
 import Image from "next/image";
 import {
-  IStillListMovie,
   StillList,
   StillListHeading,
   StillListNav,
 } from "@/components/StillList";
+import type { StillListItemData } from "../StillList/StillListItem";
+
+export interface ArticleProps {
+  slug: string;
+  alt: string;
+  articleText: string;
+  title: string;
+  moreReviewsData: StillListItemData[];
+}
 
 export function Article({
   slug,
   alt,
   title,
   articleText,
-  moreReviewedTitles,
-}: {
-  slug: string;
-  alt: string;
-  articleText: string;
-  title: string;
-  moreReviewedTitles: IStillListMovie[];
-}): JSX.Element {
+  moreReviewsData,
+}: ArticleProps): JSX.Element {
   return (
     <main>
       <article className="flex flex-col items-center">
@@ -34,11 +36,11 @@ export function Article({
           alt={alt}
           className="mb-[5.33px]"
         />
-        <div className="h-16 min-h-16" />
+        <div className="spacer-y-16" />
         <div className="px-pageMargin">
           <LongFormText text={articleText} className="max-w-prose" />
         </div>
-        <div className="h-32 min-h-32" />
+        <div className="spacer-y-32" />
       </article>
       <div className="flex w-full max-w-popout items-center justify-center bg-default tablet:max-w-full tablet:bg-subtle tablet:pb-32 tablet:pt-8">
         <StillListNav>
@@ -48,7 +50,7 @@ export function Article({
             linkTarget={`/reviews/`}
           />
           <StillList
-            movies={moreReviewedTitles}
+            data={moreReviewsData}
             seeAllLinkTarget="/reviews/"
             seeAllLinkText="Reviews"
           />

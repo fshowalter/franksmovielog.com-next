@@ -7,35 +7,40 @@ import { Filters } from "./Filters";
 import { Header } from "./Header";
 import { List } from "./List";
 import { initState, reducer } from "./Viewings.reducer";
-import type { IViewing } from "./data";
+import type { ListItemData } from "./List";
+import type { Sort } from "./Viewings.reducer";
 
-export function Viewings({
-  viewings,
-  distinctGenres,
-  distinctMedia,
-  distinctVenues,
-  distinctReleaseYears,
-  distinctViewingYears,
-}: {
-  viewings: readonly IViewing[];
+export interface ViewingsProps {
+  data: readonly ListItemData[];
   distinctGenres: readonly string[];
   distinctMedia: readonly string[];
   distinctVenues: readonly string[];
   distinctReleaseYears: readonly string[];
   distinctViewingYears: readonly string[];
-}): JSX.Element {
+  initialSort: Sort;
+}
+
+export function Viewings({
+  data,
+  distinctGenres,
+  distinctMedia,
+  distinctVenues,
+  distinctReleaseYears,
+  distinctViewingYears,
+  initialSort,
+}: ViewingsProps): JSX.Element {
   const [state, dispatch] = useReducer(
     reducer,
     {
-      items: [...viewings],
-      sort: "viewing-date-desc",
+      items: [...data],
+      sort: initialSort,
     },
     initState,
   );
 
   return (
     <ListWithFiltersLayout
-      header={<Header viewingCount={viewings.length} />}
+      header={<Header viewingCount={data.length} />}
       filters={
         <Filters
           dispatch={dispatch}

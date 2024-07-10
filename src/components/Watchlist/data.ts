@@ -1,16 +1,10 @@
-import { getWatchlistTitlesJsonData } from "@/data/watchlistTitlesJson";
-import type { IWatchlistTitle } from "./Watchlist";
-import { getJsonStatYears } from "@/data/yearStatsJson";
+import watchlistTitlesJson from "@/data/watchlistTitlesJson";
+import type { WatchlistProps } from "./Watchlist";
 
-export default async function getComponentData(): Promise<{
-  titles: readonly IWatchlistTitle[];
-  distinctDirectors: readonly string[];
-  distinctPerformers: readonly string[];
-  distinctWriters: readonly string[];
-  distinctCollections: readonly string[];
-  distinctReleaseYears: readonly string[];
-}> {
-  const watchlistTitlesJsonData = await getWatchlistTitlesJsonData();
+export default async function getComponentData(): Promise<WatchlistProps> {
+  const json = await watchlistTitlesJson();
+
+  json.sort((a, b) => a.releaseSequence.localeCompare(b.releaseSequence));
 
   const directors = new Set<string>();
   const performers = new Set<string>();
@@ -18,17 +12,23 @@ export default async function getComponentData(): Promise<{
   const collections = new Set<string>();
   const releaseYears = new Set<string>();
 
-  const watchlistTitles = watchlistTitlesJsonData.map((title) => {
+  const data = json.map((title) => {
     title.directorNames.forEach((name) => directors.add(name));
     title.performerNames.forEach((name) => performers.add(name));
     title.writerNames.forEach((name) => writers.add(name));
     title.collectionNames.forEach((name) => collections.add(name));
     releaseYears.add(title.year);
-    return title;
+
+    const itemData: WatchlistProps["data"][0] = {
+      ...title,
+    };
+
+    return itemData;
   });
 
   return {
-    titles: watchlistTitles,
+    data,
+    initialSort: "release-date-asc",
     distinctReleaseYears: Array.from(releaseYears).toSorted(),
     distinctDirectors: Array.from(directors).toSorted(),
     distinctPerformers: Array.from(performers).toSorted(),

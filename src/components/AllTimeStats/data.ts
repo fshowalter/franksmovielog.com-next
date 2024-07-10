@@ -1,7 +1,7 @@
 import allTimeStatsJson from "@/data/allTimeStatsJson";
 import type { AllTimeStatsProps } from "./AllTimeStats";
 import yearStatsJson from "@/data/yearStatsJson";
-import type { IMostWatchedPerson } from "../Stats/MostWatchedPeople";
+import type { MostWatchedPerson } from "@/data/allTimeStatsJson";
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
@@ -12,12 +12,12 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 
 function formatViewingDatesForMostWatchedPeople(
-  mostWatchedPeople: IMostWatchedPerson[],
+  mostWatchedPeople: MostWatchedPerson[],
 ) {
   return mostWatchedPeople.map((person) => {
     return {
       ...person,
-      viewings: person.viewings.map((viewing) => {
+      viewingsData: person.viewings.map((viewing) => {
         const viewingDate = new Date(viewing.date);
         return {
           ...viewing,
@@ -49,8 +49,10 @@ export default async function getComponentData(): Promise<AllTimeStatsProps> {
     mostWatchedWriters: formatViewingDatesForMostWatchedPeople(
       json.mostWatchedWriters,
     ),
-    distinctStatYears: Array.from(statYears).toSorted(),
   };
 
-  return { data };
+  return {
+    data,
+    distinctStatYears: Array.from(statYears).toSorted(),
+  };
 }

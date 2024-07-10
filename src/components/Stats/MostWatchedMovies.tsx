@@ -4,12 +4,20 @@ import { ListItemTitle } from "@/components/ListItemTitle";
 import { StatHeading } from "@/components/StatHeading";
 import { twMerge } from "tailwind-merge";
 
+export interface MostWatchedMovieListItemData {
+  imdbId: string;
+  title: string;
+  year: string;
+  slug: string | null;
+  count: number;
+}
+
 export function MostWatchedMovies({
-  titles,
+  data,
 }: {
-  titles: readonly IMostWatchedTitle[];
+  data: readonly MostWatchedMovieListItemData[];
 }): JSX.Element | null {
-  if (titles.length === 0) {
+  if (data.length === 0) {
     return null;
   }
 
@@ -19,8 +27,8 @@ export function MostWatchedMovies({
       <div>
         <div className="tablet:spacer-y-4" />
         <List>
-          {titles.map((movie) => {
-            return <ListItem movie={movie} key={movie.imdbId} />;
+          {data.map((movie) => {
+            return <ListItem data={movie} key={movie.imdbId} />;
           })}
         </List>
         <div className="tablet:spacer-y-4" />
@@ -37,22 +45,22 @@ function List({ children }: { children: React.ReactNode }): JSX.Element {
   );
 }
 
-function ListItem({ movie }: { movie: IMostWatchedTitle }): JSX.Element {
+function ListItem({
+  data,
+}: {
+  data: MostWatchedMovieListItemData;
+}): JSX.Element {
   return (
     <li className="flex items-center gap-x-6 px-gutter py-4 even:bg-subtle tablet:flex-col tablet:p-0 tablet:even:bg-unset">
-      <Poster movie={movie} className="shrink-0" />
+      <Poster data={data} className="shrink-0" />
       <div className="grow tablet:w-full">
         <div className="tablet:hidden">
           <div className="tablet:spacer-y-1" />
-          <ListItemTitle
-            title={movie.title}
-            year={movie.year}
-            slug={movie.slug}
-          />
+          <ListItemTitle title={data.title} year={data.year} slug={data.slug} />
           <div className="spacer-y-1 tablet:spacer-y-2" />
         </div>
         <div className="flex justify-start text-base text-subtle tablet:justify-center">
-          <div>{movie.count.toLocaleString()} times</div>
+          <div>{data.count.toLocaleString()} times</div>
         </div>
         <div className="spacer-y-1 tablet:spacer-y-0" />
       </div>
@@ -61,24 +69,24 @@ function ListItem({ movie }: { movie: IMostWatchedTitle }): JSX.Element {
 }
 
 function Poster({
-  movie,
+  data,
   className,
 }: {
-  movie: IMostWatchedTitle;
+  data: MostWatchedMovieListItemData;
   className?: string;
 }) {
-  if (movie.slug) {
+  if (data.slug) {
     return (
       <Link
-        href={`/reviews/${movie.slug}/`}
+        href={`/reviews/${data.slug}/`}
         className={twMerge(
           "safari-border-radius-fix min-w-12 max-w-12 overflow-hidden rounded-lg shadow-all tablet:max-w-poster",
           className,
         )}
       >
         <Image
-          src={`/assets/posters/${movie.slug}.png`}
-          alt={`A poster from ${movie.title} (${movie.year})`}
+          src={`/assets/posters/${data.slug}.png`}
+          alt={`A poster from ${data.title} (${data.year})`}
           width={200}
           height={300}
           className="h-auto"
@@ -96,20 +104,12 @@ function Poster({
     >
       <Image
         src={`/assets/posters/default.png`}
-        alt={`${movie.title} (${movie.year})`}
-        title={`${movie.title} (${movie.year})`}
+        alt={`${data.title} (${data.year})`}
+        title={`${data.title} (${data.year})`}
         width={200}
         height={300}
         className="h-auto"
       />
     </div>
   );
-}
-
-export interface IMostWatchedTitle {
-  imdbId: string;
-  title: string;
-  year: string;
-  slug: string | null;
-  count: number;
 }

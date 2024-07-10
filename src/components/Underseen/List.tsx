@@ -5,7 +5,18 @@ import { ListItemPoster } from "@/components/ListItemPoster";
 import { ListItemTitle } from "@/components/ListItemTitle";
 import { GroupedList } from "@/components/ListWithFiltersLayout";
 import { Action, ActionType } from "./Underseen.reducer";
-import type { UnderseenTitle } from "./Underseen";
+
+export interface ListItemData {
+  releaseSequence: string;
+  title: string;
+  year: string;
+  sortTitle: string;
+  slug: string;
+  grade: string;
+  gradeValue: number;
+  imdbId: string;
+  genres: string[];
+}
 
 export function List({
   groupedItems,
@@ -13,7 +24,7 @@ export function List({
   visibleCount,
   dispatch,
 }: {
-  groupedItems: Map<string, UnderseenTitle[]>;
+  groupedItems: Map<string, ListItemData[]>;
   totalCount: number;
   visibleCount: number;
   dispatch: React.Dispatch<Action>;
@@ -26,28 +37,24 @@ export function List({
       totalCount={totalCount}
       onShowMore={() => dispatch({ type: ActionType.SHOW_MORE })}
     >
-      {(item) => <UnderseenGemsListItem item={item} key={item.imdbId} />}
+      {(item) => <UnderseenGemsListItem data={item} key={item.imdbId} />}
     </GroupedList>
   );
 }
 
-function UnderseenGemsListItem({
-  item,
-}: {
-  item: UnderseenTitle;
-}): JSX.Element {
+function UnderseenGemsListItem({ data }: { data: ListItemData }): JSX.Element {
   return (
     <ListItem className="items-center">
-      <ListItemPoster slug={item.slug} title={item.title} year={item.year} />
+      <ListItemPoster slug={data.slug} title={data.title} year={data.year} />
       <div className="grow pr-gutter tablet:w-full desktop:pr-4">
         <div>
-          <ListItemTitle title={item.title} year={item.year} slug={item.slug} />
+          <ListItemTitle title={data.title} year={data.year} slug={data.slug} />
           <div className="spacer-y-1" />
           <div className="py-px">
-            <Grade grade={item.grade} height={18} />
+            <Grade grade={data.grade} height={18} />
           </div>
           <div className="spacer-y-2" />
-          <ListItemGenres genres={item.genres} />
+          <ListItemGenres genres={data.genres} />
           <div className="spacer-y-2" />
         </div>
       </div>

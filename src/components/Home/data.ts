@@ -12,7 +12,7 @@ async function generateBlurPlaceholder(slug: string) {
     .jpeg()
     .toBuffer();
 
-  return `data:image/png;base64,${imageBase64Bytes.toString("base64")}`;
+  return `data:image/jpeg;base64,${imageBase64Bytes.toString("base64")}`;
 }
 
 function formatDate(reviewDate: Date) {

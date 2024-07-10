@@ -44,7 +44,8 @@ export function HomeListItem({
             quality={80}
             blurDataURL={data.placeholder}
             placeholder="blur"
-            slug={data.slug}
+            slug={"bob"}
+            sizes="(min-width: 512px) 512px, 100vw"
             priority={eagerLoadImage}
             className="h-auto rounded-xl"
           />

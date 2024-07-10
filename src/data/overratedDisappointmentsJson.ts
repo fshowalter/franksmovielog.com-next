@@ -21,7 +21,7 @@ const OverratedDisappointmentsJsonSchema = z.object({
   releaseSequence: z.string(),
 });
 
-export type OverratedDisappointmentsJson = z.infer<
+type OverratedDisappointmentsJson = z.infer<
   typeof OverratedDisappointmentsJsonSchema
 >;
 

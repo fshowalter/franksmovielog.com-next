@@ -12,7 +12,7 @@ import type { CreditsData } from "./Credits";
 import type { MoreReviewsData } from "./MoreReviews";
 import type { StructuredDataData } from "./StructuredData";
 
-export interface ReviewData
+interface ReviewData
   extends HeaderData,
     ContentData,
     ViewingHistoryData,

@@ -33,7 +33,7 @@ const WatchlistProgressJsonSchema = z.object({
   collectionDetails: z.array(Detail),
 });
 
-export type WatchlistProgressJson = z.infer<typeof WatchlistProgressJsonSchema>;
+type WatchlistProgressJson = z.infer<typeof WatchlistProgressJsonSchema>;
 
 export default async function getWatchlistProgressJsonData(): Promise<WatchlistProgressJson> {
   const json = await fs.readFile(watchlistProgressJsonFile, "utf8");

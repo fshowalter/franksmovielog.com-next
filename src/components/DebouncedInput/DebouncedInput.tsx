@@ -1,4 +1,4 @@
-export type onChangeHandler = (value: string) => void;
+type onChangeHandler = (value: string) => void;
 
 /**
  * Wraps a given function in a setTimeout call with the given milliseconds.

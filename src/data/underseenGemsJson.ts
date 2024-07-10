@@ -21,7 +21,7 @@ const UnderseenGemsJsonSchema = z.object({
   releaseSequence: z.string(),
 });
 
-export type UnderseenGemsJson = z.infer<typeof UnderseenGemsJsonSchema>;
+type UnderseenGemsJson = z.infer<typeof UnderseenGemsJsonSchema>;
 
 export default async function underseenGemsJson(): Promise<
   UnderseenGemsJson[]

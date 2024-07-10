@@ -22,7 +22,7 @@ const WatchlistTitlesJsonSchema = z.object({
   collectionNames: z.array(z.string()),
 });
 
-export type WatchlistTitlesJson = z.infer<typeof WatchlistTitlesJsonSchema>;
+type WatchlistTitlesJson = z.infer<typeof WatchlistTitlesJsonSchema>;
 
 export default async function getWatchlistTitlesJsonData(): Promise<
   WatchlistTitlesJson[]

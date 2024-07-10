@@ -66,7 +66,7 @@ function groupForItem(item: CastAndCrewMemberTitle, sortValue: Sort): string {
   }
 }
 
-export interface State
+interface State
   extends FilterableState<
     CastAndCrewMemberTitle,
     Sort,

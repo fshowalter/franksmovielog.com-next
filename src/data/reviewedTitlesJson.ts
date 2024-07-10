@@ -78,7 +78,7 @@ const ReviewedTitlesJsonSchema = z.object({
   moreReviews: z.array(MoreTitleSchema),
 });
 
-export type ReviewedTitlesJson = z.infer<typeof ReviewedTitlesJsonSchema>;
+type ReviewedTitlesJson = z.infer<typeof ReviewedTitlesJsonSchema>;
 
 let allReviewedTitlesJson: ReviewedTitlesJson[];
 

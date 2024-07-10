@@ -65,7 +65,7 @@ function groupForItem(item: OverratedTitle, sortValue: Sort): string {
   }
 }
 
-export type State = FilterableState<
+type State = FilterableState<
   OverratedTitle,
   Sort,
   Map<string, OverratedTitle[]>

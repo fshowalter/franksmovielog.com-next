@@ -15,7 +15,7 @@ import type { MediaDistributionData } from "@/components/Stats/MediaDistribution
 import type { MostWatchedMovieListItemData } from "@/components/Stats/MostWatchedMovies";
 import type { MostWatchedPersonListItemData } from "@/components/Stats/MostWatchedPeople";
 
-export interface YearStatsData extends CalloutsData {
+interface YearStatsData extends CalloutsData {
   decadeDistribution: readonly DecadeDistributionData[];
   mediaDistribution: readonly MediaDistributionData[];
   mostWatchedTitles: readonly MostWatchedMovieListItemData[];

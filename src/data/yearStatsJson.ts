@@ -54,7 +54,7 @@ const YearStatsJsonSchema = z.object({
   mostWatchedWriters: z.array(MostWatchedPersonSchema),
 });
 
-export type YearStatsJson = z.infer<typeof YearStatsJsonSchema>;
+type YearStatsJson = z.infer<typeof YearStatsJsonSchema>;
 
 let allYearStatsJson: YearStatsJson[];
 

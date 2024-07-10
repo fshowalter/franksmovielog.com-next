@@ -62,11 +62,7 @@ function groupForItem(item: ListItemData, sortValue: Sort): string {
   }
 }
 
-export type State = FilterableState<
-  ListItemData,
-  Sort,
-  Map<string, ListItemData[]>
->;
+type State = FilterableState<ListItemData, Sort, Map<string, ListItemData[]>>;
 
 export function initState({
   items,

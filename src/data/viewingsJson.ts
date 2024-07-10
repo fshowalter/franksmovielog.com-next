@@ -23,7 +23,7 @@ const ViewingJsonSchema = z.object({
   releaseSequence: z.string(),
 });
 
-export type ViewingJson = z.infer<typeof ViewingJsonSchema>;
+type ViewingJson = z.infer<typeof ViewingJsonSchema>;
 
 export default async function viewingsJson(): Promise<ViewingJson[]> {
   const json = await fs.readFile(viewingsJsonFile, "utf8");

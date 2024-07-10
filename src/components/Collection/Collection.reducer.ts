@@ -63,7 +63,7 @@ function groupForItem(item: CollectionTitle, sortValue: Sort): string {
   }
 }
 
-export interface State
+interface State
   extends FilterableState<
     CollectionTitle,
     Sort,

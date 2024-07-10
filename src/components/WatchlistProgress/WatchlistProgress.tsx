@@ -4,7 +4,7 @@ import { Details } from "./Details";
 import type { DetailData } from "./Details";
 import type { CalloutsData } from "./Callouts";
 
-export interface WatchlistProgressData extends CalloutsData {
+interface WatchlistProgressData extends CalloutsData {
   directorDetails: DetailData[];
   performerDetails: DetailData[];
   writerDetails: DetailData[];

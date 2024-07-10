@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   // write your next.js configuration values.
   // output: "export",
 
@@ -16,3 +17,5 @@ const nextConfig = {
     formats: ["image/avif"],
   },
 };
+
+export default nextConfig;

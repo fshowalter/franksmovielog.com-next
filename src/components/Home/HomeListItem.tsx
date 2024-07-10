@@ -15,6 +15,7 @@ export interface HomeListItemData {
   principalCastNames: string[];
   directorNames: string[];
   reviewExcerpt: string;
+  placeholder: string;
 }
 
 export function HomeListItem({
@@ -41,6 +42,8 @@ export function HomeListItem({
             width={512}
             height={288}
             quality={80}
+            blurDataURL={data.placeholder}
+            placeholder="blur"
             slug={data.slug}
             priority={eagerLoadImage}
             className="h-auto rounded-xl"

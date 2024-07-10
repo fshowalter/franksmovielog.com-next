@@ -2,6 +2,9 @@ import reviewedTitlesJson from "@/data/reviewedTitlesJson";
 import reviewsMarkdown from "@/data/reviewsMarkdown";
 import viewingsMarkdown from "@/data/viewingsMarkdown";
 import type { ReviewProps } from "./Review";
+import { join } from "path";
+import sharp from "sharp";
+import { existsSync, mkdirSync } from "node:fs";
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
@@ -11,8 +14,56 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
+const destBaseDir = join(process.cwd(), "public");
+
 function formatDate(reviewDate: Date) {
   return dateFormat.format(reviewDate);
+}
+
+function buildImage(slug: string, width: number) {
+  const quality = 80;
+
+  const destSrcDir = join("/gen", `${width}`, `${quality}`);
+  const destDir = join(destBaseDir, destSrcDir);
+
+  if (!existsSync(destDir)) {
+    mkdirSync(destDir, { recursive: true });
+  }
+
+  const imageFileName = `${slug}.avif`;
+
+  return {
+    width,
+    quality,
+    format: sharp.format.avif,
+    fullPath: join(destDir, imageFileName),
+    src: join(destSrcDir, imageFileName),
+  };
+}
+
+async function createStillImages(slug: string) {
+  const pipeline = sharp(
+    join(process.cwd(), "content", "assets", "stills", `${slug}.png`),
+  );
+
+  const images = await Promise.all(
+    [0.25, 0.5, 1, 2].map(async (width) => {
+      const image = buildImage(slug, 960 * width);
+
+      if (existsSync(image.fullPath)) {
+        return image;
+      }
+
+      await pipeline
+        .resize(image.width)
+        .avif({ quality: image.quality })
+        .toFile(image.fullPath);
+
+      return image;
+    }),
+  );
+
+  return images.map((image) => `${image.src} ${image.width}w`).join(`,\n`);
 }
 
 export default async function getComponentData(
@@ -49,6 +100,7 @@ export default async function getComponentData(
   }
 
   const data: ReviewProps["data"] = {
+    stillSrcSet: await createStillImages(slug),
     imdbId: jsonTitle.imdbId,
     title: jsonTitle.title,
     year: jsonTitle.year,

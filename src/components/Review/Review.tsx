@@ -1,4 +1,3 @@
-import { Still } from "@/components/Still";
 import { Content } from "./Content";
 import { Credits } from "./Credits";
 import { Header } from "./Header";
@@ -22,6 +21,7 @@ interface ReviewData
   title: string;
   year: string;
   slug: string;
+  stillSrcSet: string;
   frontmatter: ContentData["frontmatter"] & StructuredDataData["frontmatter"];
 }
 
@@ -36,13 +36,13 @@ export function Review({ data }: ReviewProps): JSX.Element {
         data={data}
         className="px-pageMargin py-6 text-center desktop:py-8"
       />
-      <Still
-        slug={data.slug}
-        title={data.title}
-        year={data.year}
+      <img
+        alt={`A still from ${data.title} (${data.year})`}
         width={960}
         height={540}
+        sizes="(min-width: 960px) 960px, 100vw"
         className="mb-[5.33px]"
+        srcSet={data.stillSrcSet}
       />
       <div className="h-6 min-h-6 tablet:h-8 tablet:min-h-8" />
       <Content data={data} className="items-center px-pageMargin" />
